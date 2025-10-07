@@ -2,7 +2,7 @@
 
 Un tableau de bord futuriste qui affiche des métriques globales critiques pour surveiller l'état de la planète et de l'humanité.
 
-## 🌍 Aperçu
+## Aperçu
 
 Ce projet présente un dashboard interactif de style cyberpunk qui visualise :
 
@@ -13,7 +13,7 @@ Ce projet présente un dashboard interactif de style cyberpunk qui visualise :
 - **Conflits & Risques Tech** : Guerres actives, tensions nucléaires, risques IA
 - **Santé & Stabilité** : Pandémies, résilience des infrastructures
 
-## 🎨 Caractéristiques
+## Caractéristiques
 
 - Design cyberpunk avec animations fluides
 - Interface responsive adaptée aux mobiles
@@ -21,22 +21,22 @@ Ce projet présente un dashboard interactif de style cyberpunk qui visualise :
 - Jauges et indicateurs interactifs
 - Police Orbitron pour un look futuriste
 
-## 🚀 Utilisation
+## Utilisation
 
 Ouvrez simplement `index.html` dans votre navigateur web. Aucune installation ou serveur requis.
 
-## 🛠️ Technologies
+## Technologies
 
 - HTML5
 - CSS3 (Grid, Flexbox, Animations, Gradients)
 - JavaScript Vanilla
 - Google Fonts (Orbitron)
 
-## 📱 Responsive
+## Responsive
 
 Le dashboard s'adapte automatiquement aux différentes tailles d'écran, de desktop aux smartphones.
 
-## 🎯 Objectif
+## Objectif
 
 Ce projet vise à sensibiliser aux enjeux planétaires critiques à travers une visualisation de données engageante et moderne.
 
