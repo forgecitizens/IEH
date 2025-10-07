@@ -1178,6 +1178,14 @@
         // Initialize audio
         audio.volume = 0.3; // Volume à 30% pour ne pas être trop fort
 
+        // Effets sonores pour les modales
+        const expansionOpenSound = new Audio('sounds/expansion1.wav');
+        const expansionCloseSound = new Audio('sounds/expansion2.wav');
+        
+        // Configuration des effets sonores
+        expansionOpenSound.volume = 0.4;
+        expansionCloseSound.volume = 0.4;
+
         function toggleAudioPanel() {
             const audioControls = document.getElementById('audioControlsIEH');
             if (audioControls) {
@@ -1667,6 +1675,10 @@
         function showOilMap() {
             const modal = document.getElementById('oilMapModal');
             if (modal) {
+                // Jouer le son d'ouverture
+                expansionOpenSound.currentTime = 0;
+                expansionOpenSound.play().catch(e => console.log('Erreur son ouverture:', e));
+                
                 // Fixer la position de scroll avant d'ouvrir la modale
                 const scrollY = window.scrollY;
                 document.body.style.position = 'fixed';
@@ -1682,6 +1694,10 @@
         function closeOilMap() {
             const modal = document.getElementById('oilMapModal');
             if (modal) {
+                // Jouer le son de fermeture
+                expansionCloseSound.currentTime = 0;
+                expansionCloseSound.play().catch(e => console.log('Erreur son fermeture:', e));
+                
                 modal.classList.remove('show');
                 
                 // Restaurer la position de scroll
@@ -1705,6 +1721,10 @@
         function showConflictsChart() {
             const modal = document.getElementById('conflictsChartModal');
             if (modal) {
+                // Jouer le son d'ouverture
+                expansionOpenSound.currentTime = 0;
+                expansionOpenSound.play().catch(e => console.log('Erreur son ouverture:', e));
+                
                 // Fixer la position de scroll avant d'ouvrir la modale
                 const scrollY = window.scrollY;
                 document.body.style.position = 'fixed';
@@ -1720,6 +1740,10 @@
         function closeConflictsChart() {
             const modal = document.getElementById('conflictsChartModal');
             if (modal) {
+                // Jouer le son de fermeture
+                expansionCloseSound.currentTime = 0;
+                expansionCloseSound.play().catch(e => console.log('Erreur son fermeture:', e));
+                
                 modal.classList.remove('show');
                 
                 // Restaurer la position de scroll
