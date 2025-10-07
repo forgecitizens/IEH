@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de Bord Planétaire</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             box-sizing: border-box;
             margin: 0;
             padding: 75px 0 0 0;
-            font-family: 'Orbitron', monospace;
+            font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
             color: #ffffff;
             min-height: 100vh;
@@ -156,12 +156,38 @@
             100% { box-shadow: 0 0 25px rgba(0, 255, 255, 1); }
         }
 
-        .gauge-value {
-            font-size: 3rem;
-            font-weight: 900;
+        .world-commentary {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .commentary-title {
+            font-size: 1.4rem;
+            font-weight: 700;
             color: #00ff00;
-            margin-top: 20px;
-            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            margin: 0 0 15px 0;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .commentary-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: justify;
+        }
+
+        .commentary-text p {
+            margin: 0 0 12px 0;
+        }
+
+        .commentary-text p:last-child {
+            margin-bottom: 0;
         }
 
         .global-section {
@@ -224,7 +250,7 @@
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 9999; /* Z-index très élevé pour être au-dessus de tout */
-            font-family: 'Orbitron', monospace;
+            font-family: 'Roboto', sans-serif;
             pointer-events: none; /* Évite les problèmes d'interaction */
         }
 
@@ -982,8 +1008,17 @@
                 font-size: 1.5rem;
             }
 
-            .gauge-value {
-                font-size: 2rem;
+            .commentary-title {
+                font-size: 1.2rem;
+            }
+
+            .commentary-text {
+                font-size: 0.9rem;
+            }
+
+            .world-commentary {
+                padding: 15px;
+                margin-top: 20px;
             }
         }
         /* Audio controls styling for IEH section */
@@ -1366,7 +1401,18 @@
                     <div class="gauge-needle" id="gaugeNeedle"></div>
                 </div>
             </div>
-            <div class="gauge-value">22 / 99</div>
+            <div class="world-commentary">
+                <h3 class="commentary-title">État global : Stabilité sous tension</h3>
+                <div class="commentary-text">
+                    <p>L'humanité évolue dans une phase de stabilité fragile. La population mondiale dépasse les huit milliards d'habitants, soutenue par une économie encore fonctionnelle et des ressources énergétiques disponibles, bien que sous pression.</p>
+                    
+                    <p>Les conflits internationaux restent limités : seules quelques guerres inter-étatiques persistent, tandis que la majorité des tensions se concentrent à l'intérieur des frontières. Les grandes puissances maintiennent un fragile équilibre diplomatique, évitant pour l'instant une escalade mondiale.</p>
+                    
+                    <p>Les indicateurs environnementaux demeurent préoccupants, mais les efforts de transition énergétique et les avancées technologiques ralentissent partiellement la dégradation.</p>
+                    
+                    <p>La jauge reste donc dans le vert, signalant que malgré les fractures et les risques émergents, l'humanité conserve encore une marge de sécurité avant le basculement.</p>
+                </div>
+            </div>
             
             <!-- Audio Controls -->
             <div class="audio-controls-ieh" id="audioControlsIEH" onclick="toggleAudioPanel()">
