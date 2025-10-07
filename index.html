@@ -9,7 +9,7 @@
         body {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 60px 0 0 0;
             font-family: 'Orbitron', monospace;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
             color: #ffffff;
@@ -264,7 +264,7 @@
         /* Audio controls styling */
         .audio-controls {
             position: fixed;
-            top: 20px;
+            top: 70px;
             right: 20px;
             z-index: 1000;
             background: rgba(15, 25, 45, 0.9);
@@ -321,7 +321,7 @@
         /* News ticker styling */
         .news-ticker {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
             height: 50px;
@@ -334,8 +334,8 @@
             align-items: center;
             overflow: hidden;
             z-index: 2000;
-            border-top: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 -4px 20px rgba(255, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
         }
 
         .news-ticker::before {
@@ -352,7 +352,7 @@
 
         .news-content {
             white-space: nowrap;
-            animation: scroll-left 45s linear infinite;
+            animation: scroll-left 150s linear infinite;
             padding-left: 20px;
             display: flex;
             align-items: center;
@@ -376,8 +376,12 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding-top: 50px;
+            }
+
             .audio-controls {
-                top: 10px;
+                top: 60px;
                 right: 10px;
                 padding: 8px;
             }
@@ -385,7 +389,6 @@
             .credits {
                 font-size: 0.6rem;
                 max-width: 300px;
-                bottom: 60px; /* Au-dessus du ticker */
             }
 
             .news-ticker {
@@ -394,7 +397,7 @@
             }
 
             .news-content {
-                animation-duration: 35s; /* Plus rapide sur mobile */
+                animation-duration: 115s; /* Proportionnellement plus lent */
             }
         }
     </style>
