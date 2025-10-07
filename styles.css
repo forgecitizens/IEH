@@ -1938,23 +1938,19 @@ body::before {body::before {
 
     flex-grow: 1;
 
-}.expand-indicator {
+}
 
+.expand-indicator {
     color: #00ff7f;
-
-.expand-indicator {    font-size: 1.2rem;
-
-    color: #00ff7f;    font-weight: bold;
-
-    font-size: 1.2rem;    transition: transform 0.3s ease;
-
-    font-weight: bold;    margin-left: 10px;
-
-    transition: transform 0.3s ease;    user-select: none;
-
-    margin-left: 10px;}
-
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
     user-select: none;
+}
 }
 
 .continent-text {
@@ -1966,7 +1962,7 @@ body::before {body::before {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    transition: max-height 0.4s ease, opacity 0.4s ease 0.1s, padding 0.3s ease;
     padding: 0 15px 0 15px;
     border-left: 2px solid transparent;
     background: rgba(0, 0, 0, 0.1);
@@ -1974,7 +1970,7 @@ body::before {body::before {
 }
 
 .continent-text.expanded {
-    max-height: 500px; /* Assez grand pour le contenu */
+    max-height: 800px; /* Plus grand pour le contenu */
     opacity: 1;
     padding: 15px 15px 15px 15px;
     border-left: 2px solid rgba(0, 255, 127, 0.4);
