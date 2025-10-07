@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Planétaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 20px;
+            grid-template-areas: 
+                "extinction extinction extinction"
+                "global resources climate"
+                "conflicts conflicts health";
+        }
+
+        .section {
+            background: rgba(15, 25, 45, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scanLine 3s infinite;
+        }
+
+        @keyframes scanLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .section:hover {
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 12px 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .extinction-section {
+            grid-area: extinction;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .extinction-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00ffff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .gauge-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 120px;
+        }
+
+        .gauge-background {
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to right, 
+                #00ff00 0%, #00ff00 10%,
+                #7fff00 10%, #7fff00 30%,
+                #ffff00 30%, #ffff00 50%,
+                #ff8c00 50%, #ff8c00 70%,
+                #ff4500 70%, #ff4500 89%,
+                #ff0000 89%, #ff0000 100%);
+            border-radius: 30px;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gauge-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #00ff00;
+            margin-top: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .global-section {
+            grid-area: global;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .global-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00ffff;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaaaaa;
+            text-transform: uppercase;
+        }
+
+        .resources-section {
+            grid-area: resources;
+        }
+
+        .resource-bar {
+            margin: 15px 0;
+        }
+
+        .resource-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .resource-progress {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .resource-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+
+        .oil-fill { background: linear-gradient(90deg, #ff8c00, #ffaa00); width: 45%; }
+        .gas-fill { background: linear-gradient(90deg, #4169e1, #6495ed); width: 62%; }
+        .water-fill { background: linear-gradient(90deg, #00bfff, #87ceeb); width: 78%; }
+
+        .climate-section {
+            grid-area: climate;
+        }
+
+        .climate-indicator {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .temp-display {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ff4500;
+            text-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+        }
+
+        .conflicts-section {
+            grid-area: conflicts;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .conflict-subsection {
+            background: rgba(255, 0, 100, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 100, 0.3);
+        }
+
+        .conflict-counter {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ff0066;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .health-section {
+            grid-area: health;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "extinction"
+                    "global"
+                    "resources"
+                    "climate"
+                    "conflicts"
+                    "health";
+            }
+
+            .conflicts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .extinction-title {
+                font-size: 1.5rem;
+            }
+
+            .gauge-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="section extinction-section">
+            <h1 class="extinction-title">INDICE D'EXTINCTION DE L'HUMANITÉ</h1>
+            <div class="gauge-container">
+                <div class="gauge-background"></div>
+            </div>
+            <div class="gauge-value">22 / 99</div>
+        </div>
+
+        <div class="section global-section">
+            <h2 class="section-title">🌍 Statut Global</h2>
+            <div class="global-stats">
+                <div class="stat-item">
+                    <div class="stat-value">8.1B</div>
+                    <div class="stat-label">Population</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Guerres Actives</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">847</div>
+                    <div class="stat-label">Ressources Critiques</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">73%</div>
+                    <div class="stat-label">Stabilité Régionale</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section resources-section">
+            <h2 class="section-title">⚡ Ressources & Énergie</h2>
+            <div class="resource-bar">
+                <div class="resource-label">
+                    <span>🛢️ Pétrole</span>
+                    <span>45%</span>
+                </div>
+                <div class="resource-progress">
+                    <div class="resource-fill oil-fill"></div>
+                </div>
+            </div>
+            <div class="resource-bar">
+                <div class="resource-label">
+                    <span>🔥 Gaz Naturel</span>
+                    <span>62%</span>
+                </div>
+                <div class="resource-progress">
+                    <div class="resource-fill gas-fill"></div>
+                </div>
+            </div>
+            <div class="resource-bar">
+                <div class="resource-label">
+                    <span>💧 Eau Douce</span>
+                    <span>78%</span>
+                </div>
+                <div class="resource-progress">
+                    <div class="resource-fill water-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section climate-section">
+            <h2 class="section-title">🌡️ Climat & Biodiversité</h2>
+            <div class="climate-indicator">
+                <div class="stat-label">Anomalie Température</div>
+                <div class="temp-display">+1.8°C</div>
+            </div>
+        </div>
+
+        <div class="section conflicts-section">
+            <div class="conflict-subsection">
+                <h3 class="section-title">⚔️ Conflits</h3>
+                <div class="conflict-counter">12</div>
+                <div class="stat-label">Guerres Actives</div>
+                <div class="conflict-counter">47</div>
+                <div class="stat-label">Tensions Internes</div>
+            </div>
+            <div class="conflict-subsection">
+                <h3 class="section-title">☢️ Risques Tech</h3>
+            </div>
+        </div>
+
+        <div class="section health-section">
+            <h2 class="section-title">🧬 Santé & Stabilité</h2>
+            <div class="stat-item">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Pandémies Actives</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">84%</div>
+                <div class="stat-label">Résilience Infrastructure</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
