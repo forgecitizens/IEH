@@ -363,5 +363,67 @@
     
     <!-- Script JavaScript externe -->
     <script src="script.js?v=2.0"></script>
+    
+    <!-- Script inline pour debug -->
+    <script>
+        console.log("🔧 Script inline chargé dans index_optimized.html");
+        
+        // Vérifier si le script externe s'est chargé
+        setTimeout(() => {
+            if (typeof toggleContinentSection === 'function') {
+                console.log("✅ Script externe chargé avec succès");
+            } else {
+                console.error("❌ Script externe non chargé - définition manuelle");
+                
+                // Définir la fonction manuellement si le script externe échoue
+                window.toggleContinentSection = function(id) {
+                    console.log('🔧 FALLBACK - Toggle continent:', id);
+                    
+                    const textElement = document.getElementById(id + '-text');
+                    if (!textElement) {
+                        console.error('Element not found:', id + '-text');
+                        return;
+                    }
+                    
+                    const indicator = textElement.parentElement.querySelector('.expand-indicator');
+                    const isVisible = textElement.style.display === 'block';
+                    
+                    if (isVisible) {
+                        textElement.style.display = 'none';
+                        textElement.style.opacity = '0';
+                        textElement.style.marginTop = '0';
+                        if (indicator) indicator.textContent = '▼';
+                        console.log('Fermeture section:', id);
+                    } else {
+                        textElement.style.display = 'block';
+                        textElement.style.opacity = '1';
+                        textElement.style.marginTop = '15px';
+                        if (indicator) indicator.textContent = '▲';
+                        console.log('Ouverture section:', id);
+                    }
+                };
+                
+                window.showGeopoliticalAnalysis = function() {
+                    console.log('FALLBACK - Ouverture analyse géopolitique');
+                    const modal = document.querySelector('.geopolitical-analysis');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                        console.log('✅ Modal géopolitique affichée');
+                    }
+                };
+                
+                window.closeGeopoliticalAnalysis = function() {
+                    console.log('FALLBACK - Fermeture analyse géopolitique');
+                    const modal = document.querySelector('.geopolitical-analysis');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        console.log('✅ Modal géopolitique fermée');
+                    }
+                };
+                
+                console.log("✅ Fonctions fallback définies");
+            }
+        }, 100);
+    </script>
 </body>
 </html>
