@@ -1918,15 +1918,16 @@ body::before {body::before {
 
     width: 100%;
 
-}.continent-title {
+}
 
+.continent-title {
     color: #00ff7f;
-
-.continent-title {    font-size: 1.1rem;
-
-    color: #00ff7f;    font-weight: 600;
-
-    font-size: 1.1rem;    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    padding-right: 40px; /* Espace pour la flèche */
+    display: block;
+    width: 100%;
 
     font-weight: 600;    font-family: 'Roboto', sans-serif;
 
@@ -1948,8 +1949,13 @@ body::before {body::before {
     position: absolute;
     right: 18px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(0deg);
     user-select: none;
+}
+
+.continent-card.expanded .expand-indicator {
+    transform: translateY(-50%) rotate(180deg);
+    color: #ff6b6b;
 }
 }
 
