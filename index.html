@@ -116,6 +116,40 @@
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
+        .gauge-ticks {
+            position: absolute;
+            top: -10px;
+            width: 100%;
+            height: 80px;
+        }
+
+        .tick {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            top: 0;
+        }
+
+        .gauge-needle {
+            position: absolute;
+            top: -20px;
+            left: 22%;
+            width: 4px;
+            height: 100px;
+            background: linear-gradient(to bottom, #ffffff, #00ffff);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            animation: needleGlow 2s ease-in-out infinite alternate;
+            transition: left 2s ease-out;
+        }
+
+        @keyframes needleGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); }
+            100% { box-shadow: 0 0 25px rgba(0, 255, 255, 1); }
+        }
+
         .gauge-value {
             font-size: 3rem;
             font-weight: 900;
@@ -443,7 +477,10 @@
         <div class="section extinction-section">
             <h1 class="extinction-title">INDICE D'EXTINCTION DE L'HUMANITÉ</h1>
             <div class="gauge-container">
-                <div class="gauge-background"></div>
+                <div class="gauge-background">
+                    <div class="gauge-ticks" id="gaugeTicks"></div>
+                    <div class="gauge-needle" id="gaugeNeedle"></div>
+                </div>
             </div>
             <div class="gauge-value">22 / 99</div>
         </div>
@@ -662,6 +699,132 @@
             statusIndicator.innerHTML = `<span style="color: ${color}">● ${status}</span>`;
         }
 
+        // Système de calcul IEH (Indice d'Extinction de l'Humanité)
+        const iehConfig = {
+            guerresEntrePays: { value: 3, max: 10, weight: 10 },
+            conflitsInternes: { value: 12, max: 50, weight: 8 },
+            petroleDisponible: { value: 45, max: 100, weight: 6, inverse: true }, // 45% = pénurie
+            gazDisponible: { value: 62, max: 100, weight: 5, inverse: true },
+            eauDisponible: { value: 78, max: 100, weight: 12, inverse: true },
+            temperatureAnomalie: { value: 1.8, max: 5, weight: 18 },
+            biodiversitePerdue: { value: 60, max: 100, weight: 12 },
+            tensionNucleaire: { value: 6, max: 10, weight: 15 },
+            pandemiesActives: { value: 2, max: 10, weight: 6 },
+            risqueIA: { value: 4, max: 10, weight: 8 }
+        };
+
+        function calculateIEH() {
+            let totalContribution = 0;
+            let totalWeight = 0;
+            
+            console.log('🧮 Calcul IEH en cours...');
+            
+            for (const [key, config] of Object.entries(iehConfig)) {
+                let normalizedValue;
+                
+                if (config.inverse) {
+                    // Pour les ressources : plus c'est bas, plus c'est dangereux
+                    normalizedValue = 1 - (config.value / 100);
+                } else {
+                    // Pour les menaces : plus c'est haut, plus c'est dangereux
+                    normalizedValue = config.value / config.max;
+                }
+                
+                const contribution = config.weight * normalizedValue;
+                totalContribution += contribution;
+                totalWeight += config.weight;
+                
+                console.log(`📊 ${key}: ${config.value} → normalized: ${normalizedValue.toFixed(3)} → contrib: ${contribution.toFixed(2)}`);
+            }
+            
+            // Score normalisé sur la somme des poids max (100)
+            const normalizedScore = totalContribution / 100;
+            
+            // Conversion en IEH (1 à 99)
+            const ieh = Math.max(1, Math.min(99, 1 + Math.round(normalizedScore * 98)));
+            
+            console.log(`🎯 Score total: ${totalContribution.toFixed(2)}/100`);
+            console.log(`📈 Score normalisé: ${normalizedScore.toFixed(4)}`);
+            console.log(`⚠️ IEH calculé: ${ieh}/99`);
+            
+            return {
+                ieh: ieh,
+                score: normalizedScore,
+                totalContribution: totalContribution,
+                details: Object.entries(iehConfig).map(([key, config]) => ({
+                    name: key,
+                    value: config.value,
+                    contribution: config.weight * (config.inverse ? 1 - (config.value / 100) : config.value / config.max)
+                }))
+            };
+        }
+
+        function updateIEHDisplay() {
+            const result = calculateIEH();
+            const gaugeValue = document.getElementById('gaugeValue');
+            const gaugeNeedle = document.getElementById('gaugeNeedle');
+            
+            // Mettre à jour l'affichage
+            gaugeValue.textContent = `${result.ieh} / 99`;
+            
+            // Positionner l'aiguille (position en pourcentage)
+            const needlePosition = (result.ieh / 99) * 100;
+            gaugeNeedle.style.left = `${needlePosition}%`;
+            
+            // Changer la couleur selon le niveau de danger
+            let color, textShadow;
+            if (result.ieh <= 20) {
+                color = '#00ff00'; // Vert - situation stable
+                textShadow = '0 0 20px rgba(0, 255, 0, 0.5)';
+            } else if (result.ieh <= 40) {
+                color = '#7fff00'; // Vert-jaune - préoccupant
+                textShadow = '0 0 20px rgba(127, 255, 0, 0.5)';
+            } else if (result.ieh <= 60) {
+                color = '#ffff00'; // Jaune - dangereux
+                textShadow = '0 0 20px rgba(255, 255, 0, 0.5)';
+            } else if (result.ieh <= 80) {
+                color = '#ff8c00'; // Orange - très dangereux
+                textShadow = '0 0 20px rgba(255, 140, 0, 0.5)';
+            } else {
+                color = '#ff0000'; // Rouge - critique
+                textShadow = '0 0 20px rgba(255, 0, 0, 0.8)';
+            }
+            
+            gaugeValue.style.color = color;
+            gaugeValue.style.textShadow = textShadow;
+            
+            return result;
+        }
+
+        function updateMetrics() {
+            // Simuler de légères variations dans les métriques
+            const variations = {
+                guerresEntrePays: () => Math.max(0, Math.min(10, iehConfig.guerresEntrePays.value + (Math.random() - 0.5) * 0.2)),
+                conflitsInternes: () => Math.max(0, Math.min(50, iehConfig.conflitsInternes.value + (Math.random() - 0.5) * 2)),
+                temperatureAnomalie: () => Math.max(0, Math.min(5, iehConfig.temperatureAnomalie.value + (Math.random() - 0.5) * 0.1)),
+                tensionNucleaire: () => Math.max(0, Math.min(10, iehConfig.tensionNucleaire.value + (Math.random() - 0.5) * 0.5)),
+                pandemiesActives: () => Math.max(0, Math.min(10, iehConfig.pandemiesActives.value + (Math.random() - 0.5) * 0.3)),
+                risqueIA: () => Math.max(0, Math.min(10, iehConfig.risqueIA.value + (Math.random() - 0.5) * 0.3))
+            };
+            
+            // Appliquer les variations
+            for (const [key, fn] of Object.entries(variations)) {
+                if (iehConfig[key]) {
+                    iehConfig[key].value = parseFloat(fn().toFixed(1));
+                }
+            }
+            
+            // Mettre à jour l'affichage des métriques dans l'interface
+            const guerresElement = document.querySelector('.global-stats .stat-item:nth-child(2) .stat-value');
+            if (guerresElement) guerresElement.textContent = Math.round(iehConfig.guerresEntrePays.value + iehConfig.conflitsInternes.value);
+            
+            const tempElement = document.querySelector('.temp-display');
+            if (tempElement) tempElement.textContent = `+${iehConfig.temperatureAnomalie.value.toFixed(1)}°C`;
+            
+            // Calculer et afficher le nouvel IEH
+            updateIEHDisplay();
+        }
+
         // Charger les nouvelles au démarrage
         fetchFrance24News();
         
@@ -670,6 +833,48 @@
         
         // Mélanger l'ordre d'affichage toutes les 2 minutes
         setInterval(updateNewsTicker, 120000);
+        
+        // Génération des graduations de la jauge
+        function generateTicks() {
+            const ticksContainer = document.getElementById('gaugeTicks');
+            if (!ticksContainer) return;
+            
+            for (let i = 1; i <= 99; i++) {
+                const tick = document.createElement('div');
+                tick.className = 'tick';
+                tick.style.left = `${(i / 99) * 100}%`;
+                if (i % 10 === 0) {
+                    tick.style.height = '25px';
+                    tick.style.width = '3px';
+                    tick.style.background = '#ffffff';
+                    
+                    // Ajouter les numéros pour les graduations principales
+                    const label = document.createElement('div');
+                    label.style.cssText = `
+                        position: absolute;
+                        top: 30px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        color: rgba(255, 255, 255, 0.8);
+                        font-size: 0.7rem;
+                        font-weight: 700;
+                    `;
+                    label.textContent = i;
+                    tick.appendChild(label);
+                }
+                ticksContainer.appendChild(tick);
+            }
+        }
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateTicks();
+            updateIEHDisplay();
+        });
+
+        // Calculer l'IEH initial et le mettre à jour régulièrement
+        updateIEHDisplay();
+        setInterval(updateMetrics, 30000); // Mise à jour toutes les 30 secondes
     </script>
 </body>
 </html>
