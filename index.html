@@ -618,8 +618,20 @@
             background: rgba(15, 25, 45, 0.9);
             border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             backdrop-filter: blur(10px);
+            width: 45px;
+            height: 45px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .audio-controls.expanded {
+            width: 160px;
+            padding: 10px;
         }
 
         .audio-controls button {
@@ -632,6 +644,11 @@
             font-family: 'Orbitron', monospace;
             font-size: 0.8rem;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .audio-controls button:hover {
@@ -641,6 +658,20 @@
 
         .audio-controls button:active {
             transform: scale(0.95);
+        }
+
+        .audio-icon {
+            font-size: 1.2rem;
+        }
+
+        .audio-text {
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .audio-controls.expanded .audio-text {
+            opacity: 1;
         }
 
         /* Credits styling */
@@ -686,8 +717,7 @@
             box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
         }
 
-        .news-ticker::before {
-            content: '🚨 BREAKING NEWS';
+        .news-ticker-header {
             background: rgba(0, 0, 0, 0.8);
             padding: 0 15px;
             height: 100%;
@@ -696,6 +726,20 @@
             flex-shrink: 0;
             border-right: 2px solid rgba(255, 255, 255, 0.5);
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            gap: 20px;
+        }
+
+        .breaking-news {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .live-status {
+            font-size: 0.8rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .news-ticker {
@@ -744,6 +788,13 @@
             .audio-controls {
                 top: 60px;
                 right: 10px;
+                padding: 6px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .audio-controls.expanded {
+                width: 140px;
                 padding: 8px;
             }
 
@@ -755,6 +806,19 @@
             .news-ticker {
                 height: 40px;
                 font-size: 0.8rem;
+            }
+
+            .news-ticker-header {
+                padding: 0 10px;
+                gap: 10px;
+            }
+
+            .breaking-news {
+                font-size: 0.7rem;
+            }
+
+            .live-status {
+                font-size: 0.6rem;
             }
 
             .news-content {
@@ -771,8 +835,11 @@
     </audio>
 
     <!-- Audio Controls -->
-    <div class="audio-controls">
-        <button id="audioToggle" onclick="toggleAudio()">🔊 AUDIO ON</button>
+    <div class="audio-controls" id="audioControls" onclick="toggleAudioPanel()">
+        <button id="audioToggle" onclick="toggleAudio(event)">
+            <span class="audio-icon">�</span>
+            <span class="audio-text">AUDIO OFF</span>
+        </button>
     </div>
 
     <!-- Credits -->
@@ -782,6 +849,13 @@
 
     <!-- News Ticker -->
     <div class="news-ticker">
+        <div class="news-ticker-header">
+            <span class="breaking-news">🚨 INFOS EN DIRECT</span>
+            <span class="live-status" id="liveStatus">
+                <span class="status-indicator status-cached"></span>
+                <span>CHARGEMENT...</span>
+            </span>
+        </div>
         <div class="news-content" id="newsContent">
             <span class="news-item">🔄 Chargement des dernières nouvelles France24...</span>
         </div>
@@ -942,10 +1016,24 @@
         // Initialize audio
         audio.volume = 0.3; // Volume à 30% pour ne pas être trop fort
 
-        function toggleAudio() {
+        function toggleAudioPanel() {
+            const audioControls = document.getElementById('audioControls');
+            if (audioControls) {
+                audioControls.classList.toggle('expanded');
+            }
+        }
+
+        function toggleAudio(event) {
+            event.stopPropagation(); // Empêche la propagation vers toggleAudioPanel
+            
+            const audioToggle = document.getElementById('audioToggle');
+            const audioIcon = audioToggle.querySelector('.audio-icon');
+            const audioText = audioToggle.querySelector('.audio-text');
+            
             if (audioEnabled) {
                 audio.pause();
-                audioToggle.innerHTML = '🔇 AUDIO OFF';
+                audioIcon.textContent = '🔇';
+                audioText.textContent = 'AUDIO OFF';
                 audioToggle.style.background = 'rgba(255, 100, 100, 0.2)';
                 audioToggle.style.borderColor = 'rgba(255, 100, 100, 0.5)';
                 audioToggle.style.color = '#ff6464';
@@ -955,7 +1043,8 @@
                     console.log('Erreur lecture audio:', e);
                     alert('Impossible de lire l\'audio. Votre navigateur bloque peut-être la lecture automatique.');
                 });
-                audioToggle.innerHTML = '🔊 AUDIO ON';
+                audioIcon.textContent = '🔊';
+                audioText.textContent = 'AUDIO ON';
                 audioToggle.style.background = 'rgba(0, 255, 255, 0.2)';
                 audioToggle.style.borderColor = 'rgba(0, 255, 255, 0.5)';
                 audioToggle.style.color = '#00ffff';
@@ -1037,28 +1126,16 @@
         }
 
         function updateNewsStatus(status, color) {
-            const ticker = document.querySelector('.news-ticker');
-            const statusElement = ticker.querySelector('::before') || ticker;
-            
-            // Créer un indicateur de statut si il n'existe pas
-            let statusIndicator = document.getElementById('newsStatus');
-            if (!statusIndicator) {
-                statusIndicator = document.createElement('div');
-                statusIndicator.id = 'newsStatus';
-                statusIndicator.style.cssText = `
-                    position: absolute;
-                    right: 10px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    font-size: 0.7rem;
-                    opacity: 0.8;
-                    display: flex;
-                    align-items: center;
-                `;
-                ticker.appendChild(statusIndicator);
+            const liveStatus = document.getElementById('liveStatus');
+            if (liveStatus) {
+                const indicator = liveStatus.querySelector('.status-indicator');
+                const text = liveStatus.querySelector('span:last-child');
+                
+                if (indicator && text) {
+                    indicator.className = `status-indicator ${color === '#00ff00' ? 'status-live' : 'status-cached'}`;
+                    text.textContent = status;
+                }
             }
-            
-            statusIndicator.innerHTML = `<span style="color: ${color}">● ${status}</span>`;
         }
 
         // Système de calcul IEH (Indice d'Extinction de l'Humanité)
