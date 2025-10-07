@@ -609,68 +609,71 @@
                 font-size: 2rem;
             }
         }
-        /* Audio controls styling */
-        .audio-controls {
-            position: fixed;
-            top: 70px;
+        /* Audio controls styling for IEH section */
+        .audio-controls-ieh {
+            position: absolute;
+            bottom: 20px;
             right: 20px;
             z-index: 1000;
             background: rgba(15, 25, 45, 0.9);
             border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 8px;
-            padding: 8px;
+            border-radius: 6px;
+            padding: 6px;
             backdrop-filter: blur(10px);
-            width: 45px;
-            height: 45px;
+            width: 35px;
+            height: 35px;
             transition: all 0.3s ease;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: flex-start;
+            cursor: pointer;
         }
 
-        .audio-controls.expanded {
-            width: 160px;
-            padding: 10px;
+        .audio-controls-ieh.expanded {
+            width: 120px;
+            padding: 8px;
         }
 
-        .audio-controls button {
+        .audio-controls-ieh button {
             background: rgba(0, 255, 255, 0.2);
             border: 1px solid rgba(0, 255, 255, 0.5);
             color: #00ffff;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 4px 6px;
+            border-radius: 3px;
             cursor: pointer;
             font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             transition: all 0.3s ease;
             white-space: nowrap;
-            min-width: 35px;
+            min-width: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 25px;
         }
 
-        .audio-controls button:hover {
+        .audio-controls-ieh button:hover {
             background: rgba(0, 255, 255, 0.4);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
         }
 
-        .audio-controls button:active {
+        .audio-controls-ieh button:active {
             transform: scale(0.95);
         }
 
-        .audio-icon {
-            font-size: 1.2rem;
+        .audio-controls-ieh .audio-icon {
+            font-size: 1rem;
         }
 
-        .audio-text {
-            margin-left: 8px;
+        .audio-controls-ieh .audio-text {
+            margin-left: 6px;
             opacity: 0;
             transition: opacity 0.3s ease;
+            font-size: 0.6rem;
         }
 
-        .audio-controls.expanded .audio-text {
+        .audio-controls-ieh.expanded .audio-text {
             opacity: 1;
         }
 
@@ -761,6 +764,8 @@
             padding-left: 20px;
             display: flex;
             align-items: center;
+            mask: linear-gradient(to right, transparent 0%, black 200px, black calc(100% - 100px), transparent 100%);
+            -webkit-mask: linear-gradient(to right, transparent 0%, black 200px, black calc(100% - 100px), transparent 100%);
         }
 
         @keyframes scroll-left {
@@ -785,17 +790,27 @@
                 padding-top: 50px;
             }
 
-            .audio-controls {
-                top: 60px;
-                right: 10px;
-                padding: 6px;
-                width: 40px;
-                height: 40px;
+            .audio-controls-ieh {
+                bottom: 15px;
+                right: 15px;
+                padding: 4px;
+                width: 30px;
+                height: 30px;
             }
 
-            .audio-controls.expanded {
-                width: 140px;
-                padding: 8px;
+            .audio-controls-ieh.expanded {
+                width: 100px;
+                padding: 6px;
+            }
+
+            .audio-controls-ieh button {
+                height: 20px;
+                min-width: 20px;
+                font-size: 0.6rem;
+            }
+
+            .audio-controls-ieh .audio-icon {
+                font-size: 0.8rem;
             }
 
             .credits {
@@ -835,12 +850,9 @@
     </audio>
 
     <!-- Audio Controls -->
-    <div class="audio-controls" id="audioControls" onclick="toggleAudioPanel()">
-        <button id="audioToggle" onclick="toggleAudio(event)">
+
             <span class="audio-icon">�</span>
-            <span class="audio-text">AUDIO OFF</span>
-        </button>
-    </div>
+
 
     <!-- Credits -->
     <div class="credits">
@@ -890,6 +902,14 @@
                 </div>
             </div>
             <div class="gauge-value">22 / 99</div>
+            
+            <!-- Audio Controls -->
+            <div class="audio-controls-ieh" id="audioControlsIEH" onclick="toggleAudioPanel()">
+                <button id="audioToggle" onclick="toggleAudio(event)">
+                    <span class="audio-icon">🔇</span>
+                    <span class="audio-text">AUDIO OFF</span>
+                </button>
+            </div>
         </div>
 
         <div class="section global-section">
@@ -1017,7 +1037,7 @@
         audio.volume = 0.3; // Volume à 30% pour ne pas être trop fort
 
         function toggleAudioPanel() {
-            const audioControls = document.getElementById('audioControls');
+            const audioControls = document.getElementById('audioControlsIEH');
             if (audioControls) {
                 audioControls.classList.toggle('expanded');
             }
