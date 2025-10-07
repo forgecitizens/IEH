@@ -55,9 +55,10 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
+            overflow: visible; /* Permet à la pop-up de sortir */
         }
 
+        /* Override pour la ligne de scan qui a besoin d'overflow hidden */
         .section::before {
             content: '';
             position: absolute;
@@ -67,7 +68,10 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, #00ffff, transparent);
             animation: scanLine 3s infinite;
+            overflow: hidden; /* Contient seulement la ligne de scan */
         }
+
+
 
         @keyframes scanLine {
             0% { left: -100%; }
@@ -160,6 +164,7 @@
 
         .global-section {
             grid-area: global;
+            overflow: visible; /* Permet à la pop-up de sortir du container */
         }
 
         .section-title {
@@ -203,10 +208,9 @@
 
         /* Population popup styling */
         .population-popup {
-            position: absolute;
-            top: -150px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed; /* Utilisation de fixed pour sortir complètement du flow */
+            top: auto;
+            left: auto;
             background: rgba(15, 25, 45, 0.95);
             border: 2px solid rgba(0, 255, 255, 0.6);
             border-radius: 12px;
@@ -217,8 +221,13 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: 1000;
+            z-index: 9999; /* Z-index très élevé pour être au-dessus de tout */
             font-family: 'Orbitron', monospace;
+            pointer-events: none; /* Évite les problèmes d'interaction */
+        }
+
+        .stat-item:hover .population-popup {
+            pointer-events: auto; /* Réactive les interactions au hover */
         }
 
         .population-popup::before {
@@ -232,6 +241,7 @@
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
             border-top: 8px solid rgba(0, 255, 255, 0.6);
+            transition: all 0.3s ease;
         }
 
         .population-popup::after {
@@ -245,12 +255,27 @@
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
             border-top: 6px solid rgba(15, 25, 45, 0.95);
+            transition: all 0.3s ease;
+        }
+
+        /* Variante quand la pop-up est en bas (flèche vers le haut) */
+        .population-popup.bottom::before {
+            bottom: auto;
+            top: -8px;
+            border-top: none;
+            border-bottom: 8px solid rgba(0, 255, 255, 0.6);
+        }
+
+        .population-popup.bottom::after {
+            bottom: auto;
+            top: -6px;
+            border-top: none;
+            border-bottom: 6px solid rgba(15, 25, 45, 0.95);
         }
 
         .stat-item:hover .population-popup {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(-5px);
         }
 
         .popup-title {
@@ -1166,12 +1191,58 @@
             }
         }
 
-        // Initialisation au chargement de la page
+        // Gestion du positionnement dynamique de la pop-up
+        function positionPopup() {
+            const populationItem = document.querySelector('.population-item');
+            const popup = document.getElementById('populationPopup');
+            
+            if (!populationItem || !popup) return;
+            
+            const rect = populationItem.getBoundingClientRect();
+            const popupRect = popup.getBoundingClientRect();
+            
+            // Position de base : au-dessus de l'élément, centré
+            let top = rect.top - popupRect.height - 20;
+            let left = rect.left + (rect.width / 2) - (popupRect.width / 2);
+            
+            // Ajustements si la pop-up sort de l'écran
+            if (top < 10) {
+                // Si pas assez de place en haut, afficher en bas
+                top = rect.bottom + 10;
+                popup.classList.add('bottom');
+            } else {
+                popup.classList.remove('bottom');
+            }
+            
+            if (left < 10) {
+                // Si trop à gauche
+                left = 10;
+            } else if (left + popupRect.width > window.innerWidth - 10) {
+                // Si trop à droite
+                left = window.innerWidth - popupRect.width - 10;
+            }
+            
+            popup.style.top = `${top}px`;
+            popup.style.left = `${left}px`;
+        }
+
+        // Event listeners pour le positionnement de la pop-up
         document.addEventListener('DOMContentLoaded', function() {
             generateTicks();
             updateIEHDisplay();
             // Initialiser la pop-up avec les données par défaut
             updatePopulationPopup(8100000000, '2024', false);
+            
+            // Ajouter les event listeners pour la pop-up
+            const populationItem = document.querySelector('.population-item');
+            if (populationItem) {
+                populationItem.addEventListener('mouseenter', function() {
+                    setTimeout(positionPopup, 10); // Petit délai pour que le CSS soit appliqué
+                });
+            }
+            
+            // Repositionner sur redimensionnement de fenêtre
+            window.addEventListener('resize', positionPopup);
         });
 
         // Calculer l'IEH initial et le mettre à jour régulièrement
