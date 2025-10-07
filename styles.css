@@ -32,17 +32,12 @@ body::before {body::before {
 
     top: 0;    top: 0;
 
-    left: 0;    left: 0;
-
-    width: 100%;    width: 100%;
-
-    height: 100%;    height: 100%;
-
-    background-image:     background-image: 
-
-        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-
-        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
 
     background-size: 50px 50px;    background-size: 50px 50px;
 
@@ -273,16 +268,12 @@ body::before {body::before {
     animation: needleGlow 2s ease-in-out infinite alternate;}
 
     transition: left 2s ease-out;
+}
 
-}@keyframes needleGlow {
-
+@keyframes needleGlow {
     0% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); }
-
-@keyframes needleGlow {    100% { box-shadow: 0 0 25px rgba(0, 255, 255, 1); }
-
-    0% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); }}
-
     100% { box-shadow: 0 0 25px rgba(0, 255, 255, 1); }
+}
 
 }.world-commentary {
 
@@ -462,15 +453,12 @@ body::before {body::before {
 
     animation: data-update 1s ease-in-out;
 
-}@keyframes data-update {
+}
 
+@keyframes data-update {
     0%, 100% { opacity: 1; }
-
-@keyframes data-update {    50% { opacity: 0.7; transform: scale(1.05); }
-
-    0%, 100% { opacity: 1; }}
-
     50% { opacity: 0.7; transform: scale(1.05); }
+}
 
 }/* Population popup styling */
 
@@ -772,15 +760,12 @@ body::before {body::before {
 
     background: #ffaa00;
 
-}@keyframes pulse-dot {
+}
 
+@keyframes pulse-dot {
     0%, 100% { opacity: 1; }
-
-@keyframes pulse-dot {    50% { opacity: 0.5; }
-
-    0%, 100% { opacity: 1; }}
-
     50% { opacity: 0.5; }
+}
 
 }/* Oil reserves map modal */
 
@@ -2687,17 +2672,14 @@ body::before {body::before {
 
     animation: pulse-status 2s ease-in-out infinite alternate;
 
-}@keyframes pulse-status {
+}
 
+@keyframes pulse-status {
     0% { opacity: 0.6; }
-
-@keyframes pulse-status {    100% { opacity: 1; }
-
-    0% { opacity: 0.6; }}
-
     100% { opacity: 1; }
+}
 
-}.news-content {
+.news-content {
 
     white-space: nowrap;
 
@@ -2717,21 +2699,18 @@ body::before {body::before {
     mask: linear-gradient(to right, transparent 0%, black 100px, black calc(100% - 100px), transparent 100%);}
 
     -webkit-mask: linear-gradient(to right, transparent 0%, black 100px, black calc(100% - 100px), transparent 100%);
-
-}@keyframes scroll-left {
-
-    0% { transform: translateX(100%); }
+    mask: linear-gradient(to right, transparent 0%, black 100px, black calc(100% - 100px), transparent 100%);
+}
 
 @keyframes scroll-left {
     0% { transform: translateX(100%); }
     100% { transform: translateX(-100%); }
-}.news-item {
+}
 
+.news-item {
+    display: inline-block;
     margin-right: 80px;
-
-.news-item {    display: inline-block;
-
-    margin-right: 80px;}
+}
 
     display: inline-block;
 
