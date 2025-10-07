@@ -369,27 +369,39 @@
         
         // Fonction accordéon - SIMPLE ET DIRECTE
         function toggleContinentSection(id) {
-            console.log('Toggle continent:', id);
+            console.log('🔄 Toggle continent:', id);
             
             const textElement = document.getElementById(id + '-text');
             if (!textElement) {
-                console.error('Element not found:', id + '-text');
+                console.error('❌ Element not found:', id + '-text');
                 return;
             }
             
             const parentCard = textElement.parentElement;
             const isExpanded = textElement.classList.contains('expanded');
             
+            console.log('📍 Element trouvé:', textElement);
+            console.log('📍 Parent card:', parentCard);
+            console.log('📍 Est expanded?', isExpanded);
+            console.log('📍 Classes actuelles:', textElement.className);
+            
             if (isExpanded) {
                 // Fermer l'accordéon
                 textElement.classList.remove('expanded');
                 parentCard.classList.remove('expanded');
-                console.log('Fermeture section:', id);
+                console.log('❌ Fermeture section:', id);
             } else {
                 // Ouvrir l'accordéon  
                 textElement.classList.add('expanded');
                 parentCard.classList.add('expanded');
-                console.log('Ouverture section:', id);
+                console.log('✅ Ouverture section:', id);
+                console.log('✅ Classes après ajout:', textElement.className);
+                
+                // Vérifier le style appliqué
+                const computedStyle = window.getComputedStyle(textElement);
+                console.log('🎨 Max-height computed:', computedStyle.maxHeight);
+                console.log('🎨 Opacity computed:', computedStyle.opacity);
+                console.log('🎨 Display computed:', computedStyle.display);
             }
         }
         
