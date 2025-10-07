@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Planétaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Audio Background -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="sounds/212025__qubodup__sci-fi-laboratory-ambience.ogg" type="audio/ogg">
+        <source src="sounds/212025__qubodup__sci-fi-laboratory-ambience.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Credits -->
+    <div class="credits">
+        Audio: <a href="http://freesound.org/people/qubodup/sounds/212025">Sci-fi Laboratory Ambience</a> by <a href="http://freesound.org/people/qubodup">Iwan Gabovitch</a> under <a href="http://creativecommons.org/licenses/by/3.0/legalcode">CC-BY 3.0 License</a> with sounds by wolick, swiftoid, Diboz
+    </div>
+
+    <!-- News Header -->
+    <div class="news-header">
+        <span class="breaking-news">🚨 INFOS EN DIRECT</span>
+        <span class="live-status" id="liveStatus">
+            <span class="status-indicator status-cached"></span>
+            <span>FRANCE 24 LIVE</span>
+        </span>
+    </div>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="news-content" id="newsContent">
+            <span class="news-item">🔄 Chargement des dernières nouvelles France24...</span>
+        </div>
+    </div>
+
+    <!-- Oil Map Modal -->
+    <div class="oil-map-modal" id="oilMapModal">
+        <div class="oil-map-container">
+            <div class="oil-map-header">
+                <div class="oil-map-title">🛢️ Réserves Mondiales de Pétrole</div>
+                <button class="oil-map-close" onclick="closeOilMap()">×</button>
+            </div>
+            <iframe src="https://ourworldindata.org/grapher/oil-proved-reserves?tab=map" 
+                    loading="lazy" 
+                    style="width: 100%; height: 600px; border: 0px none;" 
+                    allow="web-share; clipboard-write"
+                    class="oil-map-iframe">
+            </iframe>
+            <div class="oil-map-instructions">
+                Cliquez sur × pour fermer • Données: Our World in Data
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflicts Chart Modal -->
+    <div class="conflicts-chart-modal" id="conflictsChartModal">
+        <div class="conflicts-chart-container">
+            <div class="conflicts-chart-header">
+                <div class="conflicts-chart-title">⚔️ Conflits Armés dans le Monde</div>
+                <button class="conflicts-chart-close" onclick="closeConflictsChart()">×</button>
+            </div>
+            <iframe src="https://ourworldindata.org/grapher/number-of-armed-conflicts?tab=chart" 
+                    loading="lazy" 
+                    style="width: 100%; height: 600px; border: 0px none;" 
+                    allow="web-share; clipboard-write"
+                    class="conflicts-chart-iframe">
+            </iframe>
+            <div class="conflicts-chart-instructions">
+                Cliquez sur × pour fermer • Données: Our World in Data
+            </div>
+        </div>
+    </div>
+
+    <!-- Gas Map Modal -->
+    <div class="gas-map-modal" id="gasMapModal">
+        <div class="gas-map-container">
+            <div class="gas-map-header">
+                <div class="gas-map-title">🔥 Réserves de Gaz Naturel</div>
+                <button class="gas-map-close" onclick="closeGasMap()">×</button>
+            </div>
+            <iframe src="https://ourworldindata.org/grapher/natural-gas-proved-reserves?tab=map" 
+                    loading="lazy" 
+                    style="width: 100%; height: 600px; border: 0px none;" 
+                    allow="web-share; clipboard-write"
+                    class="gas-map-iframe">
+            </iframe>
+            <div class="gas-map-instructions">
+                Cliquez sur × pour fermer • Données: Our World in Data
+            </div>
+        </div>
+    </div>
+
+    <!-- Climate Data Modal -->
+    <div class="climate-data-modal" id="climateDataModal">
+        <div class="climate-data-container">
+            <div class="climate-data-header">
+                <div class="climate-data-title">🌡️ Données Climatiques Mondiales</div>
+                <button class="climate-data-close" onclick="closeClimateData()">×</button>
+            </div>
+            
+            <div class="climate-sections">
+                <div class="climate-counter-section">
+                    <h3 class="climate-section-title">🌡️ Température Globale Moyenne</h3>
+                    <div class="climate-counter-container">
+                        <iframe title='World average temperature (°C)' 
+                                src='https://www.theworldcounts.com/embeds/counters/21?background_color=white&color=black&font_family=%22Helvetica+Neue%22%2C+Arial%2C+sans-serif&font_size=14' 
+                                style='border: none' 
+                                height='100' 
+                                width='300'>
+                        </iframe>
+                    </div>
+                </div>
+                
+                <div class="climate-counter-section">
+                    <h3 class="climate-section-title">🌊 Montée du Niveau des Océans</h3>
+                    <div class="climate-counter-container">
+                        <iframe title='Rise in sea levels (cm)' 
+                                src='https://www.theworldcounts.com/embeds/counters/68?background_color=white&color=black&font_family=%22Helvetica+Neue%22%2C+Arial%2C+sans-serif&font_size=14' 
+                                style='border: none' 
+                                height='100' 
+                                width='300'>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="climate-data-instructions">
+                Cliquez sur × pour fermer • Données: The World Counts
+            </div>
+        </div>
+    </div>
+
+    <!-- Geopolitical Analysis Modal -->
+    <div class="geopolitical-modal" id="geopoliticalModal">
+        <div class="geopolitical-container">
+            <div class="geopolitical-header">
+                <div class="geopolitical-title">🌍 Analyse Géopolitique Mondiale - Octobre 2025</div>
+                <button class="geopolitical-close" onclick="closeGeopoliticalAnalysis()">×</button>
+            </div>
+            
+            <div class="geopolitical-sections">
+                <div class="continent-card" onclick="toggleContinentSection('africa')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🌍 Situation en Afrique</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="africa-text" style="display: none;">
+                        <p>En octobre 2025, l'Afrique fait face à une situation géopolitique marquée par une croissance économique résiliente, projetée à 3,9 % pour l'année, malgré des vents contraires mondiaux comme les tensions commerciales et les conflits armés. Des crises persistantes, telles que la guerre civile au Soudan et les instabilités post-électorales au Mozambique et en Mauritanie, alimentent des frustrations sociales et des risques sécuritaires, exacerbés par l'ingérence extérieure des Émirats arabes unis et de la Russie.</p>
+                        <p>L'Union africaine renforce ses partenariats avec l'ONU pour la paix et la sécurité, tandis que des élections à venir au Cameroun, en Côte d'Ivoire et en Tanzanie pourraient éroder davantage la démocratie. Au milieu de ces défis, l'Afrique de l'Est mène la croissance à 5,9 %, mais la pauvreté, le changement climatique et la gouvernance faible menacent une stabilité durable, avec des appels croissants à une intégrité électorale accrue pour soutenir le développement.</p>
+                    </div>
+                </div>
+
+                <div class="continent-card" onclick="toggleContinentSection('asia')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🏯 Situation en Asie</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="asia-text" style="display: none;">
+                        <p>L'Asie en octobre 2025 est au cœur d'une rivalité géopolitique intense entre les États-Unis et la Chine, amplifiée par le retour de Donald Trump à la Maison Blanche, qui promet une escalade des guerres commerciales et des tensions sur les minéraux critiques. Des points chauds comme la mer de Chine méridionale, Taïwan et la péninsule coréenne risquent des confrontations non militaires accrues, tandis que la Corée du Nord consolide son pacte de défense mutuelle avec la Russie, déployant des troupes en Ukraine.</p>
+                        <p>Le Sud-Est asiatique navigue entre ces dynamiques, avec des initiatives comme l'adhésion potentielle de la Chine au CPTPP et des élections en Australie et à Singapour testant la stabilité régionale. Malgré une reprise fragile de la consommation, les politiques protectionnistes américaines et la concurrence en IA redessinent les chaînes d'approvisionnement, positionnant l'Asie comme le moteur de croissance mondial mais vulnérable à une fragmentation accrue.</p>
+                    </div>
+                </div>
+
+                <div class="continent-card" onclick="toggleContinentSection('europe')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🏰 Situation en Europe</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="europe-text" style="display: none;">
+                        <p>En octobre 2025, l'Europe est confrontée à une "récession géopolitique" où le conflit en Ukraine persiste, forçant une diversification énergétique et une augmentation des dépenses de défense face à une Russie affaiblie mais agressive. Les tensions commerciales avec les États-Unis sous Trump, incluant des menaces de tarifs douaniers, et avec la Chine sur les véhicules électriques, accentuent les divisions internes au sein de l'UE, limitée par des contraintes budgétaires comme la "brake" allemande sur la dette.</p>
+                        <p>La Commission européenne, sous Ursula von der Leyen, pousse pour une "Commission géopolitique" renforçant la souveraineté économique et la statecraft défensive, tandis que des élections au Canada et en Irlande ajoutent de l'incertitude. Malgré une croissance faible, l'Europe cherche à équilibrer ses alliances atlantiques et à contrer l'influence russe et chinoise, avec une focalisation sur la cybersécurité et l'IA pour préserver sa compétitivité globale.</p>
+                    </div>
+                </div>
+
+                <div class="continent-card" onclick="toggleContinentSection('northAmerica')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🗽 Situation en Amérique du Nord</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="northAmerica-text" style="display: none;">
+                        <p>L'Amérique du Nord en octobre 2025 est dominée par l'agenda imprévisible de la seconde administration Trump, qui priorise un isolationnisme transactionnel avec des pressions sur les alliés pour plus de dépenses de défense et des négociations de cessez-le-feu en Ukraine, tout en imposant des tarifs massifs sur la Chine et potentiellement l'Europe. Les États-Unis consolident leur leadership en IA et biotechnologies, mais font face à des risques cybernétiques accrus et à une concurrence géoéconomique fragmentant les chaînes d'approvisionnement.</p>
+                        <p>Au Canada, des élections fédérales en octobre pourraient redéfinir les relations avec Washington, tandis que le Mexique gère les flux migratoires et commerciaux sous pression. Malgré une croissance modérée, la région navigue des tensions internes sur l'énergie et le climat, positionnant l'Amérique du Nord comme pivot central d'une reconfiguration globale des alliances et du commerce.</p>
+                    </div>
+                </div>
+
+                <div class="continent-card" onclick="toggleContinentSection('southAmerica')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🌎 Situation en Amérique du Sud</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="southAmerica-text" style="display: none;">
+                        <p>En octobre 2025, l'Amérique du Sud connaît une croissance modérée d'environ 2,5 %, boostée par des opportunités dans les minéraux pour la transition énergétique, mais menacée par les incendies amazoniens records et la rareté hydrique due au changement climatique. Les tensions géopolitiques s'intensifient avec le retour de Trump, amplifiant les risques migratoires et commerciaux, tandis que les cartels de drogue, enrichis par une production de cocaïne doublée, étendent leur influence vers l'Asie et l'Afrique, alimentant l'instabilité au Pérou et en Colombie.</p>
+                        <p>Des élections au Chili pourraient favoriser les conservateurs, et des leaders comme Nayib Bukele au Salvador inspirent des politiques sécuritaires musclées. Le sommet climatique de l'ONU à Belém, au Brésil, offre une chance de coordination régionale, mais des divisions entre gouvernements de gauche et de droite, couplées à la concurrence sino-américaine pour les ressources, soulignent la vulnérabilité d'une région aux catastrophes environnementales et aux flux illicites.</p>
+                    </div>
+                </div>
+
+                <div class="continent-card" onclick="toggleContinentSection('oceania')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🏝️ Situation en Océanie</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="oceania-text" style="display: none;">
+                        <p>L'Océanie en octobre 2025 émerge comme un théâtre prioritaire de la compétition entre grandes puissances, avec les États-Unis intensifiant leur engagement via la Stratégie Indo-Pacifique pour contrer l'influence chinoise grandissante dans les îles du Pacifique, où Pékin est le troisième donateur d'aide après l'Australie et la Nouvelle-Zélande. Des élections fédérales précoces en Australie et le premier test électoral du Premier ministre singapourien Lawrence Wong testent la résilience régionale face aux tensions en mer de Chine méridionale et aux pactes comme celui entre la Corée du Nord et la Russie.</p>
+                        <p>Le changement climatique, menaçant les États insulaires par la montée des eaux, amplifie les appels à une coopération multilatérale, tandis que la Malaisie préside l'ASEAN et les Îles Salomon le Forum des îles du Pacifique. Malgré une croissance stable, la région gère des défis en cybersécurité et ressources, équilibrant souveraineté et partenariats pour préserver sa stabilité stratégique.</p>
+                    </div>
+                </div>
+
+                <div class="continent-card" onclick="toggleContinentSection('antarctica')" title="Cliquez pour développer">
+                    <h3 class="continent-title">🧊 Situation en Antarctique</h3>
+                    <div class="expand-indicator">▼</div>
+                    <div class="continent-text" id="antarctica-text" style="display: none;">
+                        <p>En octobre 2025, l'Antarctique reste un bastion de coopération scientifique sous le Traité antarctique, mais fait face à des pressions géopolitiques croissantes avec l'essor de la présence chinoise et russe, qui testent les limites de la démilitarisation et de l'interdiction minière via des recherches sur les ressources fossiles et minérales. Des niveaux historiquement bas de glace de mer pour la quatrième année consécutive, dus au réchauffement climatique, accélèrent la fonte des glaciers et menacent la montée des eaux globales, tandis qu'un événement de réchauffement stratosphérique soudain en septembre a fait grimper les températures de plus de 30 °C.</p>
+                        <p>Des expéditions comme celle de l'Australian RSV Nuyina et des études sur les carottes de glace par la British Antarctic Survey soulignent l'urgence scientifique, mais des incidents comme l'évaluation psychologique d'un chercheur sud-africain rappellent les fragilités humaines. Bien que sans conflits armés, la région risque une érosion du statu quo face à des revendications territoriales latentes et à l'intérêt commercial croissant.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="geopolitical-instructions">
+                Cliquez sur × pour fermer • Analyse géopolitique - Octobre 2025
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="section extinction-section">
+            <h1 class="extinction-title">INDICE D'EXTINCTION DE L'HUMANITÉ</h1>
+            <div class="gauge-container">
+                <div class="gauge-background">
+                    <div class="gauge-ticks" id="gaugeTicks"></div>
+                    <div class="gauge-needle" id="gaugeNeedle"></div>
+                </div>
+            </div>
+            <div class="world-commentary world-commentary-hover" onclick="showGeopoliticalAnalysis()" title="Cliquez pour voir l'analyse géopolitique détaillée par continent">
+                <h3 class="commentary-title">État global : Stabilité sous tension</h3>
+                <div class="commentary-text">
+                    <p>L'humanité évolue dans une phase de stabilité fragile. La population mondiale dépasse les huit milliards d'habitants, soutenue par une économie encore fonctionnelle et des ressources énergétiques disponibles, bien que sous pression.</p>
+                    
+                    <p>Les conflits internationaux restent limités : seules quelques guerres inter-étatiques persistent, tandis que la majorité des tensions se concentrent à l'intérieur des frontières. Les grandes puissances maintiennent un fragile équilibre diplomatique, évitant pour l'instant une escalade mondiale.</p>
+                    
+                    <p>Les indicateurs environnementaux demeurent préoccupants, mais les efforts de transition énergétique et les avancées technologiques ralentissent partiellement la dégradation.</p>
+                    
+                    <p>La jauge reste donc dans le vert, signalant que malgré les fractures et les risques émergents, l'humanité conserve encore une marge de sécurité avant le basculement.</p>
+                </div>
+            </div>
+            
+            <!-- Audio Controls -->
+            <div class="audio-controls-ieh" id="audioControlsIEH" onclick="toggleAudioPanel()">
+                <button id="audioToggle" onclick="toggleAudio(event)">
+                    <span class="audio-icon">🔇</span>
+                    <span class="audio-text">AUDIO OFF</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section global-section">
+            <h2 class="section-title">🌍 Statut Global</h2>
+            <div class="global-stats">
+                <div class="stat-item population-item" title="Population mondiale (Banque Mondiale)">
+                    <div class="stat-value" id="populationValue">8.1B</div>
+                    <div class="stat-label">Population 🌍</div>
+                    <div class="population-popup" id="populationPopup">
+                        <div class="popup-title">🌍 Population Mondiale</div>
+                        <div class="popup-data">
+                            <div class="popup-row">
+                                <span class="popup-label">Population exacte:</span>
+                                <span class="popup-value" id="exactPopulation">Chargement...</span>
+                            </div>
+                            <div class="popup-row">
+                                <span class="popup-label">Année de référence:</span>
+                                <span class="popup-value" id="populationYear">-</span>
+                            </div>
+                            <div class="popup-row">
+                                <span class="popup-label">Source:</span>
+                                <span class="popup-value">Banque Mondiale</span>
+                            </div>
+                            <div class="popup-row">
+                                <span class="popup-label">Statut:</span>
+                                <span class="popup-value">
+                                    <span class="status-indicator status-cached" id="statusIndicator"></span>
+                                    <span id="statusText">Données par défaut</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="popup-link">
+                            <a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank" rel="noopener">
+                                🔗 Voir sur worldbank.org
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-item" title="Conflits armés internationaux actifs">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Guerres Actives</div>
+                </div>
+                <div class="stat-item" title="Ressources en situation critique">
+                    <div class="stat-value">847</div>
+                    <div class="stat-label">Ressources Critiques</div>
+                </div>
+                <div class="stat-item" title="Pourcentage de régions stables">
+                    <div class="stat-value">73%</div>
+                    <div class="stat-label">Stabilité Régionale</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section resources-section">
+            <h2 class="section-title">⚡ Ressources & Énergie</h2>
+            <div class="resource-bar oil-resource-hover" onclick="showOilMap()" title="Cliquez pour voir la carte des réserves mondiales">
+                <div class="resource-label">
+                    <span>🛢️ Pétrole</span>
+                    <span>45%</span>
+                </div>
+                <div class="resource-progress">
+                    <div class="resource-fill oil-fill"></div>
+                </div>
+            </div>
+            <div class="resource-bar gas-resource-hover" onclick="showGasMap()" title="Cliquez pour voir la carte des réserves mondiales de gaz naturel">
+                <div class="resource-label">
+                    <span>🔥 Gaz Naturel</span>
+                    <span>62%</span>
+                </div>
+                <div class="resource-progress">
+                    <div class="resource-fill gas-fill"></div>
+                </div>
+            </div>
+            <div class="resource-bar">
+                <div class="resource-label">
+                    <span>💧 Eau Douce</span>
+                    <span>78%</span>
+                </div>
+                <div class="resource-progress">
+                    <div class="resource-fill water-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section climate-section climate-section-hover" onclick="showClimateData()" title="Cliquez pour voir les données climatiques en temps réel">
+            <h2 class="section-title">🌡️ Climat & Biodiversité</h2>
+            <div class="climate-indicator">
+                <div class="stat-label">Anomalie Température</div>
+                <div class="temp-display">+1.8°C</div>
+            </div>
+        </div>
+
+        <div class="section conflicts-section conflicts-section-hover" onclick="showConflictsChart()" title="Cliquez pour voir l'évolution des conflits armés" onmouseenter="playWarSound()" onmouseleave="stopWarSound()">
+            <div class="conflict-subsection">
+                <h3 class="section-title">⚔️ Conflits</h3>
+                <div class="conflict-counter">12</div>
+                <div class="stat-label">Guerres Actives</div>
+                <div class="conflict-counter">47</div>
+                <div class="stat-label">Tensions Internes</div>
+            </div>
+        </div>
+
+        <div class="section tech-risks-section">
+            <div class="conflict-subsection">
+                <h3 class="section-title">☢️ Risques Tech</h3>
+            </div>
+        </div>
+
+        <div class="section health-section">
+            <h2 class="section-title">🧬 Santé & Stabilité</h2>
+            <div class="stat-item">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Pandémies Actives</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">84%</div>
+                <div class="stat-label">Résilience Infrastructure</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script JavaScript externe -->
+    <script src="script.js"></script>
+</body>
+</html>
