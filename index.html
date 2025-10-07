@@ -318,6 +318,63 @@
             text-decoration: underline;
         }
 
+        /* News ticker styling */
+        .news-ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, #ff0000, #ff4500, #ff0000);
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 2000;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 -4px 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .news-ticker::before {
+            content: '🚨 BREAKING NEWS';
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0 15px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            border-right: 2px solid rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .news-content {
+            white-space: nowrap;
+            animation: scroll-left 45s linear infinite;
+            padding-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .news-item {
+            margin-right: 80px;
+            display: inline-block;
+        }
+
+        .news-item::before {
+            content: '●';
+            color: #00ffff;
+            margin-right: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
         @media (max-width: 768px) {
             .audio-controls {
                 top: 10px;
@@ -328,6 +385,16 @@
             .credits {
                 font-size: 0.6rem;
                 max-width: 300px;
+                bottom: 60px; /* Au-dessus du ticker */
+            }
+
+            .news-ticker {
+                height: 40px;
+                font-size: 0.8rem;
+            }
+
+            .news-content {
+                animation-duration: 35s; /* Plus rapide sur mobile */
             }
         }
     </style>
@@ -347,6 +414,20 @@
     <!-- Credits -->
     <div class="credits">
         Audio: <a href="http://freesound.org/people/qubodup/sounds/212025">Sci-fi Laboratory Ambience</a> by <a href="http://freesound.org/people/qubodup">Iwan Gabovitch</a> under <a href="http://creativecommons.org/licenses/by/3.0/legalcode">CC-BY 3.0 License</a> with sounds by wolick, swiftoid, Diboz
+    </div>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="news-content" id="newsContent">
+            <span class="news-item">Tensions nucléaires en hausse : 3 pays placent leurs forces en alerte maximale</span>
+            <span class="news-item">Réchauffement climatique : nouveau record de +2.1°C atteint ce mois</span>
+            <span class="news-item">Crise énergétique mondiale : les réserves de pétrole chutent à 42%</span>
+            <span class="news-item">Pandémie H7N3 : 12 nouveaux foyers détectés en Asie du Sud-Est</span>
+            <span class="news-item">IA militaire : première utilisation autonome signalée dans un conflit</span>
+            <span class="news-item">Effondrement de la biodiversité : 15 espèces déclarées éteintes cette semaine</span>
+            <span class="news-item">Cyber-attaque massive : infrastructures critiques de 8 pays touchées</span>
+            <span class="news-item">Famine climatique : 240 millions de personnes en situation d'urgence alimentaire</span>
+        </div>
     </div>
 
     <div class="dashboard-container">
@@ -488,6 +569,37 @@
             audioToggle.innerHTML = '❌ AUDIO ERROR';
             audioToggle.disabled = true;
         });
+
+        // News ticker functionality
+        const newsItems = [
+            "Tensions nucléaires en hausse : 3 pays placent leurs forces en alerte maximale",
+            "Réchauffement climatique : nouveau record de +2.1°C atteint ce mois",
+            "Crise énergétique mondiale : les réserves de pétrole chutent à 42%",
+            "Pandémie H7N3 : 12 nouveaux foyers détectés en Asie du Sud-Est",
+            "IA militaire : première utilisation autonome signalée dans un conflit",
+            "Effondrement de la biodiversité : 15 espèces déclarées éteintes cette semaine",
+            "Cyber-attaque massive : infrastructures critiques de 8 pays touchées",
+            "Famine climatique : 240 millions de personnes en situation d'urgence alimentaire",
+            "Alerte météorologique : super-typhon de catégorie 6 en formation",
+            "Pénurie d'eau potable : 50 métropoles déclarent l'état d'urgence",
+            "Révolution technologique : premier cerveau artificiel quantique activé",
+            "Crise démocratique : 15 gouvernements suspendent les élections"
+        ];
+
+        function shuffleNews() {
+            const newsContent = document.getElementById('newsContent');
+            const shuffledNews = [...newsItems].sort(() => Math.random() - 0.5);
+            
+            newsContent.innerHTML = shuffledNews.map(item => 
+                `<span class="news-item">${item}</span>`
+            ).join('');
+        }
+
+        // Mélanger les nouvelles toutes les 2 minutes
+        setInterval(shuffleNews, 120000);
+        
+        // Mélanger au chargement
+        shuffleNews();
     </script>
 </body>
 </html>
