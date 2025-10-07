@@ -684,6 +684,126 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* Climate data modal */
+        .climate-data-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .climate-data-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .climate-data-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%);
+            border: 2px solid rgba(0, 255, 127, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 95%;
+            max-height: 95%;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            animation: modal-appear 0.5s ease-out;
+        }
+
+        .climate-data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 127, 0.3);
+        }
+
+        .climate-data-title {
+            color: #00ff7f;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .climate-data-close {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6464;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .climate-data-close:hover {
+            background: rgba(255, 0, 0, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .climate-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .climate-sections {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .climate-counter-section {
+            background: rgba(0, 255, 127, 0.1);
+            border: 1px solid rgba(0, 255, 127, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .climate-section-title {
+            color: #00ff7f;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .climate-counter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+        }
+
+        .climate-data-instructions {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .conflicts-section-hover {
             cursor: pointer;
             transition: all 0.3s ease;
@@ -784,6 +904,23 @@
             font-weight: 900;
             color: #ff4500;
             text-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+        }
+
+        .climate-section-hover {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .climate-section-hover:hover {
+            background: rgba(0, 255, 127, 0.15);
+            border-color: rgba(0, 255, 127, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 255, 127, 0.3);
+        }
+
+        .climate-section-hover:hover .section-title {
+            color: #00ff7f;
+            text-shadow: 0 0 8px rgba(0, 255, 127, 0.6);
         }
 
         .conflicts-section {
@@ -1180,6 +1317,46 @@
         </div>
     </div>
 
+    <!-- Climate Data Modal -->
+    <div class="climate-data-modal" id="climateDataModal">
+        <div class="climate-data-container">
+            <div class="climate-data-header">
+                <div class="climate-data-title">🌡️ Données Climatiques Mondiales</div>
+                <button class="climate-data-close" onclick="closeClimateData()">×</button>
+            </div>
+            
+            <div class="climate-sections">
+                <div class="climate-counter-section">
+                    <h3 class="climate-section-title">🌡️ Température Globale Moyenne</h3>
+                    <div class="climate-counter-container">
+                        <iframe title='World average temperature (°C)' 
+                                src='https://www.theworldcounts.com/embeds/counters/21?background_color=white&color=black&font_family=%22Helvetica+Neue%22%2C+Arial%2C+sans-serif&font_size=14' 
+                                style='border: none' 
+                                height='100' 
+                                width='300'>
+                        </iframe>
+                    </div>
+                </div>
+                
+                <div class="climate-counter-section">
+                    <h3 class="climate-section-title">🌊 Montée du Niveau des Océans</h3>
+                    <div class="climate-counter-container">
+                        <iframe title='Rise in sea levels (cm)' 
+                                src='https://www.theworldcounts.com/embeds/counters/68?background_color=white&color=black&font_family=%22Helvetica+Neue%22%2C+Arial%2C+sans-serif&font_size=14' 
+                                style='border: none' 
+                                height='100' 
+                                width='300'>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="climate-data-instructions">
+                Cliquez sur × pour fermer • Données: The World Counts
+            </div>
+        </div>
+    </div>
+
     <div class="dashboard-container">
         <div class="section extinction-section">
             <h1 class="extinction-title">INDICE D'EXTINCTION DE L'HUMANITÉ</h1>
@@ -1282,7 +1459,7 @@
             </div>
         </div>
 
-        <div class="section climate-section">
+        <div class="section climate-section climate-section-hover" onclick="showClimateData()" title="Cliquez pour voir les données climatiques en temps réel">
             <h2 class="section-title">🌡️ Climat & Biodiversité</h2>
             <div class="climate-indicator">
                 <div class="stat-label">Anomalie Température</div>
@@ -1968,11 +2145,56 @@
             }
         }
 
+        // Gestion de la modale des données climatiques
+        function showClimateData() {
+            const modal = document.getElementById('climateDataModal');
+            if (modal) {
+                // Jouer le son d'ouverture
+                expansionOpenSound.currentTime = 0;
+                expansionOpenSound.play().catch(e => console.log('Erreur son ouverture:', e));
+                
+                // Fixer la position de scroll avant d'ouvrir la modale
+                const scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+                
+                modal.classList.add('show');
+                console.log('🌡️ Ouverture des données climatiques mondiales');
+            }
+        }
+
+        function closeClimateData() {
+            const modal = document.getElementById('climateDataModal');
+            if (modal) {
+                // Jouer le son de fermeture
+                expansionCloseSound.currentTime = 0;
+                expansionCloseSound.play().catch(e => console.log('Erreur son fermeture:', e));
+                
+                modal.classList.remove('show');
+                
+                // Restaurer la position de scroll
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                
+                if (scrollY) {
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                }
+                
+                console.log('🌡️ Fermeture des données climatiques mondiales');
+            }
+        }
+
         // Fermer les modales en cliquant sur le fond
         document.addEventListener('click', function(event) {
             const oilModal = document.getElementById('oilMapModal');
             const conflictsModal = document.getElementById('conflictsChartModal');
             const gasModal = document.getElementById('gasMapModal');
+            const climateModal = document.getElementById('climateDataModal');
             
             if (event.target === oilModal) {
                 closeOilMap();
@@ -1980,6 +2202,8 @@
                 closeConflictsChart();
             } else if (event.target === gasModal) {
                 closeGasMap();
+            } else if (event.target === climateModal) {
+                closeClimateData();
             }
         });
 
@@ -1989,6 +2213,7 @@
                 closeOilMap();
                 closeConflictsChart();
                 closeGasMap();
+                closeClimateData();
             }
         });
 
