@@ -190,6 +190,22 @@
             margin-bottom: 0;
         }
 
+        .world-commentary-hover {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .world-commentary-hover:hover {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4);
+        }
+
+        .world-commentary-hover:hover .commentary-title {
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        }
+
         .global-section {
             grid-area: global;
             overflow: visible; /* Permet à la pop-up de sortir du container */
@@ -830,6 +846,168 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Geopolitical analysis modal */
+        .geopolitical-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .geopolitical-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .geopolitical-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%);
+            border: 2px solid rgba(0, 255, 0, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            animation: modal-appear 0.5s ease-out;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 255, 0, 0.5) rgba(0, 0, 0, 0.2);
+        }
+
+        .geopolitical-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .geopolitical-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .geopolitical-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 0, 0.5);
+            border-radius: 4px;
+        }
+
+        .geopolitical-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 0, 0.7);
+        }
+
+        .geopolitical-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .geopolitical-title {
+            color: #00ff00;
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .geopolitical-close {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6464;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .geopolitical-close:hover {
+            background: rgba(255, 0, 0, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .geopolitical-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .geopolitical-sections {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .geopolitical-container {
+                padding: 20px;
+                max-width: 95%;
+            }
+        }
+
+        .continent-section {
+            background: rgba(0, 255, 0, 0.08);
+            border: 1px solid rgba(0, 255, 0, 0.25);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .continent-section:hover {
+            background: rgba(0, 255, 0, 0.12);
+            border-color: rgba(0, 255, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .continent-title {
+            color: #00ff7f;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            font-family: 'Roboto', sans-serif;
+            text-shadow: 0 0 5px rgba(0, 255, 127, 0.5);
+        }
+
+        .continent-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: justify;
+        }
+
+        .continent-text p {
+            margin: 0 0 12px 0;
+        }
+
+        .continent-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .geopolitical-instructions {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .conflicts-section-hover {
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1392,6 +1570,78 @@
         </div>
     </div>
 
+    <!-- Geopolitical Analysis Modal -->
+    <div class="geopolitical-modal" id="geopoliticalModal">
+        <div class="geopolitical-container">
+            <div class="geopolitical-header">
+                <div class="geopolitical-title">🌍 Analyse Géopolitique Mondiale - Octobre 2025</div>
+                <button class="geopolitical-close" onclick="closeGeopoliticalAnalysis()">×</button>
+            </div>
+            
+            <div class="geopolitical-sections">
+                <div class="continent-section">
+                    <h3 class="continent-title">🌍 Afrique</h3>
+                    <div class="continent-text">
+                        <p>En octobre 2025, l'Afrique fait face à une situation géopolitique marquée par une croissance économique résiliente, projetée à 3,9 % pour l'année, malgré des vents contraires mondiaux comme les tensions commerciales et les conflits armés. Des crises persistantes, telles que la guerre civile au Soudan et les instabilités post-électorales au Mozambique et en Mauritanie, alimentent des frustrations sociales et des risques sécuritaires, exacerbés par l'ingérence extérieure des Émirats arabes unis et de la Russie.</p>
+                        <p>L'Union africaine renforce ses partenariats avec l'ONU pour la paix et la sécurité, tandis que des élections à venir au Cameroun, en Côte d'Ivoire et en Tanzanie pourraient éroder davantage la démocratie. Au milieu de ces défis, l'Afrique de l'Est mène la croissance à 5,9 %, mais la pauvreté, le changement climatique et la gouvernance faible menacent une stabilité durable, avec des appels croissants à une intégrité électorale accrue pour soutenir le développement.</p>
+                    </div>
+                </div>
+
+                <div class="continent-section">
+                    <h3 class="continent-title">🏯 Asie</h3>
+                    <div class="continent-text">
+                        <p>L'Asie en octobre 2025 est au cœur d'une rivalité géopolitique intense entre les États-Unis et la Chine, amplifiée par le retour de Donald Trump à la Maison Blanche, qui promet une escalade des guerres commerciales et des tensions sur les minéraux critiques. Des points chauds comme la mer de Chine méridionale, Taïwan et la péninsule coréenne risquent des confrontations non militaires accrues, tandis que la Corée du Nord consolide son pacte de défense mutuelle avec la Russie, déployant des troupes en Ukraine.</p>
+                        <p>Le Sud-Est asiatique navigue entre ces dynamiques, avec des initiatives comme l'adhésion potentielle de la Chine au CPTPP et des élections en Australie et à Singapour testant la stabilité régionale. Malgré une reprise fragile de la consommation, les politiques protectionnistes américaines et la concurrence en IA redessinent les chaînes d'approvisionnement, positionnant l'Asie comme le moteur de croissance mondial mais vulnérable à une fragmentation accrue.</p>
+                    </div>
+                </div>
+
+                <div class="continent-section">
+                    <h3 class="continent-title">🏰 Europe</h3>
+                    <div class="continent-text">
+                        <p>En octobre 2025, l'Europe est confrontée à une "récession géopolitique" où le conflit en Ukraine persiste, forçant une diversification énergétique et une augmentation des dépenses de défense face à une Russie affaiblie mais agressive. Les tensions commerciales avec les États-Unis sous Trump, incluant des menaces de tarifs douaniers, et avec la Chine sur les véhicules électriques, accentuent les divisions internes au sein de l'UE, limitée par des contraintes budgétaires comme la "brake" allemande sur la dette.</p>
+                        <p>La Commission européenne, sous Ursula von der Leyen, pousse pour une "Commission géopolitique" renforçant la souveraineté économique et la statecraft défensive, tandis que des élections au Canada et en Irlande ajoutent de l'incertitude. Malgré une croissance faible, l'Europe cherche à équilibrer ses alliances atlantiques et à contrer l'influence russe et chinoise, avec une focalisation sur la cybersécurité et l'IA pour préserver sa compétitivité globale.</p>
+                    </div>
+                </div>
+
+                <div class="continent-section">
+                    <h3 class="continent-title">🗽 Amérique du Nord</h3>
+                    <div class="continent-text">
+                        <p>L'Amérique du Nord en octobre 2025 est dominée par l'agenda imprévisible de la seconde administration Trump, qui priorise un isolationnisme transactionnel avec des pressions sur les alliés pour plus de dépenses de défense et des négociations de cessez-le-feu en Ukraine, tout en imposant des tarifs massifs sur la Chine et potentiellement l'Europe. Les États-Unis consolident leur leadership en IA et biotechnologies, mais font face à des risques cybernétiques accrus et à une concurrence géoéconomique fragmentant les chaînes d'approvisionnement.</p>
+                        <p>Au Canada, des élections fédérales en octobre pourraient redéfinir les relations avec Washington, tandis que le Mexique gère les flux migratoires et commerciaux sous pression. Malgré une croissance modérée, la région navigue des tensions internes sur l'énergie et le climat, positionnant l'Amérique du Nord comme pivot central d'une reconfiguration globale des alliances et du commerce.</p>
+                    </div>
+                </div>
+
+                <div class="continent-section">
+                    <h3 class="continent-title">🌎 Amérique du Sud</h3>
+                    <div class="continent-text">
+                        <p>En octobre 2025, l'Amérique du Sud connaît une croissance modérée d'environ 2,5 %, boostée par des opportunités dans les minéraux pour la transition énergétique, mais menacée par les incendies amazoniens records et la rareté hydrique due au changement climatique. Les tensions géopolitiques s'intensifient avec le retour de Trump, amplifiant les risques migratoires et commerciaux, tandis que les cartels de drogue, enrichis par une production de cocaïne doublée, étendent leur influence vers l'Asie et l'Afrique, alimentant l'instabilité au Pérou et en Colombie.</p>
+                        <p>Des élections au Chili pourraient favoriser les conservateurs, et des leaders comme Nayib Bukele au Salvador inspirent des politiques sécuritaires musclées. Le sommet climatique de l'ONU à Belém, au Brésil, offre une chance de coordination régionale, mais des divisions entre gouvernements de gauche et de droite, couplées à la concurrence sino-américaine pour les ressources, soulignent la vulnérabilité d'une région aux catastrophes environnementales et aux flux illicites.</p>
+                    </div>
+                </div>
+
+                <div class="continent-section">
+                    <h3 class="continent-title">🏝️ Océanie</h3>
+                    <div class="continent-text">
+                        <p>L'Océanie en octobre 2025 émerge comme un théâtre prioritaire de la compétition entre grandes puissances, avec les États-Unis intensifiant leur engagement via la Stratégie Indo-Pacifique pour contrer l'influence chinoise grandissante dans les îles du Pacifique, où Pékin est le troisième donateur d'aide après l'Australie et la Nouvelle-Zélande. Des élections fédérales précoces en Australie et le premier test électoral du Premier ministre singapourien Lawrence Wong testent la résilience régionale face aux tensions en mer de Chine méridionale et aux pactes comme celui entre la Corée du Nord et la Russie.</p>
+                        <p>Le changement climatique, menaçant les États insulaires par la montée des eaux, amplifie les appels à une coopération multilatérale, tandis que la Malaisie préside l'ASEAN et les Îles Salomon le Forum des îles du Pacifique. Malgré une croissance stable, la région gère des défis en cybersécurité et ressources, équilibrant souveraineté et partenariats pour préserver sa stabilité stratégique.</p>
+                    </div>
+                </div>
+
+                <div class="continent-section">
+                    <h3 class="continent-title">🧊 Antarctique</h3>
+                    <div class="continent-text">
+                        <p>En octobre 2025, l'Antarctique reste un bastion de coopération scientifique sous le Traité antarctique, mais fait face à des pressions géopolitiques croissantes avec l'essor de la présence chinoise et russe, qui testent les limites de la démilitarisation et de l'interdiction minière via des recherches sur les ressources fossiles et minérales. Des niveaux historiquement bas de glace de mer pour la quatrième année consécutive, dus au réchauffement climatique, accélèrent la fonte des glaciers et menacent la montée des eaux globales, tandis qu'un événement de réchauffement stratosphérique soudain en septembre a fait grimper les températures de plus de 30 °C.</p>
+                        <p>Des expéditions comme celle de l'Australian RSV Nuyina et des études sur les carottes de glace par la British Antarctic Survey soulignent l'urgence scientifique, mais des incidents comme l'évaluation psychologique d'un chercheur sud-africain rappellent les fragilités humaines. Bien que sans conflits armés, la région risque une érosion du statu quo face à des revendications territoriales latentes et à l'intérêt commercial croissant.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="geopolitical-instructions">
+                Cliquez sur × pour fermer • Analyse géopolitique - Octobre 2025
+            </div>
+        </div>
+    </div>
+
     <div class="dashboard-container">
         <div class="section extinction-section">
             <h1 class="extinction-title">INDICE D'EXTINCTION DE L'HUMANITÉ</h1>
@@ -1401,7 +1651,7 @@
                     <div class="gauge-needle" id="gaugeNeedle"></div>
                 </div>
             </div>
-            <div class="world-commentary">
+            <div class="world-commentary world-commentary-hover" onclick="showGeopoliticalAnalysis()" title="Cliquez pour voir l'analyse géopolitique détaillée par continent">
                 <h3 class="commentary-title">État global : Stabilité sous tension</h3>
                 <div class="commentary-text">
                     <p>L'humanité évolue dans une phase de stabilité fragile. La population mondiale dépasse les huit milliards d'habitants, soutenue par une économie encore fonctionnelle et des ressources énergétiques disponibles, bien que sous pression.</p>
@@ -2235,12 +2485,57 @@
             }
         }
 
+        // Gestion de la modale d'analyse géopolitique
+        function showGeopoliticalAnalysis() {
+            const modal = document.getElementById('geopoliticalModal');
+            if (modal) {
+                // Jouer le son d'ouverture
+                expansionOpenSound.currentTime = 0;
+                expansionOpenSound.play().catch(e => console.log('Erreur son ouverture:', e));
+                
+                // Fixer la position de scroll avant d'ouvrir la modale
+                const scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+                
+                modal.classList.add('show');
+                console.log('🌍 Ouverture de l\'analyse géopolitique mondiale');
+            }
+        }
+
+        function closeGeopoliticalAnalysis() {
+            const modal = document.getElementById('geopoliticalModal');
+            if (modal) {
+                // Jouer le son de fermeture
+                expansionCloseSound.currentTime = 0;
+                expansionCloseSound.play().catch(e => console.log('Erreur son fermeture:', e));
+                
+                modal.classList.remove('show');
+                
+                // Restaurer la position de scroll
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                
+                if (scrollY) {
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                }
+                
+                console.log('🌍 Fermeture de l\'analyse géopolitique mondiale');
+            }
+        }
+
         // Fermer les modales en cliquant sur le fond
         document.addEventListener('click', function(event) {
             const oilModal = document.getElementById('oilMapModal');
             const conflictsModal = document.getElementById('conflictsChartModal');
             const gasModal = document.getElementById('gasMapModal');
             const climateModal = document.getElementById('climateDataModal');
+            const geopoliticalModal = document.getElementById('geopoliticalModal');
             
             if (event.target === oilModal) {
                 closeOilMap();
@@ -2250,6 +2545,8 @@
                 closeGasMap();
             } else if (event.target === climateModal) {
                 closeClimateData();
+            } else if (event.target === geopoliticalModal) {
+                closeGeopoliticalAnalysis();
             }
         });
 
@@ -2260,6 +2557,7 @@
                 closeConflictsChart();
                 closeGasMap();
                 closeClimateData();
+                closeGeopoliticalAnalysis();
             }
         });
 
