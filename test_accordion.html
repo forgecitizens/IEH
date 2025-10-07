@@ -18,7 +18,7 @@
                     <div class="continent-card" onclick="toggleContinentSection('africa')" title="Cliquez pour développer">
                         <h3 class="continent-title">🌍 Test Afrique</h3>
                         <div class="expand-indicator">▼</div>
-                        <div class="continent-text" id="africa-text">
+                        <div class="continent-text" id="africa-text" style="display: none;">
                             <p>Ceci est un test de l'accordéon pour l'Afrique. Le texte devrait s'afficher vers le bas et pousser les autres sections.</p>
                             <p>Deuxième paragraphe pour voir l'expansion complète.</p>
                         </div>
@@ -27,7 +27,7 @@
                     <div class="continent-card" onclick="toggleContinentSection('asia')" title="Cliquez pour développer">
                         <h3 class="continent-title">🏯 Test Asie</h3>
                         <div class="expand-indicator">▼</div>
-                        <div class="continent-text" id="asia-text">
+                        <div class="continent-text" id="asia-text" style="display: none;">
                             <p>Test pour l'Asie. Cette section devrait être poussée vers le bas quand l'Afrique est ouverte.</p>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                     <div class="continent-card" onclick="toggleContinentSection('europe')" title="Cliquez pour développer">
                         <h3 class="continent-title">🏰 Test Europe</h3>
                         <div class="expand-indicator">▼</div>
-                        <div class="continent-text" id="europe-text">
+                        <div class="continent-text" id="europe-text" style="display: none;">
                             <p>Test pour l'Europe. Cette section devrait aussi être repoussée vers le bas.</p>
                         </div>
                     </div>
@@ -47,11 +47,20 @@
     <script src="script.js"></script>
     <script>
         console.log("Page de test chargée");
-        // Test de la fonction
-        setTimeout(() => {
-            console.log("Test automatique de l'accordéon...");
-            toggleContinentSection('africa');
-        }, 1000);
+        
+        // Test de la fonction quand la page est chargée
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM chargé, test dans 2 secondes...");
+            setTimeout(() => {
+                console.log("Test automatique de l'accordéon Afrique...");
+                toggleContinentSection('africa');
+                
+                setTimeout(() => {
+                    console.log("Test automatique de l'accordéon Asie...");
+                    toggleContinentSection('asia');
+                }, 2000);
+            }, 2000);
+        });
     </script>
 </body>
 </html>
