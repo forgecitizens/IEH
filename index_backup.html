@@ -7,35 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 75px 0 0 0;
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
-            /* Éviter les scrollbars qui apparaissent/disparaissent */
-            scrollbar-gutter: stable;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .dashboard-container {
+        /* CSS maintenant externalisé dans styles.css */
+    </style>
+</head>
+<body>
             padding: 20px;
             max-width: 1400px;
             margin: 0 auto;
