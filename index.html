@@ -15,6 +15,8 @@
             color: #ffffff;
             min-height: 100vh;
             overflow-x: hidden;
+            /* Éviter les scrollbars qui apparaissent/disparaissent */
+            scrollbar-gutter: stable;
         }
 
         body::before {
@@ -1584,19 +1586,26 @@
             }
         }
 
-        // Gestion du positionnement dynamique de la pop-up
+        // Gestion du positionnement dynamique de la pop-up (version stable)
         function positionPopup() {
             const populationItem = document.querySelector('.population-item');
             const popup = document.getElementById('populationPopup');
             
             if (!populationItem || !popup) return;
             
+            // Éviter les recalculs en boucle qui causent les scrollbars
+            if (popup.dataset.positioning === 'true') return;
+            popup.dataset.positioning = 'true';
+            
             const rect = populationItem.getBoundingClientRect();
-            const popupRect = popup.getBoundingClientRect();
+            
+            // Utiliser des dimensions fixes pour éviter les recalculs
+            const popupWidth = 280; // Largeur fixe de la pop-up
+            const popupHeight = 200; // Hauteur approximative
             
             // Position de base : au-dessus de l'élément, centré
-            let top = rect.top - popupRect.height - 20;
-            let left = rect.left + (rect.width / 2) - (popupRect.width / 2);
+            let top = rect.top - popupHeight - 20;
+            let left = rect.left + (rect.width / 2) - (popupWidth / 2);
             
             // Ajustements si la pop-up sort de l'écran
             if (top < 10) {
@@ -1610,13 +1619,18 @@
             if (left < 10) {
                 // Si trop à gauche
                 left = 10;
-            } else if (left + popupRect.width > window.innerWidth - 10) {
+            } else if (left + popupWidth > window.innerWidth - 10) {
                 // Si trop à droite
-                left = window.innerWidth - popupRect.width - 10;
+                left = window.innerWidth - popupWidth - 10;
             }
             
             popup.style.top = `${top}px`;
             popup.style.left = `${left}px`;
+            
+            // Réinitialiser le flag après un court délai
+            setTimeout(() => {
+                popup.dataset.positioning = 'false';
+            }, 100);
         }
 
         // Event listeners pour le positionnement de la pop-up
@@ -1629,21 +1643,38 @@
             // Ajouter les event listeners pour la pop-up
             const populationItem = document.querySelector('.population-item');
             if (populationItem) {
+                let repositionTimer;
                 populationItem.addEventListener('mouseenter', function() {
-                    setTimeout(positionPopup, 10); // Petit délai pour que le CSS soit appliqué
+                    // Éviter les repositionnements multiples
+                    clearTimeout(repositionTimer);
+                    repositionTimer = setTimeout(positionPopup, 50);
+                });
+                
+                populationItem.addEventListener('mouseleave', function() {
+                    clearTimeout(repositionTimer);
                 });
             }
             
-            // Repositionner sur redimensionnement de fenêtre
-            window.addEventListener('resize', positionPopup);
+            // Repositionner sur redimensionnement de fenêtre (avec throttling)
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(positionPopup, 200);
+            });
         });
 
         // Gestion de la modale des réserves de pétrole
         function showOilMap() {
             const modal = document.getElementById('oilMapModal');
             if (modal) {
+                // Fixer la position de scroll avant d'ouvrir la modale
+                const scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+                
                 modal.classList.add('show');
-                document.body.style.overflow = 'hidden'; // Empêche le scroll de la page
                 console.log('🛢️ Ouverture de la carte des réserves de pétrole');
             }
         }
@@ -1652,7 +1683,18 @@
             const modal = document.getElementById('oilMapModal');
             if (modal) {
                 modal.classList.remove('show');
-                document.body.style.overflow = 'auto'; // Restaure le scroll
+                
+                // Restaurer la position de scroll
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                
+                if (scrollY) {
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                }
+                
                 console.log('🛢️ Fermeture de la carte des réserves de pétrole');
             }
         }
@@ -1663,8 +1705,14 @@
         function showConflictsChart() {
             const modal = document.getElementById('conflictsChartModal');
             if (modal) {
+                // Fixer la position de scroll avant d'ouvrir la modale
+                const scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+                
                 modal.classList.add('show');
-                document.body.style.overflow = 'hidden'; // Empêche le scroll de la page
                 console.log('⚔️ Ouverture du graphique des conflits armés');
             }
         }
@@ -1673,7 +1721,18 @@
             const modal = document.getElementById('conflictsChartModal');
             if (modal) {
                 modal.classList.remove('show');
-                document.body.style.overflow = 'auto'; // Restaure le scroll
+                
+                // Restaurer la position de scroll
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                
+                if (scrollY) {
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                }
+                
                 console.log('⚔️ Fermeture du graphique des conflits armés');
             }
         }
