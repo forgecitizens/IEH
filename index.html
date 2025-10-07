@@ -1290,7 +1290,7 @@
             </div>
         </div>
 
-        <div class="section conflicts-section conflicts-section-hover" onclick="showConflictsChart()" title="Cliquez pour voir l'évolution des conflits armés" onmouseenter="playWarSound()">
+        <div class="section conflicts-section conflicts-section-hover" onclick="showConflictsChart()" title="Cliquez pour voir l'évolution des conflits armés" onmouseenter="playWarSound()" onmouseleave="stopWarSound()">
             <div class="conflict-subsection">
                 <h3 class="section-title">⚔️ Conflits</h3>
                 <div class="conflict-counter">12</div>
@@ -1385,6 +1385,12 @@
         function playWarSound() {
             warSound.currentTime = 0;
             warSound.play().catch(e => console.log('Erreur son guerre:', e));
+        }
+
+        // Fonction pour arrêter le son de guerre
+        function stopWarSound() {
+            warSound.pause();
+            warSound.currentTime = 0;
         }
 
         // Gestion des erreurs audio
