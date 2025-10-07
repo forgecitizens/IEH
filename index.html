@@ -350,6 +350,19 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
+        .news-ticker {
+            position: relative;
+        }
+
+        #newsStatus {
+            animation: pulse-status 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-status {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
         .news-content {
             white-space: nowrap;
             animation: scroll-left 150s linear infinite;
@@ -422,14 +435,7 @@
     <!-- News Ticker -->
     <div class="news-ticker">
         <div class="news-content" id="newsContent">
-            <span class="news-item">Tensions nucléaires en hausse : 3 pays placent leurs forces en alerte maximale</span>
-            <span class="news-item">Réchauffement climatique : nouveau record de +2.1°C atteint ce mois</span>
-            <span class="news-item">Crise énergétique mondiale : les réserves de pétrole chutent à 42%</span>
-            <span class="news-item">Pandémie H7N3 : 12 nouveaux foyers détectés en Asie du Sud-Est</span>
-            <span class="news-item">IA militaire : première utilisation autonome signalée dans un conflit</span>
-            <span class="news-item">Effondrement de la biodiversité : 15 espèces déclarées éteintes cette semaine</span>
-            <span class="news-item">Cyber-attaque massive : infrastructures critiques de 8 pays touchées</span>
-            <span class="news-item">Famine climatique : 240 millions de personnes en situation d'urgence alimentaire</span>
+            <span class="news-item">🔄 Chargement des dernières nouvelles France24...</span>
         </div>
     </div>
 
@@ -573,36 +579,97 @@
             audioToggle.disabled = true;
         });
 
-        // News ticker functionality
-        const newsItems = [
+        // News ticker functionality with France24 RSS feed
+        const fallbackNews = [
             "Tensions nucléaires en hausse : 3 pays placent leurs forces en alerte maximale",
             "Réchauffement climatique : nouveau record de +2.1°C atteint ce mois",
             "Crise énergétique mondiale : les réserves de pétrole chutent à 42%",
             "Pandémie H7N3 : 12 nouveaux foyers détectés en Asie du Sud-Est",
             "IA militaire : première utilisation autonome signalée dans un conflit",
-            "Effondrement de la biodiversité : 15 espèces déclarées éteintes cette semaine",
-            "Cyber-attaque massive : infrastructures critiques de 8 pays touchées",
-            "Famine climatique : 240 millions de personnes en situation d'urgence alimentaire",
-            "Alerte météorologique : super-typhon de catégorie 6 en formation",
-            "Pénurie d'eau potable : 50 métropoles déclarent l'état d'urgence",
-            "Révolution technologique : premier cerveau artificiel quantique activé",
-            "Crise démocratique : 15 gouvernements suspendent les élections"
+            "Effondrement de la biodiversité : 15 espèces déclarées éteintes cette semaine"
         ];
 
-        function shuffleNews() {
+        let currentNewsItems = [...fallbackNews];
+
+        async function fetchFrance24News() {
+            try {
+                console.log('🔄 Récupération des nouvelles France24...');
+                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.france24.com/fr/rss');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('📰 Données reçues:', data);
+                
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    // Extraire les titres et nettoyer le HTML
+                    currentNewsItems = data.items.slice(0, 10).map(item => {
+                        // Nettoyer le titre des balises HTML
+                        const cleanTitle = item.title.replace(/<[^>]*>/g, '').trim();
+                        return cleanTitle;
+                    });
+                    
+                    console.log('✅ Nouvelles France24 chargées:', currentNewsItems.length);
+                    updateNewsTicker();
+                    
+                    // Mettre à jour l'indicateur de statut
+                    updateNewsStatus('LIVE FRANCE24', '#00ff00');
+                } else {
+                    throw new Error('Format de données invalide');
+                }
+            } catch (error) {
+                console.warn('⚠️ Erreur lors du chargement des nouvelles France24:', error);
+                console.log('🔄 Utilisation des nouvelles de secours...');
+                currentNewsItems = [...fallbackNews];
+                updateNewsTicker();
+                updateNewsStatus('NOUVELLES LOCALES', '#ffaa00');
+            }
+        }
+
+        function updateNewsTicker() {
             const newsContent = document.getElementById('newsContent');
-            const shuffledNews = [...newsItems].sort(() => Math.random() - 0.5);
+            const shuffledNews = [...currentNewsItems].sort(() => Math.random() - 0.5);
             
             newsContent.innerHTML = shuffledNews.map(item => 
                 `<span class="news-item">${item}</span>`
             ).join('');
         }
 
-        // Mélanger les nouvelles toutes les 2 minutes
-        setInterval(shuffleNews, 120000);
+        function updateNewsStatus(status, color) {
+            const ticker = document.querySelector('.news-ticker');
+            const statusElement = ticker.querySelector('::before') || ticker;
+            
+            // Créer un indicateur de statut si il n'existe pas
+            let statusIndicator = document.getElementById('newsStatus');
+            if (!statusIndicator) {
+                statusIndicator = document.createElement('div');
+                statusIndicator.id = 'newsStatus';
+                statusIndicator.style.cssText = `
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 0.7rem;
+                    opacity: 0.8;
+                    display: flex;
+                    align-items: center;
+                `;
+                ticker.appendChild(statusIndicator);
+            }
+            
+            statusIndicator.innerHTML = `<span style="color: ${color}">● ${status}</span>`;
+        }
+
+        // Charger les nouvelles au démarrage
+        fetchFrance24News();
         
-        // Mélanger au chargement
-        shuffleNews();
+        // Actualiser les nouvelles toutes les 5 minutes
+        setInterval(fetchFrance24News, 300000);
+        
+        // Mélanger l'ordre d'affichage toutes les 2 minutes
+        setInterval(updateNewsTicker, 120000);
     </script>
 </body>
 </html>
