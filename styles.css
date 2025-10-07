@@ -2732,11 +2732,10 @@ body::before {body::before {
 
     body {
 
-@media (max-width: 768px) {        padding-top: 65px;
-
-    body {    }
-
+@media (max-width: 768px) {
+    body {
         padding-top: 65px;
+    }
 
     }    .audio-controls-ieh {
 
@@ -2779,9 +2778,9 @@ body::before {body::before {
     }    .audio-controls-ieh .audio-icon {
 
         font-size: 0.8rem;
+    }
 
-    .audio-controls-ieh .audio-icon {    }
-
+    .audio-controls-ieh .audio-icon {
         font-size: 0.8rem;
 
     }    .credits {
@@ -2818,28 +2817,17 @@ body::before {body::before {
 
         font-size: 0.8rem;
 
-    }    .breaking-news {
+    }
 
+    .breaking-news {
         font-size: 0.7rem;
+    }
 
-    .breaking-news {    }
-
-        font-size: 0.7rem;
-
-    }    .live-status {
-
+    .live-status {
         font-size: 0.6rem;
+    }
 
-    .live-status {    }
-
-        font-size: 0.6rem;
-
-    }    .news-content {
-
+    .news-content {
         animation-duration: 115s; /* Proportionnellement plus lent */
-
-    .news-content {    }
-
-        animation-duration: 115s; /* Proportionnellement plus lent */}
     }
 }
