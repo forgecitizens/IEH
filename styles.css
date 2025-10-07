@@ -1674,77 +1674,44 @@ body::before {body::before {
 
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 
-}/* Geopolitical analysis modal */
+}
 
+/* Geopolitical analysis modal - Version corrigée */
 .geopolitical-modal {
-
-/* Geopolitical analysis modal */    position: fixed;
-
-.geopolitical-modal {    top: 0;
-
-    position: fixed;    left: 0;
-
-    top: 0;    width: 100%;
-
-    left: 0;    height: 100%;
-
-    width: 100%;    background: rgba(0, 0, 0, 0.85);
-
-    height: 100%;    display: flex;
-
-    background: rgba(0, 0, 0, 0.85);    justify-content: center;
-
-    display: flex;    align-items: center;
-
-    justify-content: center;    z-index: 3000;
-
-    align-items: center;    opacity: 0;
-
-    z-index: 3000;    visibility: hidden;
-
-    opacity: 0;    transition: all 0.3s ease;
-
-    visibility: hidden;}
-
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
     transition: all 0.3s ease;
+}
 
-}.geopolitical-modal.show {
-
+.geopolitical-modal.show {
     opacity: 1;
-
-.geopolitical-modal.show {    visibility: visible;
-
-    opacity: 1;}
-
     visibility: visible;
+}
 
-}.geopolitical-container {
-
+.geopolitical-container {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%);
-
-.geopolitical-container {    border: 2px solid rgba(0, 255, 0, 0.5);
-
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%);    border-radius: 15px;
-
-    border: 2px solid rgba(0, 255, 0, 0.5);    padding: 30px;
-
-    border-radius: 15px;    max-width: 700px;
-
-    padding: 30px;    max-height: 85%;
-
-    max-width: 700px;    overflow-y: auto;
-
-    max-height: 85%;    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-
-    overflow-y: auto;    animation: modal-appear 0.5s ease-out;
-
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);    scrollbar-width: thin;
-
-    animation: modal-appear 0.5s ease-out;    scrollbar-color: rgba(0, 255, 0, 0.5) rgba(0, 0, 0, 0.2);
-
-    scrollbar-width: thin;}
-
+    border: 2px solid rgba(0, 255, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 480px; /* Réduit pour être étroit */
+    width: 90%;
+    max-height: 85%;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    animation: modal-appear 0.5s ease-out;
+    scrollbar-width: thin;
     scrollbar-color: rgba(0, 255, 0, 0.5) rgba(0, 0, 0, 0.2);
+}
 
 }.geopolitical-container::-webkit-scrollbar {
 
@@ -1869,9 +1836,9 @@ body::before {body::before {
 .geopolitical-sections {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 20px;
-    max-width: 500px; /* Réduit pour laisser plus d'espace à l'accordéon */
+    max-width: 420px; /* Plus étroit pour un accordéon compact */
     margin: 0 auto 20px auto;
 }
 
@@ -1996,17 +1963,22 @@ body::before {body::before {
     color: rgba(255, 255, 255, 0.9);
     text-align: justify;
     width: 100%;
-    display: none;
+    max-height: 0;
+    overflow: hidden;
     opacity: 0;
-    transition: opacity 0.3s ease, margin-top 0.3s ease;
-    margin-top: 0;
-    padding: 0 10px;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 0 15px 0 15px;
+    border-left: 2px solid transparent;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 8px 8px;
 }
 
 .continent-text.expanded {
-    display: block;
+    max-height: 500px; /* Assez grand pour le contenu */
     opacity: 1;
-    margin-top: 15px;
+    padding: 15px 15px 15px 15px;
+    border-left: 2px solid rgba(0, 255, 127, 0.4);
+    margin-top: 5px;
 }
 
 .continent-text p {
