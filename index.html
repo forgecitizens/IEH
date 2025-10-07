@@ -476,6 +476,23 @@
             font-weight: 700;
         }
 
+        .gas-resource-hover {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gas-resource-hover:hover {
+            background: rgba(65, 105, 225, 0.2);
+            border-color: rgba(65, 105, 225, 0.6);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+        }
+
+        .gas-resource-hover:hover .resource-label {
+            color: #4169e1;
+            text-shadow: 0 0 8px rgba(65, 105, 225, 0.6);
+        }
+
         /* Instructions pour l'utilisateur */
         .oil-map-instructions {
             position: absolute;
@@ -581,6 +598,88 @@
             width: 100%;
             height: 600px;
             border: 1px solid rgba(255, 0, 102, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Gas map modal */
+        .gas-map-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gas-map-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .gas-map-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%);
+            border: 2px solid rgba(65, 105, 225, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 95%;
+            max-height: 95%;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            animation: modal-appear 0.5s ease-out;
+        }
+
+        .gas-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(65, 105, 225, 0.3);
+        }
+
+        .gas-map-title {
+            color: #4169e1;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gas-map-close {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6464;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .gas-map-close:hover {
+            background: rgba(255, 0, 0, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .gas-map-iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid rgba(65, 105, 225, 0.3);
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
         }
@@ -1049,6 +1148,25 @@
         </div>
     </div>
 
+    <!-- Gas Map Modal -->
+    <div class="gas-map-modal" id="gasMapModal">
+        <div class="gas-map-container">
+            <div class="gas-map-header">
+                <div class="gas-map-title">🔥 Réserves de Gaz Naturel</div>
+                <button class="gas-map-close" onclick="closeGasMap()">×</button>
+            </div>
+            <iframe src="https://ourworldindata.org/grapher/natural-gas-proved-reserves?tab=map" 
+                    loading="lazy" 
+                    style="width: 100%; height: 600px; border: 0px none;" 
+                    allow="web-share; clipboard-write"
+                    class="gas-map-iframe">
+            </iframe>
+            <div class="gas-map-instructions">
+                Cliquez sur × pour fermer • Données: Our World in Data
+            </div>
+        </div>
+    </div>
+
     <div class="dashboard-container">
         <div class="section extinction-section">
             <h1 class="extinction-title">INDICE D'EXTINCTION DE L'HUMANITÉ</h1>
@@ -1131,7 +1249,7 @@
                     <div class="resource-fill oil-fill"></div>
                 </div>
             </div>
-            <div class="resource-bar">
+            <div class="resource-bar gas-resource-hover" onclick="showGasMap()" title="Cliquez pour voir la carte des réserves mondiales de gaz naturel">
                 <div class="resource-label">
                     <span>🔥 Gaz Naturel</span>
                     <span>62%</span>
@@ -1776,15 +1894,62 @@
             }
         }
 
+        // Gestion de la modale des réserves de gaz naturel
+        function showGasMap() {
+            const modal = document.getElementById('gasMapModal');
+            if (modal) {
+                // Jouer le son d'ouverture
+                expansionOpenSound.currentTime = 0;
+                expansionOpenSound.play().catch(e => console.log('Erreur son ouverture:', e));
+                
+                // Fixer la position de scroll avant d'ouvrir la modale
+                const scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+                
+                modal.classList.add('show');
+                console.log('🔥 Ouverture de la carte des réserves de gaz naturel');
+            }
+        }
+
+        function closeGasMap() {
+            const modal = document.getElementById('gasMapModal');
+            if (modal) {
+                // Jouer le son de fermeture
+                expansionCloseSound.currentTime = 0;
+                expansionCloseSound.play().catch(e => console.log('Erreur son fermeture:', e));
+                
+                modal.classList.remove('show');
+                
+                // Restaurer la position de scroll
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                
+                if (scrollY) {
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                }
+                
+                console.log('🔥 Fermeture de la carte des réserves de gaz naturel');
+            }
+        }
+
         // Fermer les modales en cliquant sur le fond
         document.addEventListener('click', function(event) {
             const oilModal = document.getElementById('oilMapModal');
             const conflictsModal = document.getElementById('conflictsChartModal');
+            const gasModal = document.getElementById('gasMapModal');
             
             if (event.target === oilModal) {
                 closeOilMap();
             } else if (event.target === conflictsModal) {
                 closeConflictsChart();
+            } else if (event.target === gasModal) {
+                closeGasMap();
             }
         });
 
@@ -1793,6 +1958,7 @@
             if (event.key === 'Escape') {
                 closeOilMap();
                 closeConflictsChart();
+                closeGasMap();
             }
         });
 
