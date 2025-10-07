@@ -45,7 +45,7 @@
             grid-template-areas: 
                 "extinction extinction extinction"
                 "global resources climate"
-                "conflicts conflicts health";
+                "conflicts tech-risks health";
         }
 
         .section {
@@ -788,9 +788,14 @@
 
         .conflicts-section {
             grid-area: conflicts;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tech-risks-section {
+            grid-area: tech-risks;
+            display: flex;
+            justify-content: center;
         }
 
         .conflict-subsection {
@@ -798,6 +803,13 @@
             padding: 15px;
             border-radius: 8px;
             border: 1px solid rgba(255, 0, 100, 0.3);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .tech-risks-section .conflict-subsection {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
         }
 
         .conflict-counter {
@@ -821,6 +833,7 @@
                     "resources"
                     "climate"
                     "conflicts"
+                    "tech-risks"
                     "health";
             }
 
@@ -1277,7 +1290,7 @@
             </div>
         </div>
 
-        <div class="section conflicts-section conflicts-section-hover" onclick="showConflictsChart()" title="Cliquez pour voir l'évolution des conflits armés">
+        <div class="section conflicts-section conflicts-section-hover" onclick="showConflictsChart()" title="Cliquez pour voir l'évolution des conflits armés" onmouseenter="playWarSound()">
             <div class="conflict-subsection">
                 <h3 class="section-title">⚔️ Conflits</h3>
                 <div class="conflict-counter">12</div>
@@ -1285,6 +1298,9 @@
                 <div class="conflict-counter">47</div>
                 <div class="stat-label">Tensions Internes</div>
             </div>
+        </div>
+
+        <div class="section tech-risks-section">
             <div class="conflict-subsection">
                 <h3 class="section-title">☢️ Risques Tech</h3>
             </div>
@@ -1314,10 +1330,12 @@
         // Effets sonores pour les modales
         const expansionOpenSound = new Audio('sounds/expansion1.wav');
         const expansionCloseSound = new Audio('sounds/expansion2.wav');
+        const warSound = new Audio('sounds/war.wav');
         
         // Configuration des effets sonores
         expansionOpenSound.volume = 0.4;
         expansionCloseSound.volume = 0.4;
+        warSound.volume = 0.3;
 
         function toggleAudioPanel() {
             const audioControls = document.getElementById('audioControlsIEH');
@@ -1362,6 +1380,12 @@
             }
             document.removeEventListener('click', startAudio);
         }, { once: true });
+
+        // Fonction pour jouer le son de guerre au survol de la section conflits
+        function playWarSound() {
+            warSound.currentTime = 0;
+            warSound.play().catch(e => console.log('Erreur son guerre:', e));
+        }
 
         // Gestion des erreurs audio
         audio.addEventListener('error', function(e) {
