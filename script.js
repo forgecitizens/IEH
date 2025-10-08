@@ -88,6 +88,11 @@ const NewsManager = {
         const banner = document.createElement('div');
         banner.className = 'news-banner';
         banner.innerHTML = `
+            <div class="audio-control">
+                <button class="audio-button" id="audio-button" onclick="toggleAudio()">
+                    <span class="audio-icon">♪</span>
+                </button>
+            </div>
             <div class="news-status">
                 <span class="status-indicator" id="status-indicator">●</span>
                 <span class="status-text" id="status-text">INITIALISATION...</span>
@@ -239,6 +244,7 @@ const Dashboard = {
             PerformanceManager.init();
             NewsManager.init();
             PopulationCounter.init();
+            AudioManager.init();
             
             // Outils de debug
             this.setupDebugTools();
@@ -265,12 +271,16 @@ const Dashboard = {
             isCounterRunning: () => PopulationCounter.isRunning(),
             getCurrentPop: () => PopulationCounter.getCurrentPopulation(),
             forceUpdate: () => PopulationCounter.updateCounter(),
+            toggleAudio: () => AudioManager.toggle(),
+            playAudio: () => AudioManager.play(),
+            stopAudio: () => AudioManager.stop(),
             getStatus: () => ({
                 newsCount: NewsManager.currentNews.length,
                 hasError: NewsManager.hasError,
                 isScrollPaused: PerformanceManager.newsTickerPaused,
                 isLoading: NewsManager.isLoading,
-                counterRunning: PopulationCounter.updateInterval !== null
+                counterRunning: PopulationCounter.updateInterval !== null,
+                audioPlaying: AudioManager.isPlaying
             }),
             showConfig: () => CONFIG
         };
@@ -419,5 +429,68 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
+
+// ================================================================
+// GESTIONNAIRE AUDIO
+// ================================================================
+
+const AudioManager = {
+    audio: null,
+    isPlaying: false,
+    
+    init() {
+        this.audio = new Audio('sounds/212025__qubodup__sci-fi-laboratory-ambience.mp3');
+        this.audio.loop = true;
+        this.audio.volume = 0.3; // Volume modéré par défaut
+        console.log('Audio Manager initialise');
+    },
+    
+    toggle() {
+        if (this.isPlaying) {
+            this.stop();
+        } else {
+            this.play();
+        }
+    },
+    
+    play() {
+        if (this.audio) {
+            this.audio.play().then(() => {
+                this.isPlaying = true;
+                this.updateButton();
+                console.log('Audio demarre');
+            }).catch(error => {
+                console.error('Erreur lecture audio:', error);
+            });
+        }
+    },
+    
+    stop() {
+        if (this.audio) {
+            this.audio.pause();
+            this.audio.currentTime = 0;
+            this.isPlaying = false;
+            this.updateButton();
+            console.log('Audio arrete');
+        }
+    },
+    
+    updateButton() {
+        const button = document.getElementById('audio-button');
+        const icon = button.querySelector('.audio-icon');
+        
+        if (this.isPlaying) {
+            button.classList.add('active');
+            icon.textContent = '♪';
+        } else {
+            button.classList.remove('active');
+            icon.textContent = '♪';
+        }
+    }
+};
+
+function toggleAudio() {
+    AudioManager.toggle();
+}
 
 console.log('Script Dashboard France24 - Pret pour initialisation');
