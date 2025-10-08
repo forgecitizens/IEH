@@ -88,11 +88,6 @@ const NewsManager = {
         const banner = document.createElement('div');
         banner.className = 'news-banner';
         banner.innerHTML = `
-            <div class="audio-control">
-                <button class="audio-button" id="audio-button" onclick="toggleAudio()">
-                    <span class="audio-icon">♪</span>
-                </button>
-            </div>
             <div class="news-status">
                 <span class="status-indicator" id="status-indicator">●</span>
                 <span class="status-text" id="status-text">INITIALISATION...</span>
@@ -101,11 +96,6 @@ const NewsManager = {
                 <div class="news-ticker" id="news-ticker">
                     Connexion a France24 en cours...
                 </div>
-            </div>
-            <div class="credits-control">
-                <button class="credits-button" id="credits-button" onclick="openCreditsModal()">
-                    Credits
-                </button>
             </div>
         `;
         

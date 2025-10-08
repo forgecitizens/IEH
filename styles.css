@@ -307,78 +307,7 @@
     font-family: 'Orbitron', monospace;
 }
 
-.audio-control {
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    height: 100%;
-}
 
-.audio-button {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    border-radius: 6px;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #ffffff;
-}
-
-.audio-button:hover {
-    background: rgba(0, 255, 255, 0.1);
-    border-color: rgba(0, 255, 255, 0.6);
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 255, 255, 0.2);
-}
-
-.audio-button.active {
-    background: rgba(0, 255, 0, 0.2);
-    border-color: rgba(0, 255, 0, 0.6);
-    color: #00ff00;
-}
-
-.audio-button.active:hover {
-    background: rgba(0, 255, 0, 0.3);
-}
-
-.audio-icon {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.credits-control {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    height: 100%;
-    margin-left: auto;
-}
-
-.credits-button {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 11px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 300;
-    color: #ffffff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.credits-button:hover {
-    background: rgba(0, 255, 255, 0.1);
-    border-color: rgba(0, 255, 255, 0.6);
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 255, 255, 0.2);
-}
 
 .news-status {
     display: flex;
@@ -745,14 +674,7 @@
         font-size: 10px;
     }
 
-    .audio-button {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .audio-icon {
-        font-size: 14px;
-    }
+
     
 
 }
@@ -797,27 +719,7 @@
         font-size: 9px;
     }
 
-    .audio-control {
-        padding: 0 8px;
-    }
-    
-    .audio-button {
-        width: 28px;
-        height: 28px;
-    }
-    
-    .audio-icon {
-        font-size: 12px;
-    }
 
-    .credits-control {
-        padding: 0 10px;
-    }
-
-    .credits-button {
-        font-size: 9px;
-        padding: 4px 8px;
-    }
 
     /* Modale responsive mobile */
     .population-modal {
