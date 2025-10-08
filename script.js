@@ -102,6 +102,11 @@ const NewsManager = {
                     Connexion a France24 en cours...
                 </div>
             </div>
+            <div class="credits-control">
+                <button class="credits-button" id="credits-button" onclick="openCreditsModal()">
+                    Credits
+                </button>
+            </div>
         `;
         
         document.body.insertBefore(banner, document.body.firstChild);
@@ -492,5 +497,57 @@ const AudioManager = {
 function toggleAudio() {
     AudioManager.toggle();
 }
+
+// ================================================================
+// GESTIONNAIRE MODALE CREDITS
+// ================================================================
+
+function openCreditsModal() {
+    const modal = document.getElementById('credits-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        console.log('Modale credits ouverte');
+    } else {
+        console.error('Modale credits non trouvee');
+    }
+}
+
+function closeCreditsModal() {
+    const modal = document.getElementById('credits-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        console.log('Modale credits fermee');
+    } else {
+        console.error('Modale credits non trouvee');
+    }
+}
+
+// Ajouter les event listeners pour la modale credits
+document.addEventListener('DOMContentLoaded', () => {
+    const creditsModal = document.getElementById('credits-modal');
+    if (creditsModal) {
+        creditsModal.addEventListener('click', (event) => {
+            if (event.target === creditsModal) {
+                closeCreditsModal();
+            }
+        });
+    }
+});
+
+// Gerer la touche Echap pour les modales
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const populationModal = document.getElementById('population-modal');
+        const creditsModal = document.getElementById('credits-modal');
+        
+        if (populationModal && populationModal.classList.contains('active')) {
+            closePopulationModal();
+        } else if (creditsModal && creditsModal.classList.contains('active')) {
+            closeCreditsModal();
+        }
+    }
+});
 
 console.log('Script Dashboard France24 - Pret pour initialisation');

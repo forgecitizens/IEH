@@ -20,7 +20,16 @@
             height: 100%;
             background-image: 
                 linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+                    .audio-icon {
+        font-size: 14px;
+    }
+
+    .credits-button {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    /* Modale responsive mobile */r-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: -1;
@@ -290,6 +299,36 @@
     font-weight: bold;
 }
 
+.credits-control {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 100%;
+    margin-left: auto;
+}
+
+.credits-button {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.credits-button:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 255, 255, 0.2);
+}
+
 .news-status {
     display: flex;
     align-items: center;
@@ -464,6 +503,11 @@
     min-height: 300px;
 }
 
+.credits-modal {
+    width: 600px;
+    max-width: 90vw;
+}
+
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -557,6 +601,41 @@
     50% { opacity: 0.7; }
 }
 
+/* Styles pour la modale credits */
+.credits-section {
+    margin-bottom: 20px;
+}
+
+.credits-section h4 {
+    color: #00ffff;
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    margin: 0 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.credit-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #ffffff;
+}
+
+.credit-item a {
+    color: #00ffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.credit-item a:hover {
+    color: #66ffff;
+    text-decoration: underline;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -637,6 +716,15 @@
     
     .audio-icon {
         font-size: 12px;
+    }
+
+    .credits-control {
+        padding: 0 10px;
+    }
+
+    .credits-button {
+        font-size: 9px;
+        padding: 4px 8px;
     }
 
     /* Modale responsive mobile */
