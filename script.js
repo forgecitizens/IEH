@@ -283,4 +283,53 @@ window.addEventListener('error', (event) => {
     console.error('❌ Erreur JavaScript globale:', event.error);
 });
 
+// ================================================================
+// GESTIONNAIRE MODALE POPULATION
+// ================================================================
+
+function openPopulationModal() {
+    const modal = document.getElementById('population-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Empêcher le scroll du body
+        console.log('📊 Modale population ouverte');
+    } else {
+        console.error('❌ Modale population non trouvée');
+    }
+}
+
+function closePopulationModal() {
+    const modal = document.getElementById('population-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restaurer le scroll du body
+        console.log('✅ Modale population fermée');
+    } else {
+        console.error('❌ Modale population non trouvée');
+    }
+}
+
+// Fermer la modale en cliquant sur l'overlay
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('population-modal');
+    if (modal) {
+        modal.addEventListener('click', (event) => {
+            // Fermer seulement si on clique sur l'overlay, pas sur le contenu
+            if (event.target === modal) {
+                closePopulationModal();
+            }
+        });
+    }
+});
+
+// Fermer la modale avec la touche Échap
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('population-modal');
+        if (modal && modal.classList.contains('active')) {
+            closePopulationModal();
+        }
+    }
+});
+
 console.log('📄 Script Dashboard France24 - Prêt pour initialisation');
