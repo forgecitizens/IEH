@@ -302,7 +302,7 @@ window.addEventListener('error', (event) => {
 
 // Donnees de base pour le compteur
 const PopulationCounter = {
-    basePopulation: 8251125400, // estimation au 1er janvier 2025
+    basePopulation: 8251126800, // estimation au 1er janvier 2025
     growthPerSecond: 2.52, // croissance nette mondiale
     startTime: new Date('2025-01-01T00:00:00Z').getTime(),
     updateInterval: null,
