@@ -59,12 +59,7 @@
             width: 100%;
             height: 2px;
             background: linear-gradient(90deg, transparent, #00ffff, transparent);
-            animation: scanLine 3s infinite;
-        }
-
-        @keyframes scanLine {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            /* Animation scanLine supprimée pour optimiser les performances */
         }
 
         .section:hover {
