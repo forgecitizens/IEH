@@ -262,6 +262,9 @@ const Dashboard = {
             closePopulation: () => closePopulationModal(),
             startCounter: () => PopulationCounter.startCounter(),
             stopCounter: () => PopulationCounter.stopCounter(),
+            isCounterRunning: () => PopulationCounter.isRunning(),
+            getCurrentPop: () => PopulationCounter.getCurrentPopulation(),
+            forceUpdate: () => PopulationCounter.updateCounter(),
             getStatus: () => ({
                 newsCount: NewsManager.currentNews.length,
                 hasError: NewsManager.hasError,
@@ -281,6 +284,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Petit délai pour s'assurer que le CSS est chargé
     setTimeout(() => {
         Dashboard.init();
+        // Forcer une mise à jour du compteur après l'initialisation
+        setTimeout(() => {
+            PopulationCounter.updateCounter();
+        }, 200);
     }, 100);
 });
 
@@ -301,6 +308,7 @@ const PopulationCounter = {
     updateInterval: null,
     
     init() {
+        this.updateCounter(); // Mise à jour immédiate
         this.startCounter();
         console.log('Compteur population initialise');
     },
@@ -330,17 +338,36 @@ const PopulationCounter = {
     },
     
     startCounter() {
-        this.updateCounter(); // Mise a jour immediate
+        // Arrêter le compteur précédent s'il existe
+        this.stopCounter();
+        
+        // Mise à jour immédiate
+        this.updateCounter();
+        
+        // Démarrer le nouveau compteur
         this.updateInterval = setInterval(() => {
             this.updateCounter();
         }, 100); // Mise a jour toutes les 100ms
+        
+        console.log('Compteur population demarre');
     },
     
     stopCounter() {
         if (this.updateInterval) {
             clearInterval(this.updateInterval);
             this.updateInterval = null;
+            console.log('Compteur population arrete');
         }
+    },
+    
+    isRunning() {
+        return this.updateInterval !== null;
+    },
+    
+    getCurrentPopulation() {
+        const now = Date.now();
+        const elapsedSeconds = (now - this.startTime) / 1000;
+        return this.basePopulation + (elapsedSeconds * this.growthPerSecond);
     }
 };
 
