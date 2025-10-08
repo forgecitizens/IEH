@@ -1,6 +1,6 @@
 // Dashboard Planétaire - Bandeau d'actualités France24
 // Version 1.0 - Octobre 2025
-console.log('📄 Script Dashboard chargé');
+console.log('Script Dashboard charge');
 
 // Configuration
 const CONFIG = {
@@ -22,7 +22,7 @@ const PerformanceManager = {
     
     init() {
         this.setupScrollDetection();
-        console.log('✅ Performance Manager initialisé');
+        console.log('Performance Manager initialise');
     },
     
     setupScrollDetection() {
@@ -47,11 +47,11 @@ const PerformanceManager = {
         if (pause && !this.newsTickerPaused) {
             ticker.style.animationPlayState = 'paused';
             this.newsTickerPaused = true;
-            console.log('⏸️ Animation pause - Économie mémoire');
+            console.log('Animation pause - Economie memoire');
         } else if (!pause && this.newsTickerPaused) {
             ticker.style.animationPlayState = 'running';
             this.newsTickerPaused = false;
-            console.log('▶️ Animation reprise');
+            console.log('Animation reprise');
         }
     }
 };
@@ -79,7 +79,7 @@ const NewsManager = {
         this.createNewsHTML();
         this.loadNews();
         this.setupTimers();
-        console.log('✅ News Manager initialisé');
+        console.log('News Manager initialise');
     },
     
     createNewsHTML() {
@@ -94,7 +94,7 @@ const NewsManager = {
             </div>
             <div class="news-ticker-container">
                 <div class="news-ticker" id="news-ticker">
-                    🌐 Connexion à France24 en cours...
+                    Connexion a France24 en cours...
                 </div>
             </div>
         `;
@@ -109,7 +109,7 @@ const NewsManager = {
         this.updateStatus('loading', 'CONNEXION...');
         
         try {
-            console.log('📡 Tentative de connexion à France24 RSS...');
+            console.log('Tentative de connexion a France24 RSS...');
             
             const response = await fetch(CONFIG.rss.apiUrl);
             if (!response.ok) {
@@ -130,10 +130,10 @@ const NewsManager = {
             this.updateStatus('live', 'LIVE FRANCE24');
             this.displayNews();
             
-            console.log('✅ ' + this.currentNews.length + ' actualités France24 chargées');
+            console.log(this.currentNews.length + ' actualites France24 chargees');
             
         } catch (error) {
-            console.error('❌ Erreur lors du chargement RSS:', error.message);
+            console.error('Erreur lors du chargement RSS:', error.message);
             this.handleError();
         } finally {
             this.isLoading = false;
@@ -145,7 +145,7 @@ const NewsManager = {
         this.currentNews = [...this.fallbackNews];
         this.updateStatus('error', 'Problème pour récupérer les informations');
         this.displayNews();
-        console.log('🔄 Basculement sur actualités de secours activé');
+        console.log('Basculement sur actualites de secours active');
     },
     
     cleanHtmlTags(text) {
@@ -197,13 +197,13 @@ const NewsManager = {
         }
         
         this.displayNews();
-        console.log('🔀 Ordre des actualités mélangé');
+        console.log('Ordre des actualites melange');
     },
     
     setupTimers() {
         // Actualisation automatique toutes les 5 minutes
         this.refreshTimer = setInterval(() => {
-            console.log('🔄 Actualisation automatique des actualités...');
+            console.log('Actualisation automatique des actualites...');
             this.loadNews();
         }, CONFIG.rss.refreshInterval);
         
@@ -215,12 +215,12 @@ const NewsManager = {
     
     // Méthodes de contrôle manuel
     forceRefresh() {
-        console.log('🔄 Actualisation forcée demandée');
+        console.log('Actualisation forcee demandee');
         this.loadNews();
     },
     
     forceShuffle() {
-        console.log('🔀 Mélange forcé demandé');
+        console.log('Melange force demande');
         this.shuffleNews();
     }
 };
@@ -232,7 +232,7 @@ const Dashboard = {
     init() {
         if (this.initialized) return;
         
-        console.log('🚀 === INITIALISATION DASHBOARD PLANÉTAIRE ===');
+        console.log('=== INITIALISATION DASHBOARD PLANETAIRE ===');
         
         try {
             // Initialisation séquentielle
@@ -243,10 +243,10 @@ const Dashboard = {
             this.setupDebugTools();
             
             this.initialized = true;
-            console.log('✅ === DASHBOARD OPÉRATIONNEL ===');
+            console.log('=== DASHBOARD OPERATIONNEL ===');
             
         } catch (error) {
-            console.error('❌ Erreur lors de l\'initialisation:', error);
+            console.error('Erreur lors de l\'initialisation:', error);
         }
     },
     
@@ -266,7 +266,7 @@ const Dashboard = {
             showConfig: () => CONFIG
         };
         
-        console.log('🛠️ Outils de debug disponibles: window.DashboardDebug');
+        console.log('Outils de debug disponibles: window.DashboardDebug');
     }
 };
 
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Gestion des erreurs globales
 window.addEventListener('error', (event) => {
-    console.error('❌ Erreur JavaScript globale:', event.error);
+    console.error('Erreur JavaScript globale:', event.error);
 });
 
 // ================================================================
@@ -292,9 +292,9 @@ function openPopulationModal() {
     if (modal) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden'; // Empêcher le scroll du body
-        console.log('📊 Modale population ouverte');
+        console.log('Modale population ouverte');
     } else {
-        console.error('❌ Modale population non trouvée');
+        console.error('Modale population non trouvee');
     }
 }
 
@@ -303,9 +303,9 @@ function closePopulationModal() {
     if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto'; // Restaurer le scroll du body
-        console.log('✅ Modale population fermée');
+        console.log('Modale population fermee');
     } else {
-        console.error('❌ Modale population non trouvée');
+        console.error('Modale population non trouvee');
     }
 }
 
@@ -332,4 +332,4 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-console.log('📄 Script Dashboard France24 - Prêt pour initialisation');
+console.log('Script Dashboard France24 - Pret pour initialisation');
