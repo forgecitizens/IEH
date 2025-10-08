@@ -481,15 +481,19 @@ const AudioManager = {
     },
     
     updateButton() {
-        const button = document.getElementById('audio-button');
-        const icon = button.querySelector('.audio-icon');
+        const button = document.getElementById('audio-btn');
+        const icon = button ? button.querySelector('.btn-icon') : null;
         
-        if (this.isPlaying) {
-            button.classList.add('active');
-            icon.textContent = '♪';
-        } else {
-            button.classList.remove('active');
-            icon.textContent = '♪';
+        if (button && icon) {
+            if (this.isPlaying) {
+                button.classList.remove('muted');
+                icon.textContent = '🔊';
+                button.title = 'Désactiver l\'audio';
+            } else {
+                button.classList.add('muted');
+                icon.textContent = '🔇';
+                button.title = 'Activer l\'audio';
+            }
         }
     }
 };
