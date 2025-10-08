@@ -265,9 +265,10 @@
 
 .status-text {
     font-size: 11px;
-    font-weight: bold;
+    font-weight: 300;
     letter-spacing: 1px;
     color: #ffffff;
+    font-family: 'Roboto', sans-serif;
 }
 
 .news-ticker-container {
@@ -285,8 +286,8 @@
     padding-left: 100%;
     color: #ffffff;
     font-size: 14px;
-    font-weight: 400;
-    font-family: 'Orbitron', monospace;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
 }
 
 .news-item {
