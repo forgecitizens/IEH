@@ -238,6 +238,7 @@ const Dashboard = {
             // Initialisation séquentielle
             PerformanceManager.init();
             NewsManager.init();
+            PopulationCounter.init();
             
             // Outils de debug
             this.setupDebugTools();
@@ -257,11 +258,16 @@ const Dashboard = {
             shuffleNews: () => NewsManager.forceShuffle(),
             pauseAnimation: () => PerformanceManager.toggleNewsAnimation(true),
             resumeAnimation: () => PerformanceManager.toggleNewsAnimation(false),
+            openPopulation: () => openPopulationModal(),
+            closePopulation: () => closePopulationModal(),
+            startCounter: () => PopulationCounter.startCounter(),
+            stopCounter: () => PopulationCounter.stopCounter(),
             getStatus: () => ({
                 newsCount: NewsManager.currentNews.length,
                 hasError: NewsManager.hasError,
                 isScrollPaused: PerformanceManager.newsTickerPaused,
-                isLoading: NewsManager.isLoading
+                isLoading: NewsManager.isLoading,
+                counterRunning: PopulationCounter.updateInterval !== null
             }),
             showConfig: () => CONFIG
         };
@@ -281,6 +287,110 @@ document.addEventListener('DOMContentLoaded', () => {
 // Gestion des erreurs globales
 window.addEventListener('error', (event) => {
     console.error('Erreur JavaScript globale:', event.error);
+});
+
+// ================================================================
+// GESTIONNAIRE COMPTEUR POPULATION LIVE
+// ================================================================
+
+// Donnees de base pour le compteur
+const PopulationCounter = {
+    basePopulation: 8251125400, // estimation au 1er janvier 2025
+    growthPerSecond: 2.52, // croissance nette mondiale
+    startTime: new Date('2025-01-01T00:00:00Z').getTime(),
+    updateInterval: null,
+    
+    init() {
+        this.startCounter();
+        console.log('Compteur population initialise');
+    },
+    
+    updateCounter() {
+        const now = Date.now();
+        const elapsedSeconds = (now - this.startTime) / 1000;
+        const currentPopulation = this.basePopulation + (elapsedSeconds * this.growthPerSecond);
+        
+        // Mettre a jour le compteur principal
+        const mainCounter = document.getElementById('counter');
+        if (mainCounter) {
+            mainCounter.textContent = this.formatNumber(currentPopulation);
+        }
+        
+        // Mettre a jour le compteur de la modale
+        const modalCounter = document.getElementById('modal-counter');
+        if (modalCounter) {
+            modalCounter.textContent = this.formatNumber(currentPopulation);
+        }
+    },
+    
+    formatNumber(number) {
+        return number.toLocaleString('fr-FR', {
+            maximumFractionDigits: 0
+        });
+    },
+    
+    startCounter() {
+        this.updateCounter(); // Mise a jour immediate
+        this.updateInterval = setInterval(() => {
+            this.updateCounter();
+        }, 100); // Mise a jour toutes les 100ms
+    },
+    
+    stopCounter() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+    }
+};
+
+// ================================================================
+// GESTIONNAIRE MODALE POPULATION
+// ================================================================
+
+function openPopulationModal() {
+    const modal = document.getElementById('population-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Empecher le scroll du body
+        console.log('Modale population ouverte');
+    } else {
+        console.error('Modale population non trouvee');
+    }
+}
+
+function closePopulationModal() {
+    const modal = document.getElementById('population-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restaurer le scroll du body
+        console.log('Modale population fermee');
+    } else {
+        console.error('Modale population non trouvee');
+    }
+}
+
+// Fermer la modale en cliquant sur l'overlay
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('population-modal');
+    if (modal) {
+        modal.addEventListener('click', (event) => {
+            // Fermer seulement si on clique sur l'overlay, pas sur le contenu
+            if (event.target === modal) {
+                closePopulationModal();
+            }
+        });
+    }
+});
+
+// Fermer la modale avec la touche Echap
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('population-modal');
+        if (modal && modal.classList.contains('active')) {
+            closePopulationModal();
+        }
+    }
 });
 
 console.log('Script Dashboard France24 - Pret pour initialisation');

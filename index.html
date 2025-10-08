@@ -21,9 +21,9 @@
         <div class="section global-section">
             <h2 class="section-title">Statut Global</h2>
             <div class="global-stats">
-                <div class="stat-item">
-                    <div class="stat-value">8.1B</div>
-                    <div class="stat-label">Population</div>
+                <div class="stat-item population-clickable" onclick="openPopulationModal()">
+                    <div class="stat-value" id="counter">8,251,125,400</div>
+                    <div class="stat-label">Population <span class="click-indicator">[LIVE]</span></div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">12</div>
@@ -105,7 +105,24 @@
         </div>
     </div>
 
-
+    <!-- Modale Population Live -->
+    <div id="population-modal" class="modal-overlay">
+        <div class="modal-content population-modal">
+            <div class="modal-header">
+                <h3>Population Mondiale en Temps Reel</h3>
+                <button class="modal-close" onclick="closePopulationModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="counter-section">
+                    <div class="counter-display">
+                        <div class="counter-value" id="modal-counter">8,251,125,400</div>
+                        <div class="counter-label">Population mondiale actuelle</div>
+                        <div class="counter-info">Mis a jour en temps reel</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
