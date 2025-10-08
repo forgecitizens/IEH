@@ -21,9 +21,9 @@
         <div class="section global-section">
             <h2 class="section-title">Statut Global</h2>
             <div class="global-stats">
-                <div class="stat-item population-clickable" onclick="openPopulationModal()">
+                <div class="stat-item">
                     <div class="stat-value">8.1B</div>
-                    <div class="stat-label">Population <span class="click-indicator">[+]</span></div>
+                    <div class="stat-label">Population</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">12</div>
@@ -105,26 +105,7 @@
         </div>
     </div>
 
-    <!-- Modale Population -->
-    <div id="population-modal" class="modal-overlay">
-        <div class="modal-content population-modal">
-            <div class="modal-header">
-                <h3>Population Mondiale en Temps Reel</h3>
-                <button class="modal-close" onclick="closePopulationModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="iframe-container">
-                    <iframe 
-                        src="https://www.census.gov/popclock/embed.php?component=counter" 
-                        width="376" 
-                        height="688"
-                        frameborder="0"
-                        title="Compteur Population Mondiale">
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 </body>
 </html>
