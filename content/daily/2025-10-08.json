@@ -1,48 +1,41 @@
 {
   "date": "2025-10-08",
   "title": "Actualités du mardi 8 octobre 2025",
-  "summary": "Journée marquée par des développements technologiques majeurs et des négociations commerciales entre les superpuissances mondiales.",
-  "sections": [
-    {
-      "type": "geopolitical",
-      "title": "Géopolitique",
-      "content": "Les États-Unis et la Chine reprennent leurs négociations commerciales dans un climat tendu mais constructif. L'Europe maintient sa position d'indépendance stratégique avec de nouveaux accords de défense. La Russie intensifie ses opérations en Ukraine orientale."
-    },
-    {
-      "type": "technology",
-      "title": "Technologie",
-      "content": "Percée majeure dans l'intelligence artificielle quantique avec la présentation du premier processeur commercial. Les géants tech annoncent des investissements record dans la recherche fondamentale. Nouvelles régulations en préparation pour l'IA générative."
-    },
-    {
-      "type": "economic",
-      "title": "Économie",
-      "content": "Inflation mondiale stabilisée à 3.2%, les banques centrales maintiennent leurs politiques accommodantes. Le Bitcoin franchit de nouveaux sommets à 87,000$. Les matières premières restent volatiles."
-    }
-  ],
+  "summary": "Le 8 octobre 2025, le monde est marqué par une multipolarité croissante et des tensions géopolitiques intenses. Au Moyen-Orient, un cessez-le-feu fragile Israël-Hamas, dans son troisième jour, s'accompagne de négociations en Égypte et d'un appel Trump-Netanyahu, mais Gaza reste quasi déserte et les tensions régionales (Syrie, Érythrée-Éthiopie) persistent. En Ukraine, la guerre s'enlise avec des frappes de drones ukrainiens infligeant des dommages massifs à la Russie, qui menace sur le nucléaire (PMDA suspendu), tandis que des drones russes survolent l'Europe (Belgique, Allemagne). Aux États-Unis, le shutdown gouvernemental paralyse le pays, Trump accentue son isolationnisme avec des tariffs record et un \"bargain\" avec Xi Jinping, face à un BRICS élargi (10 membres) défiant le dollar (or >4 000$, Bitcoin >125 000$). En Europe, les élections tchèques risquent un virage eurosceptique, et l'UE accélère son réarmement (Pologne 4,7 % PIB). Climat, cyber et énergie dominent les risques globaux, avec une croissance mondiale fragile à 3,2 %.",
+  "full_summary": "1. Conflits en cours : Diplomatie fragile et escalades hybrides\n\nMoyen-Orient : Israël et le Hamas ont signé la première phase d'un accord de cessez-le-feu le 8 octobre, négocié par les États-Unis, l'Égypte, le Qatar et la Turquie à Charm el-Cheikh. Cet accord, partie d'un plan en 20 points annoncé par Trump la semaine précédente, prévoit un retrait partiel des troupes israéliennes de Gaza, l'échange de 48 otages israéliens (dont 20 vivants) contre des prisonniers palestiniens, et l'entrée d'aide humanitaire. Trump a salué un \"succès diplomatique majeur\", tandis que Netanyahu convoque son cabinet pour approbation le 9 octobre. Cependant, des questions persistent sur le désarmement du Hamas et la gouvernance future de Gaza ; le cessez-le-feu entrera en vigueur dans les 24 heures suivant l'approbation israélienne. En parallèle, la Syrie post-Assad prépare des élections parlementaires instables, et des tensions frontalières émergent entre l'Érythrée et l'Éthiopie, accusées par Israël de déstabilisation régionale.\n\nUkraine-Russie : La guerre s'enlise avec des gains russes modestes (environ 4 900 km² conquis en 2025 selon Poutine, bien que des estimations indépendantes tablent sur 3 561 km²). L'Ukraine a mené des frappes de drones massives contre des dépôts d'armes, usines de munitions et terminaux pétroliers russes, forçant 40 % de la capacité de raffinage hors ligne et causant 714 millions $ de dommages. Zelensky dénonce le \"refus de négocier\" de Poutine, tandis que Trump qualifie le conflit de \"plus compliqué que le Moyen-Orient\" et envisage des missiles Tomahawk pour Kiev. La Russie dénonce l'accord PMDA sur le plutonium (34 tonnes d'armes nucléaires), signalant une escalade potentielle ; l'AIEA alerte sur des tirs près de Zaporijjia. Des drones russes survolent des sites européens (Belgique, Allemagne), attribués à une campagne hybride. L'Ukraine, avec 1 million de soldats, excelle en drones et guerre électronique.\n\nAutres fronts : En RDC, les ADF (liés à l'ISIS) ont tué 300 civils en 3 mois. Tensions au Sahel et en Corne de l'Afrique ; frappes anti-TTP au Pakistan/Afghanistan. Au Brésil, une proposition d'amendement constitutionnel pour des armes nucléaires défensives suscite un débat houleux.\n\n2. États-Unis et Trump 2.0 : Shutdown et America First\n\nLe shutdown gouvernemental entre dans sa 8e journée, paralysant les opérations fédérales depuis le 1er octobre. L'IRS a mis à pied 34 000 employés (50 % de son effectif), des retards aériens touchent 12 aéroports majeurs, et les militaires risquent de manquer leur paie du 15 octobre sans loi spécifique. Trump menace de non-paiement rétroactif pour les \"non méritants\" et cible ANTIFA comme \"terroriste domestique\", tout en préparant des coupes via Project 2025. Les démocrates bloquent les CR \"propres\" pour inclure des extensions ACA ; approbation de Trump chez les indépendants à 24 %. Économiquement, croissance à 2,2 %, mais dette explosive et tariffs (215 milliards $ en FY2025). Trump pousse un \"bargain\" avec Xi et courtise l'Inde pour déplacer la demande russe en énergie.\n\n3. Asie-Pacifique : BRICS élargi et rivalités sino-américaines\n\nBRICS : Le sommet de juillet au Brésil (17e édition) a élargi le groupe à 10 membres (Indonésie jointe en janvier 2025), représentant 46 % de la population mondiale et 40 % du PIB PPP. Focus sur l'IA, la dé-dollarisation et la santé globale ; l'Inde présidera en 2026. Progrès sur la frontière Inde-Chine (accord patrouilles 2024), mais tensions persistent. Chine accélère ses réserves pétrolières (169 millions de barils en 2025-2026) face à des fournisseurs risqués ; Xi absent du sommet, laissant Modi briller. Pakistan équilibre USA-Chine.\n\nJapon : Nikkei à record (+4,8 %) après la victoire de Takaichi (pro-relance), yen faible (USD/JPY >150). Manœuvres spatiales avec la France contre menaces chino-russes. Starmer visite l'Inde les 8-9 octobre pour renforcer les liens.\n\n4. Europe : Euroscepticisme et réarmement\n\nÉlections : En République tchèque, les élections du 3-4 octobre voient ANO (Babiš, \"Trump tchèque\") remporter 35 % des voix (80 sièges), un comeback eurosceptique potentiellement réduisant l'aide à l'Ukraine. Fiala (ODS) concède la défaite. Victoire pro-européenne en Moldavie (28 septembre) ; élections au Canada et en Irlande en octobre. En Allemagne, drones russes sur Munich ; Merz alerte sur une \"zone grise\". L'UE force la Hongrie et la Slovaquie à abandonner les importations russes d'huile/gaz d'ici 2028, malgré leur opposition.\n\nHybrides et économie : Macron appelle à l'autonomie stratégique ; UE prépare un \"mur de drones\" avec tech ukrainienne. Pologne à 4,7 % du PIB en défense. Croissance eurozone à 1,2 %, mais cyber-risques et tariffs UE sur l'acier (50 %) en tête. EBRD met en garde contre les politiques industrielles excessives.\n\n5. Tendances globales : Multipolarité, économie et risques\n\nÉconomie/Multipolarité : FMI prévoit 3,2 % de croissance mondiale, stable mais fragile. BRICS défie le dollar (or >4 000$/oz, Bitcoin >125 000$ comme refuges). Tariffs US à 17,6 % (plus hauts depuis les 1930s). Chine/Russie leaders en IA ; Inde cible Russie/Brésil pour pharma. UE double tariffs acier ; OPEP+ coupe 137 kb/j en novembre. Boom AI : 1T$ d'investissements, hype vs. bulle.\n\nClimat/Sécurité : Records d'événements extrêmes ; COP30 au Brésil en novembre. Cyber et énergie top risques. ONU : Débat CSNU le 24 octobre sur 80 ans d'ONU. EBRD alerte sur réfugiés (74 ans de Convention 1951). Au Brésil, forum d'affaires à Riga sur la croissance résiliente.\n\nAutres : En Argentine, banque centrale dépense 1,1 milliard $ pour défendre le peso. Attaque contre convoi présidentiel équatorien. Pakistan équilibre USA-Chine.",
+  "stability_score": 450,
+  "stability_justification": "Ce score reflète un équilibre précaire. Les progrès diplomatiques et la croissance économique soutiennent une stabilité modérée, mais les conflits armés, les risques nucléaires, les crises politiques (shutdown, euroscepticisme) et les défis climatiques/cyber maintiennent le monde dans une zone de volatilité. Nous sommes à mi-chemin entre le chaos et la prospérité, avec des risques systémiques qui empêchent un score plus élevé.",
   "events": [
     {
-      "time": "08:00",
-      "title": "Annonce technologique",
-      "description": "Dévoilement du processeur quantique commercial",
+      "time": "09:00",
+      "title": "Cessez-le-feu Israël-Hamas",
+      "description": "Signature de la première phase d'accord à Charm el-Cheikh",
       "importance": "high"
     },
     {
-      "time": "16:30",
-      "title": "Réunion Fed-BCE",
-      "description": "Coordination des politiques monétaires transatlantiques",
+      "time": "14:30",
+      "title": "Shutdown US - Jour 8",
+      "description": "34 000 employés IRS mis à pied, retards aéroportuaires",
       "importance": "high"
+    },
+    {
+      "time": "18:00",
+      "title": "Élections République Tchèque",
+      "description": "ANO (Babiš) remporte 35% des voix, virage eurosceptique",
+      "importance": "medium"
     }
   ],
   "mood": {
-    "stability": 71,
-    "optimism": 74,
-    "concern_level": 38
+    "stability": 45,
+    "optimism": 42,
+    "concern_level": 68
   },
   "sources": [
     "France24",
-    "Bloomberg",
-    "TechCrunch",
-    "Le Monde"
+    "Reuters",
+    "Associated Press",
+    "Financial Times",
+    "Bloomberg"
   ],
-  "last_updated": "2025-10-08T20:15:00Z"
+  "last_updated": "2025-10-08T23:45:00Z"
 }

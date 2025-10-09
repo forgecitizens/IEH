@@ -719,6 +719,7 @@ function closeCreditsModal() {
 document.addEventListener('DOMContentLoaded', () => {
     const creditsModal = document.getElementById('credits-modal');
     const calendarModal = document.getElementById('calendar-modal');
+    const dailyContentModal = document.getElementById('daily-content-modal');
     
     if (creditsModal) {
         creditsModal.addEventListener('click', (event) => {
@@ -732,6 +733,14 @@ document.addEventListener('DOMContentLoaded', () => {
         calendarModal.addEventListener('click', (event) => {
             if (event.target === calendarModal) {
                 closeCalendar();
+            }
+        });
+    }
+    
+    if (dailyContentModal) {
+        dailyContentModal.addEventListener('click', (event) => {
+            if (event.target === dailyContentModal) {
+                closeDailyContent();
             }
         });
     }
@@ -876,19 +885,8 @@ const CalendarManager = {
     },
     
     displayDateContent(content, dateStr) {
-        // Pour l'instant, afficher dans la console et créer une alerte
-        // Plus tard, cela ouvrira une modale dédiée au contenu
         console.log('Contenu chargé:', content);
-        
-        const formattedDate = ContentManager.formatDate(dateStr);
-        const message = content.isLoading 
-            ? `Chargement du contenu pour ${formattedDate}...`
-            : `Contenu disponible pour ${formattedDate}:\n\n${content.title}\n\n${content.summary || content.content}`;
-            
-        // Notification temporaire (à remplacer par une modale plus tard)
-        if (window.confirm(`${message}\n\nVoulez-vous voir plus de détails ?`)) {
-            console.log('Détails complets:', content);
-        }
+        openDailyContentModal(content, dateStr);
     },
     
     previousMonth() {
@@ -935,6 +933,7 @@ document.addEventListener('keydown', (event) => {
         const populationModal = document.getElementById('population-modal');
         const creditsModal = document.getElementById('credits-modal');
         const calendarModal = document.getElementById('calendar-modal');
+        const dailyContentModal = document.getElementById('daily-content-modal');
         
         if (populationModal && populationModal.classList.contains('active')) {
             closePopulationModal();
@@ -942,8 +941,140 @@ document.addEventListener('keydown', (event) => {
             closeCreditsModal();
         } else if (calendarModal && calendarModal.classList.contains('active')) {
             closeCalendar();
+        } else if (dailyContentModal && dailyContentModal.classList.contains('active')) {
+            closeDailyContent();
         }
     }
 });
+
+// ================================================================
+// GESTIONNAIRE MODALE CONTENU QUOTIDIEN
+// ================================================================
+
+function openDailyContentModal(content, dateStr) {
+    const modal = document.getElementById('daily-content-modal');
+    if (!modal) return;
+    
+    // Remplir le titre
+    const title = document.getElementById('daily-modal-title');
+    if (title) {
+        const formattedDate = ContentManager.formatDate(dateStr);
+        title.textContent = `Actualités du ${formattedDate}`;
+    }
+    
+    // Remplir le score de stabilité
+    updateStabilityScore(content.stability_score || 450, content.stability_justification);
+    
+    // Remplir le résumé
+    const summaryText = document.getElementById('daily-summary-text');
+    if (summaryText) {
+        summaryText.textContent = content.summary || 'Résumé en cours de chargement...';
+    }
+    
+    // Remplir le résumé complet
+    const fullSummary = document.getElementById('full-summary-text');
+    if (fullSummary) {
+        const fullText = content.full_summary || content.content || 'Résumé complet en cours de chargement...';
+        fullSummary.innerHTML = fullText.replace(/\n/g, '<br><br>');
+    }
+    
+    // Réinitialiser l'accordéon
+    resetAccordion();
+    
+    // Ouvrir la modale
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    console.log('Modale contenu quotidien ouverte');
+}
+
+function closeDailyContent() {
+    const modal = document.getElementById('daily-content-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        hideStabilityTooltip();
+        console.log('Modale contenu quotidien fermée');
+    }
+}
+
+function updateStabilityScore(score, justification) {
+    const scoreElement = document.getElementById('score-value');
+    const tooltipContent = document.getElementById('tooltip-content');
+    
+    if (scoreElement) {
+        scoreElement.textContent = score;
+        
+        // Appliquer la couleur selon le score
+        scoreElement.className = 'score-value';
+        if (score < 100) {
+            scoreElement.classList.add('score-0-100');
+        } else if (score < 200) {
+            scoreElement.classList.add('score-100-200');
+        } else if (score < 300) {
+            scoreElement.classList.add('score-200-300');
+        } else if (score < 400) {
+            scoreElement.classList.add('score-300-400');
+        } else if (score < 500) {
+            scoreElement.classList.add('score-400-500');
+        } else if (score < 600) {
+            scoreElement.classList.add('score-500-600');
+        } else if (score < 700) {
+            scoreElement.classList.add('score-600-700');
+        } else if (score < 800) {
+            scoreElement.classList.add('score-700-800');
+        } else if (score < 900) {
+            scoreElement.classList.add('score-800-900');
+        } else {
+            scoreElement.classList.add('score-900-1000');
+        }
+    }
+    
+    if (tooltipContent) {
+        tooltipContent.textContent = justification || 'Justification en cours de chargement...';
+    }
+}
+
+function showStabilityTooltip() {
+    const tooltip = document.getElementById('stability-tooltip');
+    if (tooltip) {
+        tooltip.classList.add('visible');
+    }
+}
+
+function hideStabilityTooltip() {
+    const tooltip = document.getElementById('stability-tooltip');
+    if (tooltip) {
+        tooltip.classList.remove('visible');
+    }
+}
+
+function toggleAccordion() {
+    const button = document.getElementById('accordion-btn');
+    const content = document.getElementById('accordion-content');
+    const icon = button.querySelector('.accordion-icon');
+    
+    if (button.classList.contains('active')) {
+        // Fermer l'accordéon
+        button.classList.remove('active');
+        content.classList.remove('active');
+        button.querySelector('span').textContent = 'Afficher le résumé complet';
+    } else {
+        // Ouvrir l'accordéon
+        button.classList.add('active');
+        content.classList.add('active');
+        button.querySelector('span').textContent = 'Masquer le résumé complet';
+    }
+}
+
+function resetAccordion() {
+    const button = document.getElementById('accordion-btn');
+    const content = document.getElementById('accordion-content');
+    
+    if (button && content) {
+        button.classList.remove('active');
+        content.classList.remove('active');
+        button.querySelector('span').textContent = 'Afficher le résumé complet';
+    }
+}
 
 console.log('Script Dashboard France24 - Pret pour initialisation');

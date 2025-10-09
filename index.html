@@ -173,5 +173,53 @@
         </div>
     </div>
 
+    <!-- Modale de Contenu Quotidien -->
+    <div id="daily-content-modal" class="modal-overlay">
+        <div class="modal-content daily-content-modal">
+            <div class="modal-header">
+                <h3 id="daily-modal-title">Actualités du jour</h3>
+                <button class="modal-close" onclick="closeDailyContent()">×</button>
+            </div>
+            <div class="modal-body daily-modal-body">
+                <!-- Score de stabilité -->
+                <div class="stability-section">
+                    <div class="stability-header">
+                        <span class="stability-label">Score de Stabilité</span>
+                        <div class="stability-score" id="stability-score" onmouseover="showStabilityTooltip()" onmouseout="hideStabilityTooltip()">
+                            <span class="score-value" id="score-value">450</span>
+                            <span class="score-max">/ 1000</span>
+                        </div>
+                    </div>
+                    <div class="stability-tooltip" id="stability-tooltip">
+                        <div class="tooltip-content" id="tooltip-content">
+                            Justification du score en cours de chargement...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Résumé du jour -->
+                <div class="daily-summary-section">
+                    <h4>Résumé du jour</h4>
+                    <div class="summary-text" id="daily-summary-text">
+                        Résumé en cours de chargement...
+                    </div>
+                </div>
+
+                <!-- Accordéon résumé complet -->
+                <div class="accordion-section">
+                    <button class="accordion-button" id="accordion-btn" onclick="toggleAccordion()">
+                        <span>Afficher le résumé complet</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" id="accordion-content">
+                        <div class="full-summary" id="full-summary-text">
+                            Résumé complet en cours de chargement...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
