@@ -275,6 +275,7 @@
     align-items: center;
     height: 50px;
     font-family: 'Orbitron', monospace;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .audio-control {

@@ -42,16 +42,24 @@ const PerformanceManager = {
     
     toggleNewsAnimation(pause) {
         const ticker = document.querySelector('.news-ticker');
-        if (!ticker) return;
+        const banner = document.querySelector('.news-banner');
+        
+        if (!ticker || !banner) return;
         
         if (pause && !this.newsTickerPaused) {
+            // Cacher le bandeau et pauser l'animation
+            banner.style.transform = 'translateY(-100%)';
+            banner.style.opacity = '0';
             ticker.style.animationPlayState = 'paused';
             this.newsTickerPaused = true;
-            console.log('Animation pause - Economie memoire');
+            console.log('Bandeau cache et animation pausee - Economie memoire');
         } else if (!pause && this.newsTickerPaused) {
+            // Montrer le bandeau et relancer l'animation
+            banner.style.transform = 'translateY(0)';
+            banner.style.opacity = '1';
             ticker.style.animationPlayState = 'running';
             this.newsTickerPaused = false;
-            console.log('Animation reprise');
+            console.log('Bandeau affiche et animation reprise');
         }
     }
 };
