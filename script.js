@@ -429,6 +429,7 @@ const Dashboard = {
             NewsManager.init();
             PopulationCounter.init();
             AudioManager.init();
+            AudioManager.preloadModalSounds();
             CalendarManager.init();
             
             // Outils de debug
@@ -582,6 +583,7 @@ const PopulationCounter = {
 function openPopulationModal() {
     const modal = document.getElementById('population-modal');
     if (modal) {
+        AudioManager.playModalOpen();
         modal.classList.add('active');
         document.body.style.overflow = 'hidden'; // Empecher le scroll du body
         console.log('Modale population ouverte');
@@ -593,6 +595,7 @@ function openPopulationModal() {
 function closePopulationModal() {
     const modal = document.getElementById('population-modal');
     if (modal) {
+        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto'; // Restaurer le scroll du body
         console.log('Modale population fermee');
@@ -631,12 +634,41 @@ document.addEventListener('keydown', (event) => {
 const AudioManager = {
     audio: null,
     isPlaying: false,
+    modalSounds: {
+        open: null,
+        close: null
+    },
+    modalSoundsEnabled: true,
     
     init() {
+        // Audio principal (ambience)
         this.audio = new Audio('sounds/212025__qubodup__sci-fi-laboratory-ambience.mp3');
         this.audio.loop = true;
         this.audio.volume = 0.3; // Volume modéré par défaut
-        console.log('Audio Manager initialise');
+        
+        // Précharger les sons de modales
+        this.preloadModalSounds();
+        
+        console.log('Audio Manager initialise avec sons modales');
+    },
+    
+    preloadModalSounds() {
+        try {
+            // Son d'ouverture de modale
+            this.modalSounds.open = new Audio('sounds/expansion1.wav');
+            this.modalSounds.open.volume = 0.4;
+            this.modalSounds.open.preload = 'auto';
+            
+            // Son de fermeture de modale
+            this.modalSounds.close = new Audio('sounds/expansion2.wav');
+            this.modalSounds.close.volume = 0.4;
+            this.modalSounds.close.preload = 'auto';
+            
+            console.log('Sons modales precharges');
+        } catch (error) {
+            console.warn('Erreur prechargement sons modales:', error);
+            this.modalSoundsEnabled = false;
+        }
     },
     
     toggle() {
@@ -682,6 +714,42 @@ const AudioManager = {
                 icon.textContent = '♪';
             }
         }
+    },
+    
+    // Méthodes pour les sons de modales
+    playModalOpen() {
+        if (this.modalSoundsEnabled && this.modalSounds.open) {
+            try {
+                // Réinitialiser le son au début s'il était déjà joué
+                this.modalSounds.open.currentTime = 0;
+                this.modalSounds.open.play().catch(error => {
+                    console.warn('Erreur lecture son ouverture modale:', error);
+                });
+            } catch (error) {
+                console.warn('Erreur son ouverture modale:', error);
+            }
+        }
+    },
+    
+    playModalClose() {
+        if (this.modalSoundsEnabled && this.modalSounds.close) {
+            try {
+                // Réinitialiser le son au début s'il était déjà joué
+                this.modalSounds.close.currentTime = 0;
+                this.modalSounds.close.play().catch(error => {
+                    console.warn('Erreur lecture son fermeture modale:', error);
+                });
+            } catch (error) {
+                console.warn('Erreur son fermeture modale:', error);
+            }
+        }
+    },
+    
+    // Méthode pour activer/désactiver les sons de modales
+    toggleModalSounds() {
+        this.modalSoundsEnabled = !this.modalSoundsEnabled;
+        console.log(`Sons modales ${this.modalSoundsEnabled ? 'activés' : 'désactivés'}`);
+        return this.modalSoundsEnabled;
     }
 };
 
@@ -696,6 +764,7 @@ function toggleAudio() {
 function openCreditsModal() {
     const modal = document.getElementById('credits-modal');
     if (modal) {
+        AudioManager.playModalOpen();
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         console.log('Modale credits ouverte');
@@ -707,6 +776,7 @@ function openCreditsModal() {
 function closeCreditsModal() {
     const modal = document.getElementById('credits-modal');
     if (modal) {
+        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
         console.log('Modale credits fermee');
@@ -903,6 +973,7 @@ const CalendarManager = {
 function openCalendar() {
     const modal = document.getElementById('calendar-modal');
     if (modal) {
+        AudioManager.playModalOpen();
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         CalendarManager.generateCalendar();
@@ -913,6 +984,7 @@ function openCalendar() {
 function closeCalendar() {
     const modal = document.getElementById('calendar-modal');
     if (modal) {
+        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
         console.log('Calendrier ferme');
@@ -930,12 +1002,16 @@ function nextMonth() {
 // Gerer la touche Echap pour les modales
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
+        const stabilityTooltip = document.getElementById('stability-tooltip');
         const populationModal = document.getElementById('population-modal');
         const creditsModal = document.getElementById('credits-modal');
         const calendarModal = document.getElementById('calendar-modal');
         const dailyContentModal = document.getElementById('daily-content-modal');
         
-        if (populationModal && populationModal.classList.contains('active')) {
+        // Fermer d'abord la tooltip si elle est visible
+        if (stabilityTooltip && stabilityTooltip.classList.contains('visible')) {
+            hideStabilityTooltip();
+        } else if (populationModal && populationModal.classList.contains('active')) {
             closePopulationModal();
         } else if (creditsModal && creditsModal.classList.contains('active')) {
             closeCreditsModal();
@@ -982,6 +1058,7 @@ function openDailyContentModal(content, dateStr) {
     resetAccordion();
     
     // Ouvrir la modale
+    AudioManager.playModalOpen();
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     console.log('Modale contenu quotidien ouverte');
@@ -990,6 +1067,7 @@ function openDailyContentModal(content, dateStr) {
 function closeDailyContent() {
     const modal = document.getElementById('daily-content-modal');
     if (modal) {
+        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
         hideStabilityTooltip();
@@ -1029,22 +1107,34 @@ function updateStabilityScore(score, justification) {
         }
     }
     
-    if (tooltipContent) {
-        tooltipContent.textContent = justification || 'Justification en cours de chargement...';
+    const tooltipText = document.getElementById('tooltip-text');
+    if (tooltipText) {
+        tooltipText.textContent = justification || 'Justification en cours de chargement...';
     }
 }
 
 function showStabilityTooltip() {
     const tooltip = document.getElementById('stability-tooltip');
-    if (tooltip) {
+    const overlay = document.getElementById('tooltip-overlay');
+    if (tooltip && overlay) {
+        overlay.classList.add('visible');
         tooltip.classList.add('visible');
+        // Empêcher le scroll du body
+        document.body.style.overflow = 'hidden';
     }
 }
 
 function hideStabilityTooltip() {
     const tooltip = document.getElementById('stability-tooltip');
-    if (tooltip) {
+    const overlay = document.getElementById('tooltip-overlay');
+    if (tooltip && overlay) {
         tooltip.classList.remove('visible');
+        overlay.classList.remove('visible');
+        // Restaurer le scroll du body seulement si aucune modale n'est active
+        const activeModals = document.querySelectorAll('.modal.active');
+        if (activeModals.length === 0) {
+            document.body.style.overflow = 'auto';
+        }
     }
 }
 
