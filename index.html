@@ -12,10 +12,19 @@
     <div class="dashboard-container">
         <div class="section extinction-section">
             <h1 class="extinction-title">PULSE.EARTH</h1>
-            <div class="gauge-container">
-                <div class="gauge-background"></div>
+            <div class="geopolitical-summary">
+                <div class="date-section">
+                    <button class="calendar-btn" id="calendar-btn" onclick="openCalendar()">
+                        <span class="calendar-icon">📅</span>
+                        <span class="calendar-date" id="calendar-date"></span>
+                    </button>
+                </div>
+                <div class="summary-section">
+                    <div class="summary-text">
+                        En octobre 2025, le monde est marqué par une multipolarité croissante et des tensions géopolitiques. Au Moyen-Orient, un fragile cessez-le-feu Israël-Hamas coexiste avec des risques d'escalade post-frappes israéliennes sur l'Iran, tandis que la Syrie post-Assad organise ses premières élections. En Ukraine, la guerre s'enlise face à une Russie agressive, avec une Europe en réarmement (Pologne à 4,7 % du PIB) et des menaces hybrides (drones, cyber). Les États-Unis de Trump poussent l'isolationnisme et des deals avec la Chine, qui, avec l'Inde et les BRICS, défie l'ordre dollar-centré. Économiquement, la croissance mondiale (3,2 %) reste fragile, avec or et Bitcoin comme refuges, tandis que climat et cyber-risques dominent les préoccupations globales.
+                    </div>
+                </div>
             </div>
-            <div class="gauge-value">22 / 99</div>
         </div>
 
         <div class="section global-section">
@@ -136,6 +145,28 @@
                     <h4>Audio</h4>
                     <div class="credit-item">
                         <a href="http://freesound.org/people/qubodup/sounds/212025" target="_blank">Sci-fi Laboratory Ambience</a> by <a href="http://freesound.org/people/qubodup" target="_blank">Iwan Gabovitch</a> under <a href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_blank">CC-BY 3.0 License</a> with sounds by wolick, swiftoid, Diboz
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Calendrier -->
+    <div id="calendar-modal" class="modal-overlay">
+        <div class="modal-content calendar-modal">
+            <div class="modal-header">
+                <h3>Sélectionnez une date</h3>
+                <button class="modal-close" onclick="closeCalendar()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="calendar-nav" onclick="previousMonth()">‹</button>
+                        <span class="calendar-month-year" id="calendar-month-year"></span>
+                        <button class="calendar-nav" onclick="nextMonth()">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid">
+                        <!-- Généré dynamiquement par JavaScript -->
                     </div>
                 </div>
             </div>

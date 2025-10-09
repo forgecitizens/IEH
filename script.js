@@ -250,6 +250,7 @@ const Dashboard = {
             NewsManager.init();
             PopulationCounter.init();
             AudioManager.init();
+            CalendarManager.init();
             
             // Outils de debug
             this.setupDebugTools();
@@ -526,9 +527,11 @@ function closeCreditsModal() {
     }
 }
 
-// Ajouter les event listeners pour la modale credits
+// Ajouter les event listeners pour toutes les modales
 document.addEventListener('DOMContentLoaded', () => {
     const creditsModal = document.getElementById('credits-modal');
+    const calendarModal = document.getElementById('calendar-modal');
+    
     if (creditsModal) {
         creditsModal.addEventListener('click', (event) => {
             if (event.target === creditsModal) {
@@ -536,18 +539,188 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
+    if (calendarModal) {
+        calendarModal.addEventListener('click', (event) => {
+            if (event.target === calendarModal) {
+                closeCalendar();
+            }
+        });
+    }
 });
+
+// ================================================================
+// GESTIONNAIRE CALENDRIER
+// ================================================================
+
+const CalendarManager = {
+    currentDate: new Date(),
+    selectedDate: null,
+    
+    init() {
+        this.updateDateButton();
+        console.log('Calendar Manager initialise');
+    },
+    
+    updateDateButton() {
+        const dateElement = document.getElementById('calendar-date');
+        if (dateElement) {
+            const today = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            const formattedDate = today.toLocaleDateString('fr-FR', options);
+            dateElement.textContent = formattedDate;
+        }
+    },
+    
+    generateCalendar() {
+        const grid = document.getElementById('calendar-grid');
+        const monthYear = document.getElementById('calendar-month-year');
+        
+        if (!grid || !monthYear) return;
+        
+        // Effacer le calendrier précédent
+        grid.innerHTML = '';
+        
+        // Afficher mois et année
+        const options = { year: 'numeric', month: 'long' };
+        monthYear.textContent = this.currentDate.toLocaleDateString('fr-FR', options);
+        
+        // Ajouter les en-têtes des jours
+        const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+        dayHeaders.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'calendar-day-header';
+            dayHeader.textContent = day;
+            grid.appendChild(dayHeader);
+        });
+        
+        // Calculer le premier jour du mois
+        const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
+        const lastDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0);
+        
+        // Ajuster pour commencer lundi (0 = dimanche, 1 = lundi)
+        let startDay = firstDay.getDay();
+        startDay = startDay === 0 ? 6 : startDay - 1;
+        
+        // Ajouter les jours du mois précédent
+        for (let i = startDay - 1; i >= 0; i--) {
+            const prevDate = new Date(firstDay);
+            prevDate.setDate(prevDate.getDate() - i - 1);
+            this.createDayElement(prevDate, true);
+        }
+        
+        // Ajouter les jours du mois courant
+        for (let day = 1; day <= lastDay.getDate(); day++) {
+            const date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), day);
+            this.createDayElement(date, false);
+        }
+        
+        // Compléter avec les jours du mois suivant
+        const totalCells = grid.children.length - 7; // Exclure les en-têtes
+        const remainingCells = 42 - totalCells; // 6 semaines * 7 jours
+        for (let day = 1; day <= remainingCells; day++) {
+            const nextDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, day);
+            this.createDayElement(nextDate, true);
+        }
+    },
+    
+    createDayElement(date, isOtherMonth) {
+        const grid = document.getElementById('calendar-grid');
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = date.getDate();
+        
+        if (isOtherMonth) {
+            dayElement.classList.add('other-month');
+        }
+        
+        // Marquer aujourd'hui
+        const today = new Date();
+        if (date.toDateString() === today.toDateString()) {
+            dayElement.classList.add('today');
+        }
+        
+        // Gestion du clic
+        dayElement.addEventListener('click', () => {
+            this.selectDate(date);
+        });
+        
+        grid.appendChild(dayElement);
+    },
+    
+    selectDate(date) {
+        // Supprimer la sélection précédente
+        document.querySelectorAll('.calendar-day.selected').forEach(day => {
+            day.classList.remove('selected');
+        });
+        
+        // Marquer la nouvelle sélection
+        event.target.classList.add('selected');
+        this.selectedDate = date;
+        
+        // Pour l'instant, fermer le calendrier
+        // Plus tard, on ouvrira une modale avec les événements de cette date
+        setTimeout(() => {
+            closeCalendar();
+        }, 500);
+    },
+    
+    previousMonth() {
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        this.generateCalendar();
+    },
+    
+    nextMonth() {
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+        this.generateCalendar();
+    }
+};
+
+function openCalendar() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        CalendarManager.generateCalendar();
+        console.log('Calendrier ouvert');
+    }
+}
+
+function closeCalendar() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        console.log('Calendrier ferme');
+    }
+}
+
+function previousMonth() {
+    CalendarManager.previousMonth();
+}
+
+function nextMonth() {
+    CalendarManager.nextMonth();
+}
 
 // Gerer la touche Echap pour les modales
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
         const populationModal = document.getElementById('population-modal');
         const creditsModal = document.getElementById('credits-modal');
+        const calendarModal = document.getElementById('calendar-modal');
         
         if (populationModal && populationModal.classList.contains('active')) {
             closePopulationModal();
         } else if (creditsModal && creditsModal.classList.contains('active')) {
             closeCreditsModal();
+        } else if (calendarModal && calendarModal.classList.contains('active')) {
+            closeCalendar();
         }
     }
 });
