@@ -1,0 +1,48 @@
+{
+  "title": "Analyse Géopolitique Approfondie",
+  "description": "Analyse des tensions et dynamiques géopolitiques actuelles dans le monde",
+  "sections": [
+    {
+      "region": "Moyen-Orient",
+      "status": "Fragile mais stabilisé",
+      "content": "Le cessez-le-feu Israël-Hamas tient depuis 3 mois mais reste précaire. Les négociations pour une solution durable progressent lentement. L'Iran adopte une posture plus modérée suite aux frappes israéliennes limitées.",
+      "risk_level": "medium-high"
+    },
+    {
+      "region": "Europe de l'Est",
+      "status": "Conflit enlisé",
+      "content": "La guerre en Ukraine entre dans sa 4e année sans perspective de résolution rapide. L'Europe renforce son budget défense avec la Pologne en tête (4,7% du PIB). Les menaces hybrides (cyber, drones) s'intensifient.",
+      "risk_level": "high"
+    },
+    {
+      "region": "Asie-Pacifique",
+      "status": "Rivalité contrôlée",
+      "content": "La Chine et les États-Unis maintiennent leurs positions dans le Pacifique. L'Inde renforce son rôle de puissance émergente. Les BRICS gagnent en influence face au G7 traditionnel.",
+      "risk_level": "medium"
+    }
+  ],
+  "trends": [
+    "Multipolarité croissante",
+    "Découplage économique partiel",
+    "Course aux armements limitée",
+    "Diplomatie climatique comme pont"
+  ],
+  "key_players": [
+    {
+      "country": "États-Unis",
+      "strategy": "Isolationnisme sélectif",
+      "influence": "Déclinante mais majeure"
+    },
+    {
+      "country": "Chine",
+      "strategy": "Expansion économique prudente",
+      "influence": "Croissante"
+    },
+    {
+      "country": "Europe",
+      "strategy": "Autonomie stratégique",
+      "influence": "Régionale forte"
+    }
+  ],
+  "last_updated": "2025-10-09T12:00:00Z"
+}

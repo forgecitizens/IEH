@@ -1,0 +1,54 @@
+{
+  "date": "2025-10-09",
+  "title": "Actualités du mercredi 9 octobre 2025",
+  "summary": "Cette journée marque plusieurs développements importants sur la scène internationale, avec des avancées diplomatiques au Moyen-Orient et des tensions persistantes en Europe de l'Est.",
+  "sections": [
+    {
+      "type": "geopolitical",
+      "title": "Géopolitique",
+      "content": "La situation au Moyen-Orient évolue avec de nouveaux pourparlers de paix initiés par les médiateurs internationaux. En parallèle, les tensions entre grandes puissances se maintiennent avec des exercices militaires conjoints en mer de Chine méridionale. L'Europe renforce sa position défensive face aux menaces hybrides continues."
+    },
+    {
+      "type": "economic",
+      "title": "Économie",
+      "content": "Les marchés financiers montrent une volatilité modérée avec une croissance du secteur technologique de 2.3%. Les cryptomonnaies poursuivent leur stabilisation autour des niveaux record, tandis que l'or maintient sa position de refuge face à l'incertitude géopolitique."
+    },
+    {
+      "type": "climate",
+      "title": "Climat & Environnement",
+      "content": "Les initiatives vertes prennent de l'ampleur avec l'annonce de nouveaux investissements dans l'énergie solaire en Afrique. Les températures mondiales restent préoccupantes avec +1.8°C au-dessus de la moyenne pré-industrielle."
+    }
+  ],
+  "events": [
+    {
+      "time": "09:30",
+      "title": "Ouverture des marchés européens",
+      "description": "Tendance positive avec hausse de 0.8% du CAC40",
+      "importance": "medium"
+    },
+    {
+      "time": "14:00",
+      "title": "Sommet diplomatique virtuel",
+      "description": "Réunion d'urgence des ministres des affaires étrangères du G7",
+      "importance": "high"
+    },
+    {
+      "time": "18:45",
+      "title": "Annonce énergétique majeure",
+      "description": "Nouveau partenariat énergétique entre l'UE et les pays du Golfe",
+      "importance": "high"
+    }
+  ],
+  "mood": {
+    "stability": 73,
+    "optimism": 68,
+    "concern_level": 42
+  },
+  "sources": [
+    "France24",
+    "Reuters",
+    "Associated Press",
+    "Financial Times"
+  ],
+  "last_updated": "2025-10-09T19:30:00Z"
+}

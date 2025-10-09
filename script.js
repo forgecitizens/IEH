@@ -15,6 +15,176 @@ const CONFIG = {
     }
 };
 
+// ================================================================
+// GESTIONNAIRE DE CONTENU AVEC LAZY LOADING
+// ================================================================
+const ContentManager = {
+    cache: new Map(),
+    maxCacheSize: 50,
+    loadingStates: new Set(),
+    
+    init() {
+        console.log('Content Manager initialise');
+    },
+    
+    async loadContent(type, identifier) {
+        const cacheKey = `${type}-${identifier}`;
+        
+        // Eviter les chargements doubles
+        if (this.loadingStates.has(cacheKey)) {
+            return this.getFallbackContent(type, identifier);
+        }
+        
+        // Vérifier le cache d'abord
+        if (this.cache.has(cacheKey)) {
+            const cached = this.cache.get(cacheKey);
+            // Vérifier l'age du cache (24h pour daily, 1h pour topics)
+            const maxAge = type === 'daily' ? 86400000 : 3600000;
+            if (Date.now() - cached.timestamp < maxAge) {
+                console.log(`Contenu ${cacheKey} chargé depuis le cache`);
+                return cached.content;
+            } else {
+                this.cache.delete(cacheKey);
+            }
+        }
+        
+        this.loadingStates.add(cacheKey);
+        
+        try {
+            const url = this.buildContentUrl(type, identifier);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                console.warn(`Contenu ${cacheKey} non trouvé, utilisation fallback`);
+                return this.getFallbackContent(type, identifier);
+            }
+            
+            const content = await response.json();
+            this.addToCache(cacheKey, content);
+            
+            console.log(`Contenu ${cacheKey} chargé depuis le serveur`);
+            return content;
+            
+        } catch (error) {
+            console.error(`Erreur chargement ${cacheKey}:`, error);
+            return this.getFallbackContent(type, identifier);
+        } finally {
+            this.loadingStates.delete(cacheKey);
+        }
+    },
+    
+    buildContentUrl(type, identifier) {
+        const baseUrl = './content/';
+        switch(type) {
+            case 'daily':
+                return `${baseUrl}daily/${identifier}.json`;
+            case 'topic':
+                return `${baseUrl}topics/${identifier}.json`;
+            case 'event':
+                return `${baseUrl}events/${identifier}.json`;
+            default:
+                return `${baseUrl}${type}/${identifier}.json`;
+        }
+    },
+    
+    addToCache(key, content) {
+        // Gestion limite cache pour éviter surcharge mémoire
+        if (this.cache.size >= this.maxCacheSize) {
+            const oldestKey = this.cache.keys().next().value;
+            this.cache.delete(oldestKey);
+            console.log(`Cache nettoyé: suppression de ${oldestKey}`);
+        }
+        
+        this.cache.set(key, {
+            content,
+            timestamp: Date.now(),
+            size: JSON.stringify(content).length
+        });
+    },
+    
+    getFallbackContent(type, identifier) {
+        const fallbacks = {
+            daily: {
+                date: identifier,
+                title: `Actualités du ${this.formatDate(identifier)}`,
+                summary: "Les actualités de cette date sont en cours de chargement...",
+                sections: [
+                    {
+                        type: "geopolitical",
+                        title: "Situation Géopolitique",
+                        content: "Analyse géopolitique en cours de chargement. Veuillez patienter..."
+                    }
+                ],
+                events: [],
+                isLoading: true
+            },
+            topic: {
+                title: "Analyse Thématique",
+                content: "Contenu thématique en cours de chargement...",
+                isLoading: true
+            },
+            event: {
+                title: "Événement Historique",
+                content: "Détails de l'événement en cours de chargement...",
+                date: identifier,
+                isLoading: true
+            }
+        };
+        
+        return fallbacks[type] || { 
+            title: "Contenu Indisponible", 
+            content: "Le contenu demandé n'est pas disponible actuellement.",
+            isLoading: false
+        };
+    },
+    
+    formatDate(dateStr) {
+        try {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch {
+            return dateStr;
+        }
+    },
+    
+    // Méthode pour précharger du contenu populaire
+    async preloadContent(contentList) {
+        const promises = contentList.map(({type, identifier}) => 
+            this.loadContent(type, identifier)
+        );
+        
+        try {
+            await Promise.allSettled(promises);
+            console.log('Préchargement terminé');
+        } catch (error) {
+            console.warn('Erreur lors du préchargement:', error);
+        }
+    },
+    
+    // Statistiques du cache pour debug
+    getCacheStats() {
+        const totalSize = Array.from(this.cache.values())
+            .reduce((sum, item) => sum + item.size, 0);
+        
+        return {
+            items: this.cache.size,
+            totalSize: `${(totalSize / 1024).toFixed(2)} KB`,
+            maxItems: this.maxCacheSize
+        };
+    },
+    
+    // Nettoyer le cache manuellement
+    clearCache() {
+        this.cache.clear();
+        console.log('Cache vidé');
+    }
+};
+
 // Gestionnaire de performance et scroll
 const PerformanceManager = {
     isScrolledDown: false,
@@ -254,6 +424,7 @@ const Dashboard = {
         
         try {
             // Initialisation séquentielle
+            ContentManager.init();
             PerformanceManager.init();
             NewsManager.init();
             PopulationCounter.init();
@@ -294,9 +465,18 @@ const Dashboard = {
                 isScrollPaused: PerformanceManager.newsTickerPaused,
                 isLoading: NewsManager.isLoading,
                 counterRunning: PopulationCounter.updateInterval !== null,
-                audioPlaying: AudioManager.isPlaying
+                audioPlaying: AudioManager.isPlaying,
+                contentCache: ContentManager.getCacheStats()
             }),
-            showConfig: () => CONFIG
+            showConfig: () => CONFIG,
+            // Outils ContentManager
+            loadContent: (type, id) => ContentManager.loadContent(type, id),
+            getCacheStats: () => ContentManager.getCacheStats(),
+            clearCache: () => ContentManager.clearCache(),
+            preloadToday: () => {
+                const today = new Date().toISOString().split('T')[0];
+                return ContentManager.loadContent('daily', today);
+            }
         };
         
         console.log('Outils de debug disponibles: window.DashboardDebug');
@@ -671,11 +851,44 @@ const CalendarManager = {
         event.target.classList.add('selected');
         this.selectedDate = date;
         
-        // Pour l'instant, fermer le calendrier
-        // Plus tard, on ouvrira une modale avec les événements de cette date
+        // Charger le contenu de la date sélectionnée
+        const dateStr = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+        this.loadDateContent(dateStr);
+        
+        // Fermer le calendrier après sélection
         setTimeout(() => {
             closeCalendar();
         }, 500);
+    },
+    
+    async loadDateContent(dateStr) {
+        try {
+            console.log(`Chargement du contenu pour ${dateStr}`);
+            const content = await ContentManager.loadContent('daily', dateStr);
+            this.displayDateContent(content, dateStr);
+        } catch (error) {
+            console.error('Erreur lors du chargement du contenu:', error);
+            this.displayDateContent(
+                ContentManager.getFallbackContent('daily', dateStr), 
+                dateStr
+            );
+        }
+    },
+    
+    displayDateContent(content, dateStr) {
+        // Pour l'instant, afficher dans la console et créer une alerte
+        // Plus tard, cela ouvrira une modale dédiée au contenu
+        console.log('Contenu chargé:', content);
+        
+        const formattedDate = ContentManager.formatDate(dateStr);
+        const message = content.isLoading 
+            ? `Chargement du contenu pour ${formattedDate}...`
+            : `Contenu disponible pour ${formattedDate}:\n\n${content.title}\n\n${content.summary || content.content}`;
+            
+        // Notification temporaire (à remplacer par une modale plus tard)
+        if (window.confirm(`${message}\n\nVoulez-vous voir plus de détails ?`)) {
+            console.log('Détails complets:', content);
+        }
     },
     
     previousMonth() {

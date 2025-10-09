@@ -1,0 +1,48 @@
+{
+  "date": "2025-10-08",
+  "title": "Actualités du mardi 8 octobre 2025",
+  "summary": "Journée marquée par des développements technologiques majeurs et des négociations commerciales entre les superpuissances mondiales.",
+  "sections": [
+    {
+      "type": "geopolitical",
+      "title": "Géopolitique",
+      "content": "Les États-Unis et la Chine reprennent leurs négociations commerciales dans un climat tendu mais constructif. L'Europe maintient sa position d'indépendance stratégique avec de nouveaux accords de défense. La Russie intensifie ses opérations en Ukraine orientale."
+    },
+    {
+      "type": "technology",
+      "title": "Technologie",
+      "content": "Percée majeure dans l'intelligence artificielle quantique avec la présentation du premier processeur commercial. Les géants tech annoncent des investissements record dans la recherche fondamentale. Nouvelles régulations en préparation pour l'IA générative."
+    },
+    {
+      "type": "economic",
+      "title": "Économie",
+      "content": "Inflation mondiale stabilisée à 3.2%, les banques centrales maintiennent leurs politiques accommodantes. Le Bitcoin franchit de nouveaux sommets à 87,000$. Les matières premières restent volatiles."
+    }
+  ],
+  "events": [
+    {
+      "time": "08:00",
+      "title": "Annonce technologique",
+      "description": "Dévoilement du processeur quantique commercial",
+      "importance": "high"
+    },
+    {
+      "time": "16:30",
+      "title": "Réunion Fed-BCE",
+      "description": "Coordination des politiques monétaires transatlantiques",
+      "importance": "high"
+    }
+  ],
+  "mood": {
+    "stability": 71,
+    "optimism": 74,
+    "concern_level": 38
+  },
+  "sources": [
+    "France24",
+    "Bloomberg",
+    "TechCrunch",
+    "Le Monde"
+  ],
+  "last_updated": "2025-10-08T20:15:00Z"
+}
