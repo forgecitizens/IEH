@@ -996,16 +996,39 @@
 }
 
 .accordion-content.active {
-    max-height: none;
+    max-height: 2000px;
+    overflow-y: auto;
 }
 
 .full-summary {
     padding: 20px;
     background: rgba(0, 0, 0, 0.2);
     font-size: 0.95rem;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #e0e0e0;
     text-align: justify;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #00ffff rgba(0, 0, 0, 0.3);
+}
+
+.full-summary::-webkit-scrollbar {
+    width: 6px;
+}
+
+.full-summary::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.full-summary::-webkit-scrollbar-thumb {
+    background: #00ffff;
+    border-radius: 3px;
+}
+
+.full-summary::-webkit-scrollbar-thumb:hover {
+    background: #00cccc;
 }
 
 /* Responsive design pour le bandeau et les boutons de contrôle */
