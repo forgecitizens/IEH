@@ -21,113 +21,114 @@ const CONFIG = {
 const ContentManager = {
     cache: new Map(),
     maxCacheSize: 50,
-    loadingStates: new Set(),
+    
+    // Données intégrées pour site statique
+    staticData: {
+        'daily-2025-10-08': {
+            date: "2025-10-08",
+            title: "Actualités du 8 octobre 2025",
+            stability_score: 450,
+            stability_justification: "Ce score reflète un équilibre précaire entre les progrès diplomatiques (cessez-le-feu Israël-Hamas) et les tensions systémiques (guerre Ukraine-Russie, shutdown américain, défis économiques des BRICS face au dollar). Les conflits armés, les risques nucléaires et les crises politiques maintiennent le monde dans une zone de volatilité modérée, à mi-chemin entre le chaos et la prospérité.",
+            summary: "Le 8 octobre 2025 marque une journée charnière avec un cessez-le-feu fragile entre Israël et le Hamas négocié par Trump en Égypte, tandis que la guerre Ukraine-Russie s'enlise avec des frappes de drones massives et des menaces nucléaires. Aux États-Unis, le shutdown gouvernemental paralyse le pays pendant que Trump négocie avec Xi Jinping face à un BRICS élargi défiant l'hégémonie du dollar.",
+            full_summary: "1. DIPLOMATIE FRAGILE AU MOYEN-ORIENT\n\nIsraël et le Hamas ont conclu la première phase d'un accord de cessez-le-feu le 8 octobre 2025, négocié par les États-Unis, l'Égypte, le Qatar et la Turquie à Charm el-Cheikh. Cet accord prévoit un retrait partiel des troupes israéliennes de Gaza, l'échange de 48 otages israéliens contre des prisonniers palestiniens, et l'entrée d'aide humanitaire. Trump a salué un 'succès diplomatique majeur', mais des questions persistent sur le désarmement du Hamas et la gouvernance future de Gaza.\n\n2. GUERRE UKRAINE-RUSSIE : ESCALADE HYBRIDE\n\nLa guerre s'enlise avec des gains russes limités (environ 3 500 km² en 2025). L'Ukraine a mené des frappes de drones massives contre des installations russes, causant 714 millions $ de dommages et mettant 40% de la capacité de raffinage hors ligne. La Russie menace sur le nucléaire avec la suspension de l'accord PMDA, tandis que des drones russes survolent l'Europe (Belgique, Allemagne).\n\n3. ÉTATS-UNIS : SHUTDOWN ET ISOLATIONNISME\n\nLe shutdown gouvernemental entre dans sa 8e journée, paralysant les opérations fédérales. Trump accentue son 'America First' avec des tarifs record et négocie directement avec Xi Jinping, remettant en question l'ordre multilatéral établi depuis 1945.\n\n4. DÉFI DES BRICS À L'HÉGÉMONIE OCCIDENTALE\n\nLe BRICS élargi (10 membres) défie le système financier occidental avec l'or à plus de 4 000$ l'once et Bitcoin à plus de 125 000$. L'initiative remet en question la domination du dollar dans les échanges internationaux, créant une alternative géopolitique majeure.",
+            content: "Analyse géopolitique complète du 8 octobre 2025 montrant un monde multipolaire en transition, entre diplomatie fragile et tensions systémiques.",
+            sections: [
+                {
+                    type: "geopolitical",
+                    title: "Situation Géopolitique",
+                    content: "Le monde du 8 octobre 2025 se caractérise par une multipolarité croissante et des tensions géopolitiques intenses, avec des avancées diplomatiques fragiles au Moyen-Orient contrebalancées par l'enlisement du conflit ukrainien et les défis économiques mondiaux."
+                }
+            ],
+            events: [],
+            isLoading: false
+        },
+        'daily-2025-10-09': {
+            date: "2025-10-09",
+            title: "Actualités du 9 octobre 2025",
+            stability_score: 475,
+            stability_justification: "Légère amélioration grâce à la confirmation du cessez-le-feu israélo-palestinien et aux signaux de désescalade diplomatique. Cependant, l'instabilité persiste avec les tensions Ukraine-Russie, les défis économiques américains et les rivalités géopolitiques. Le score reste dans la zone de volatilité modérée.",
+            summary: "Le 9 octobre 2025 confirme le cessez-le-feu israélo-palestinien avec l'approbation du cabinet Netanyahu, apportant un espoir fragile de stabilisation au Moyen-Orient. La diplomatie internationale s'active pour consolider cet accord tandis que les autres foyers de tension mondiale persistent.",
+            full_summary: "Suite des développements du 8 octobre avec la consolidation diplomatique au Moyen-Orient et les efforts internationaux pour stabiliser la région.",
+            content: "Confirmation des accords diplomatiques et efforts de stabilisation régionale.",
+            sections: [
+                {
+                    type: "geopolitical",
+                    title: "Consolidation Diplomatique",
+                    content: "Les efforts diplomatiques se concentrent sur la consolidation du cessez-le-feu israélo-palestinien et la recherche de solutions durables aux conflits régionaux."
+                }
+            ],
+            events: [],
+            isLoading: false
+        }
+    },
     
     init() {
-        console.log('Content Manager initialise');
+        console.log('Content Manager initialise avec données statiques');
     },
     
     async loadContent(type, identifier) {
         const cacheKey = `${type}-${identifier}`;
         
-        // Eviter les chargements doubles
-        if (this.loadingStates.has(cacheKey)) {
-            return this.getFallbackContent(type, identifier);
-        }
-        
         // Vérifier le cache d'abord
         if (this.cache.has(cacheKey)) {
-            const cached = this.cache.get(cacheKey);
-            // Vérifier l'age du cache (24h pour daily, 1h pour topics)
-            const maxAge = type === 'daily' ? 86400000 : 3600000;
-            if (Date.now() - cached.timestamp < maxAge) {
-                console.log(`Contenu ${cacheKey} chargé depuis le cache`);
-                return cached.content;
-            } else {
-                this.cache.delete(cacheKey);
-            }
+            console.log(`Contenu ${cacheKey} chargé depuis le cache`);
+            return this.cache.get(cacheKey);
         }
         
-        this.loadingStates.add(cacheKey);
-        
-        try {
-            const url = this.buildContentUrl(type, identifier);
-            const response = await fetch(url);
-            
-            if (!response.ok) {
-                console.warn(`Contenu ${cacheKey} non trouvé, utilisation fallback`);
-                return this.getFallbackContent(type, identifier);
-            }
-            
-            const content = await response.json();
-            this.addToCache(cacheKey, content);
-            
-            console.log(`Contenu ${cacheKey} chargé depuis le serveur`);
+        // Charger depuis les données statiques
+        const content = this.getStaticContent(type, identifier);
+        if (content) {
+            this.cache.set(cacheKey, content);
+            console.log(`Contenu ${cacheKey} chargé depuis les données statiques`);
             return content;
-            
-        } catch (error) {
-            console.error(`Erreur chargement ${cacheKey}:`, error);
-            return this.getFallbackContent(type, identifier);
-        } finally {
-            this.loadingStates.delete(cacheKey);
-        }
-    },
-    
-    buildContentUrl(type, identifier) {
-        const baseUrl = './content/';
-        switch(type) {
-            case 'daily':
-                return `${baseUrl}daily/${identifier}.json`;
-            case 'topic':
-                return `${baseUrl}topics/${identifier}.json`;
-            case 'event':
-                return `${baseUrl}events/${identifier}.json`;
-            default:
-                return `${baseUrl}${type}/${identifier}.json`;
-        }
-    },
-    
-    addToCache(key, content) {
-        // Gestion limite cache pour éviter surcharge mémoire
-        if (this.cache.size >= this.maxCacheSize) {
-            const oldestKey = this.cache.keys().next().value;
-            this.cache.delete(oldestKey);
-            console.log(`Cache nettoyé: suppression de ${oldestKey}`);
         }
         
-        this.cache.set(key, {
-            content,
-            timestamp: Date.now(),
-            size: JSON.stringify(content).length
-        });
+        // Fallback si pas trouvé
+        console.warn(`Contenu ${cacheKey} non trouvé, utilisation fallback`);
+        return this.getFallbackContent(type, identifier);
     },
+    
+    getStaticContent(type, identifier) {
+        const key = `${type}-${identifier}`;
+        console.log(`Recherche de la clé: ${key}`);
+        console.log('Clés disponibles:', Object.keys(this.staticData));
+        const content = this.staticData[key] || null;
+        console.log('Contenu trouvé:', content ? 'Oui' : 'Non');
+        return content;
+    },
+    
+
     
     getFallbackContent(type, identifier) {
         const fallbacks = {
             daily: {
                 date: identifier,
                 title: `Actualités du ${this.formatDate(identifier)}`,
-                summary: "Les actualités de cette date sont en cours de chargement...",
+                stability_score: 500,
+                stability_justification: "Score de stabilité non disponible pour cette date.",
+                summary: "Les actualités de cette date ne sont pas encore disponibles. Veuillez consulter les dates disponibles dans le calendrier.",
+                full_summary: "Contenu détaillé non disponible pour cette date.",
+                content: "Contenu en cours de préparation.",
                 sections: [
                     {
                         type: "geopolitical",
                         title: "Situation Géopolitique",
-                        content: "Analyse géopolitique en cours de chargement. Veuillez patienter..."
+                        content: "Analyse géopolitique non disponible pour cette date."
                     }
                 ],
                 events: [],
-                isLoading: true
+                isLoading: false
             },
             topic: {
                 title: "Analyse Thématique",
-                content: "Contenu thématique en cours de chargement...",
-                isLoading: true
+                content: "Contenu thématique non disponible.",
+                isLoading: false
             },
             event: {
                 title: "Événement Historique",
-                content: "Détails de l'événement en cours de chargement...",
+                content: "Détails de l'événement non disponibles.",
                 date: identifier,
-                isLoading: true
+                isLoading: false
             }
         };
         
@@ -168,14 +169,23 @@ const ContentManager = {
     
     // Statistiques du cache pour debug
     getCacheStats() {
-        const totalSize = Array.from(this.cache.values())
-            .reduce((sum, item) => sum + item.size, 0);
-        
         return {
             items: this.cache.size,
-            totalSize: `${(totalSize / 1024).toFixed(2)} KB`,
+            staticDataItems: Object.keys(this.staticData).length,
             maxItems: this.maxCacheSize
         };
+    },
+    
+    // Méthode pour lister les dates disponibles
+    getAvailableDates() {
+        const dates = [];
+        for (const key in this.staticData) {
+            if (key.startsWith('daily-')) {
+                const date = key.replace('daily-', '');
+                dates.push(date);
+            }
+        }
+        return dates.sort();
     },
     
     // Nettoyer le cache manuellement
@@ -595,7 +605,6 @@ function openPopulationModal() {
 function closePopulationModal() {
     const modal = document.getElementById('population-modal');
     if (modal) {
-        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto'; // Restaurer le scroll du body
         console.log('Modale population fermee');
@@ -776,7 +785,6 @@ function openCreditsModal() {
 function closeCreditsModal() {
     const modal = document.getElementById('credits-modal');
     if (modal) {
-        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
         console.log('Modale credits fermee');
@@ -912,6 +920,11 @@ const CalendarManager = {
             dayElement.classList.add('today');
         }
         
+        // Marquer la date précédemment sélectionnée
+        if (this.selectedDate && date.toDateString() === this.selectedDate.toDateString()) {
+            dayElement.classList.add('selected');
+        }
+        
         // Gestion du clic
         dayElement.addEventListener('click', () => {
             this.selectDate(date);
@@ -930,13 +943,16 @@ const CalendarManager = {
         event.target.classList.add('selected');
         this.selectedDate = date;
         
-        // Charger le contenu de la date sélectionnée
-        const dateStr = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+        // Charger le contenu de la date sélectionnée (éviter les problèmes de fuseau horaire)
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`; // Format YYYY-MM-DD
         this.loadDateContent(dateStr);
         
-        // Fermer le calendrier après sélection
+        // Fermer le calendrier silencieusement après sélection (pas de son pour éviter collision)
         setTimeout(() => {
-            closeCalendar();
+            closeCalendarSilent();
         }, 500);
     },
     
@@ -944,6 +960,7 @@ const CalendarManager = {
         try {
             console.log(`Chargement du contenu pour ${dateStr}`);
             const content = await ContentManager.loadContent('daily', dateStr);
+            console.log('Contenu trouvé:', content);
             this.displayDateContent(content, dateStr);
         } catch (error) {
             console.error('Erreur lors du chargement du contenu:', error);
@@ -974,6 +991,12 @@ function openCalendar() {
     const modal = document.getElementById('calendar-modal');
     if (modal) {
         AudioManager.playModalOpen();
+        
+        // Restaurer le mois de la date sélectionnée si elle existe
+        if (CalendarManager.selectedDate) {
+            CalendarManager.currentDate = new Date(CalendarManager.selectedDate.getFullYear(), CalendarManager.selectedDate.getMonth(), 1);
+        }
+        
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         CalendarManager.generateCalendar();
@@ -984,10 +1007,19 @@ function openCalendar() {
 function closeCalendar() {
     const modal = document.getElementById('calendar-modal');
     if (modal) {
-        AudioManager.playModalClose();
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
         console.log('Calendrier ferme');
+    }
+}
+
+function closeCalendarSilent() {
+    const modal = document.getElementById('calendar-modal');
+    if (modal) {
+        // Fermeture silencieuse sans son
+        modal.classList.remove('active');
+        // Ne pas restaurer le scroll car on va ouvrir une autre modale
+        console.log('Calendrier ferme silencieusement');
     }
 }
 
@@ -1057,8 +1089,7 @@ function openDailyContentModal(content, dateStr) {
     // Réinitialiser l'accordéon
     resetAccordion();
     
-    // Ouvrir la modale
-    AudioManager.playModalOpen();
+    // Ouvrir la modale (sans son car déjà dans le contexte calendrier)
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     console.log('Modale contenu quotidien ouverte');
@@ -1067,11 +1098,16 @@ function openDailyContentModal(content, dateStr) {
 function closeDailyContent() {
     const modal = document.getElementById('daily-content-modal');
     if (modal) {
-        AudioManager.playModalClose();
         modal.classList.remove('active');
-        document.body.style.overflow = 'auto';
         hideStabilityTooltip();
-        console.log('Modale contenu quotidien fermée');
+        
+        // Rouvrir le calendrier après un court délai pour une transition fluide
+        // Ne pas restaurer le scroll du body car on va rouvrir une modale
+        setTimeout(() => {
+            openCalendar();
+        }, 200);
+        
+        console.log('Modale contenu quotidien fermée, retour au calendrier');
     }
 }
 
