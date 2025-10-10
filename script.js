@@ -460,6 +460,17 @@ const Dashboard = {
             AudioManager.preloadModalSounds();
             CalendarManager.init();
             
+            // Forcer l'ouverture de l'accordéon du graphique
+            this.ensureChartAccordionOpen();
+            
+            // Initialiser le graphique avec un délai pour s'assurer que le DOM est prêt
+            setTimeout(() => {
+                console.log('🚀 Initialisation différée du graphique...');
+                StabilityChartManager.init();
+            }, 500);
+            
+            // Pas de simulation - mise à jour uniquement avec de nouvelles données
+            
             // Outils de debug
             this.setupDebugTools();
             
@@ -509,6 +520,48 @@ const Dashboard = {
         };
         
         console.log('Outils de debug disponibles: window.DashboardDebug');
+    },
+    
+    startStabilitySimulation() {
+        // Simulation de fluctuations de stabilité toutes les 20 secondes
+        setInterval(() => {
+            // Sélectionner une date au hasard
+            const dateIndex = Math.floor(Math.random() * StabilityChartManager.data.length);
+            const dataPoint = StabilityChartManager.data[dateIndex];
+            
+            if (dataPoint) {
+                // Récupérer le score de base depuis les données statiques
+                const dateStr = `2025-10-${dataPoint.date.split('/')[0]}`;
+                const content = ContentManager.getStaticContent('daily', dateStr);
+                const baseScore = content ? content.stabilityScore : dataPoint.score;
+                
+                // Simuler une fluctuation réaliste
+                const fluctuation = (Math.random() - 0.5) * 40; // ±20 points
+                const newScore = Math.max(200, Math.min(800, baseScore + fluctuation));
+                
+                // Mettre à jour le graphique
+                StabilityChartManager.updateScore(dataPoint.date, Math.round(newScore));
+                
+                console.log(`📊 Stabilité simulée: ${dataPoint.date} → ${Math.round(newScore)}`);
+            }
+        }, 20000);
+        
+        console.log('🔄 Simulation de stabilité activée (mise à jour toutes les 20s)');
+    },
+    
+    ensureChartAccordionOpen() {
+        console.log('📂 Vérification de l\'ouverture de l\'accordéon...');
+        
+        const accordionButton = document.getElementById('chart-accordion-btn');
+        const accordionContent = document.getElementById('chart-accordion-content');
+        
+        if (accordionButton && accordionContent) {
+            accordionButton.classList.add('active');
+            accordionContent.classList.add('active');
+            console.log('✅ Accordéon forcé ouvert');
+        } else {
+            console.error('❌ Éléments accordéon non trouvés');
+        }
     }
 };
 
@@ -943,12 +996,49 @@ const CalendarManager = {
             dayElement.classList.add('selected');
         }
         
+        // Ajouter la pastille de score de stabilité si la date a des données
+        this.addStabilityIndicator(dayElement, date);
+        
         // Gestion du clic
         dayElement.addEventListener('click', () => {
             this.selectDate(date);
         });
         
         grid.appendChild(dayElement);
+    },
+    
+    addStabilityIndicator(dayElement, date) {
+        // Format de la date pour chercher dans les données statiques
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
+        
+        // Vérifier si on a des données pour cette date
+        const content = ContentManager.getStaticContent('daily', dateStr);
+        if (content && content.stability_score) {
+            const indicator = document.createElement('div');
+            indicator.className = 'stability-indicator';
+            
+            // Déterminer la couleur basée sur le score
+            const color = this.getStabilityColor(content.stability_score);
+            indicator.style.backgroundColor = color;
+            
+            dayElement.appendChild(indicator);
+        }
+    },
+    
+    getStabilityColor(score) {
+        if (score < 100) return '#ff0000'; // Rouge vif (0-100)
+        if (score < 200) return '#ff4400'; // Rouge-orange (100-200)
+        if (score < 300) return '#ff8800'; // Orange (200-300)
+        if (score < 400) return '#ffaa00'; // Orange-jaune (300-400)
+        if (score < 500) return '#ffdd00'; // Jaune (400-500)
+        if (score < 600) return '#ddff00'; // Jaune-vert (500-600)
+        if (score < 700) return '#88ff00'; // Vert-jaune (600-700)
+        if (score < 800) return '#44ff00'; // Vert (700-800)
+        if (score < 900) return '#00ff44'; // Vert vif (800-900)
+        return '#808000'; // Vert olive (900-1000)
     },
     
     selectDate(date) {
@@ -1174,8 +1264,7 @@ function showStabilityTooltip() {
     if (tooltip && overlay) {
         overlay.classList.add('visible');
         tooltip.classList.add('visible');
-        // Empêcher le scroll du body
-        document.body.style.overflow = 'hidden';
+        // Ne pas modifier body overflow car la modale parent le gère déjà
     }
 }
 
@@ -1185,11 +1274,7 @@ function hideStabilityTooltip() {
     if (tooltip && overlay) {
         tooltip.classList.remove('visible');
         overlay.classList.remove('visible');
-        // Restaurer le scroll du body seulement si aucune modale n'est active
-        const activeModals = document.querySelectorAll('.modal.active');
-        if (activeModals.length === 0) {
-            document.body.style.overflow = 'auto';
-        }
+        // Ne pas modifier body overflow - la modale parent gère le scroll
     }
 }
 
@@ -1220,6 +1305,554 @@ function resetAccordion() {
         content.classList.remove('active');
         button.querySelector('span').textContent = 'Afficher le résumé complet';
     }
+}
+
+// ================================================================
+// GESTIONNAIRE GRAPHIQUE STABILITÉ
+// ================================================================
+
+function toggleChartAccordion() {
+    console.log('🔄 Toggle accordéon graphique...');
+    
+    const button = document.getElementById('chart-accordion-btn');
+    const content = document.getElementById('chart-accordion-content');
+    
+    if (!button || !content) {
+        console.error('❌ Éléments accordéon non trouvés');
+        return;
+    }
+    
+    if (button.classList.contains('active')) {
+        // Fermer l'accordéon
+        console.log('📁 Fermeture accordéon');
+        button.classList.remove('active');
+        content.classList.remove('active');
+    } else {
+        // Ouvrir l'accordéon
+        console.log('📂 Ouverture accordéon');
+        button.classList.add('active');
+        content.classList.add('active');
+        
+        // Redessiner le graphique au cas où (avec la bonne méthode)
+        setTimeout(() => {
+            if (StabilityChartManager && StabilityChartManager.renderSVGChart) {
+                StabilityChartManager.renderSVGChart();
+            }
+        }, 300);
+    }
+}
+
+const StabilityChartManager = {
+    data: [],
+    container: null,
+    
+    init() {
+        console.log('🎯 Stability Chart Manager - Initialisation SVG...');
+        this.container = document.getElementById('stability-chart-svg');
+        
+        if (!this.container) {
+            console.error('❌ Container #stability-chart-svg introuvable !');
+            return;
+        }
+        
+        console.log('✅ Container SVG trouvé');
+        this.loadStabilityData();
+        this.updateFooter();
+    },
+    
+
+    
+    loadStabilityData() {
+        console.log('📊 Chargement des données de stabilité...');
+        
+        // Récupérer les vraies données de stabilité avec fallback robuste
+        const dates = ['2025-10-08', '2025-10-09', '2025-10-10'];
+        this.data = dates.map((dateStr, index) => {
+            const content = ContentManager.getStaticContent('daily', dateStr);
+            let score = 450 + index * 25; // Fallback par défaut
+            
+            if (content && content.stabilityScore) {
+                score = content.stabilityScore;
+                console.log(`✅ Score réel trouvé pour ${dateStr}: ${score}`);
+            } else {
+                console.log(`⚠️ Score fallback pour ${dateStr}: ${score}`);
+            }
+            
+            const displayDate = `${dateStr.split('-')[2]}/${dateStr.split('-')[1]}`;
+            return {
+                date: displayDate,
+                score: score,
+                timestamp: new Date().getTime()
+            };
+        });
+        
+        console.log('📊 Données finales chargées:', this.data);
+        
+        console.log('📋 Données chargées:', this.data);
+        this.renderSVGChart();
+    },
+    
+    renderSVGChart() {
+        console.log('🎨 Rendu du graphique SVG...');
+        
+        if (!this.container || this.data.length === 0) {
+            console.error('❌ Container ou données manquants');
+            return;
+        }
+        
+        const width = 760;
+        const height = 250;
+        const padding = { top: 20, right: 40, bottom: 40, left: 60 };
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+        
+        // Créer le SVG
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'stability-chart-svg');
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        
+        // Grille et axes
+        this.createGrid(svg, padding, chartWidth, chartHeight);
+        
+        // Courbe et points
+        this.createCurve(svg, padding, chartWidth, chartHeight);
+        this.createPoints(svg, padding, chartWidth, chartHeight);
+        
+        // Labels
+        this.createLabels(svg, padding, chartWidth, chartHeight);
+        
+        // Remplacer le contenu
+        this.container.innerHTML = '';
+        this.container.appendChild(svg);
+        
+        console.log('✅ Graphique SVG rendu');
+    },
+    
+    createGrid(svg, padding, chartWidth, chartHeight) {
+        // Lignes de grille horizontales - 5 divisions
+        for (let i = 0; i <= 4; i++) {
+            const y = padding.top + chartHeight - (i / 4) * chartHeight;
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('class', 'chart-grid-line');
+            line.setAttribute('x1', padding.left);
+            line.setAttribute('y1', y);
+            line.setAttribute('x2', padding.left + chartWidth);
+            line.setAttribute('y2', y);
+            svg.appendChild(line);
+        }
+        
+        // Axes principaux
+        const axisY = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        axisY.setAttribute('class', 'chart-axis');
+        axisY.setAttribute('x1', padding.left);
+        axisY.setAttribute('y1', padding.top);
+        axisY.setAttribute('x2', padding.left);
+        axisY.setAttribute('y2', padding.top + chartHeight);
+        svg.appendChild(axisY);
+        
+        const axisX = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        axisX.setAttribute('class', 'chart-axis');
+        axisX.setAttribute('x1', padding.left);
+        axisX.setAttribute('y1', padding.top + chartHeight);
+        axisX.setAttribute('x2', padding.left + chartWidth);
+        axisX.setAttribute('y2', padding.top + chartHeight);
+        svg.appendChild(axisX);
+    },
+    
+    createCurve(svg, padding, chartWidth, chartHeight) {
+        if (this.data.length < 2) return;
+        
+        // Calculer les valeurs min/max pour une meilleure échelle
+        const scores = this.data.map(d => d.score);
+        const minScore = Math.min(...scores);
+        const maxScore = Math.max(...scores);
+        
+        // Ajouter une marge pour éviter les limites
+        const margin = (maxScore - minScore) * 0.1 || 50;
+        const scaleMin = Math.max(0, minScore - margin);
+        const scaleMax = Math.min(1000, maxScore + margin);
+        const scaleRange = scaleMax - scaleMin;
+        
+        let pathData = '';
+        this.data.forEach((point, index) => {
+            const x = padding.left + (index / (this.data.length - 1)) * chartWidth;
+            const normalizedScore = (point.score - scaleMin) / scaleRange;
+            const y = padding.top + chartHeight - (normalizedScore * chartHeight);
+            
+            if (index === 0) {
+                pathData += `M ${x} ${y}`;
+            } else {
+                pathData += ` L ${x} ${y}`;
+            }
+        });
+        
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('class', 'chart-curve');
+        path.setAttribute('d', pathData);
+        svg.appendChild(path);
+        
+
+    },
+    
+    createPoints(svg, padding, chartWidth, chartHeight) {
+        // Utiliser la même échelle que pour la courbe
+        const scores = this.data.map(d => d.score);
+        const minScore = Math.min(...scores);
+        const maxScore = Math.max(...scores);
+        const margin = (maxScore - minScore) * 0.1 || 50;
+        const scaleMin = Math.max(0, minScore - margin);
+        const scaleMax = Math.min(1000, maxScore + margin);
+        const scaleRange = scaleMax - scaleMin;
+        
+        this.data.forEach((point, index) => {
+            const x = padding.left + (index / (this.data.length - 1)) * chartWidth;
+            const normalizedScore = (point.score - scaleMin) / scaleRange;
+            const y = padding.top + chartHeight - (normalizedScore * chartHeight);
+            
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('class', 'chart-point');
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', 4);
+            circle.setAttribute('data-score', point.score);
+            circle.setAttribute('data-date', point.date);
+            
+            // Tooltip au survol
+            circle.addEventListener('mouseenter', (e) => {
+                const tooltip = document.createElement('div');
+                tooltip.style.cssText = `
+                    position: absolute;
+                    background: rgba(0, 0, 0, 0.9);
+                    color: #00ffff;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    pointer-events: none;
+                    z-index: 1000;
+                    border: 1px solid #00ffff;
+                `;
+                tooltip.textContent = `${point.date}: ${point.score} points`;
+                document.body.appendChild(tooltip);
+                
+                const updateTooltipPosition = (event) => {
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY - 30) + 'px';
+                };
+                
+                updateTooltipPosition(e);
+                circle.addEventListener('mousemove', updateTooltipPosition);
+                
+                circle.addEventListener('mouseleave', () => {
+                    document.body.removeChild(tooltip);
+                });
+            });
+            
+            svg.appendChild(circle);
+        });
+    },
+    
+    createLabels(svg, padding, chartWidth, chartHeight) {
+        // Utiliser la même échelle adaptée
+        const scores = this.data.map(d => d.score);
+        const minScore = Math.min(...scores);
+        const maxScore = Math.max(...scores);
+        const margin = (maxScore - minScore) * 0.1 || 50;
+        const scaleMin = Math.max(0, minScore - margin);
+        const scaleMax = Math.min(1000, maxScore + margin);
+        const scaleRange = scaleMax - scaleMin;
+        
+        // Labels Y (scores) - 5 divisions
+        for (let i = 0; i <= 4; i++) {
+            const score = scaleMin + (i / 4) * scaleRange;
+            const y = padding.top + chartHeight - (i / 4) * chartHeight;
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('class', 'chart-label');
+            text.setAttribute('x', padding.left - 10);
+            text.setAttribute('y', y + 4);
+            text.setAttribute('text-anchor', 'end');
+            text.textContent = Math.round(score);
+            svg.appendChild(text);
+        }
+        
+        // Labels X (dates)
+        this.data.forEach((point, index) => {
+            const x = padding.left + (index / (this.data.length - 1)) * chartWidth;
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('class', 'chart-label');
+            text.setAttribute('x', x);
+            text.setAttribute('y', padding.top + chartHeight + 20);
+            text.textContent = point.date;
+            svg.appendChild(text);
+        });
+    },
+    
+    updateFooter() {
+        const lastUpdate = document.getElementById('last-update');
+        const trendIndicator = document.getElementById('trend-indicator');
+        
+        if (lastUpdate) {
+            lastUpdate.textContent = new Date().toLocaleTimeString();
+        }
+        
+        if (trendIndicator && this.data.length >= 2) {
+            const trend = this.calculateTrend();
+            trendIndicator.textContent = trend.text;
+            trendIndicator.className = trend.class;
+        }
+    },
+    
+    calculateTrend() {
+        if (this.data.length < 2) return { text: '--', class: '' };
+        
+        const firstScore = this.data[0].score;
+        const lastScore = this.data[this.data.length - 1].score;
+        const diff = lastScore - firstScore;
+        
+        if (Math.abs(diff) < 10) {
+            return { text: 'Stable', class: 'stable' };
+        } else if (diff > 0) {
+            return { text: `+${diff} ↗`, class: 'positive' };
+        } else {
+            return { text: `${diff} ↘`, class: 'negative' };
+        }
+    },
+    
+    // Méthode pour mettre à jour avec de nouvelles données
+    updateScore(date, newScore) {
+        const dataPoint = this.data.find(d => d.date === date);
+        if (dataPoint) {
+            dataPoint.score = newScore;
+            dataPoint.timestamp = new Date().getTime();
+            this.renderSVGChart();
+            this.updateFooter();
+            console.log(`📊 Score mis à jour: ${date} → ${newScore}`);
+        }
+    },
+    
+    // Méthode pour ajouter une nouvelle journée
+    addNewDay(date, score) {
+        this.data.push({
+            date: date,
+            score: score,
+            timestamp: new Date().getTime()
+        });
+        this.renderSVGChart();
+        this.updateFooter();
+        console.log(`📅 Nouvelle journée ajoutée: ${date} → ${score}`);
+    },
+    
+    startAutoUpdate() {
+        // Mise à jour toutes les 5 secondes
+        setInterval(() => {
+            this.loadStabilityData();
+        }, 5000);
+    },
+    
+    drawChart() {
+        console.log('🎨 Début du dessin du graphique...');
+        
+        if (!this.canvas || !this.ctx) {
+            console.error('❌ Canvas ou contexte manquant');
+            return;
+        }
+        
+        if (this.data.length === 0) {
+            console.error('❌ Aucune donnée à afficher');
+            return;
+        }
+        
+        console.log('📊 Données à dessiner:', this.data);
+        
+        const width = this.canvas.width;
+        const height = this.canvas.height;
+        console.log('📐 Dimensions canvas:', width, 'x', height);
+        
+        // Effacer le canvas (garde le carré rouge pour le moment)
+        // this.ctx.clearRect(0, 0, width, height);
+        
+        // Configuration
+        const padding = 60;
+        const chartWidth = width - 2 * padding;
+        const chartHeight = height - 2 * padding;
+        
+        // Échelles
+        const minScore = 0;
+        const maxScore = 1000;
+        const scoreRange = maxScore - minScore;
+        
+        // Style
+        this.ctx.strokeStyle = '#00ffff';
+        this.ctx.fillStyle = '#00ffff';
+        this.ctx.font = '12px Roboto';
+        this.ctx.lineWidth = 2;
+        
+        console.log('🎯 Début du dessin des éléments...');
+        
+        // Test simple : dessiner un rectangle bleu
+        this.ctx.fillStyle = '#0000ff';
+        this.ctx.fillRect(100, 100, 100, 50);
+        console.log('🔵 Rectangle bleu de test dessiné');
+        
+        // Dessiner les axes
+        try {
+            this.drawAxes(this.ctx, padding, chartWidth, chartHeight, minScore, maxScore);
+            console.log('📏 Axes dessinés');
+        } catch (e) {
+            console.error('❌ Erreur axes:', e);
+        }
+        
+        // Dessiner la courbe
+        try {
+            this.drawCurve(this.ctx, padding, chartWidth, chartHeight, minScore, scoreRange);
+            console.log('📈 Courbe dessinée');
+        } catch (e) {
+            console.error('❌ Erreur courbe:', e);
+        }
+        
+        // Dessiner les points
+        try {
+            this.drawPoints(this.ctx, padding, chartWidth, chartHeight, minScore, scoreRange);
+            console.log('🔴 Points dessinés');
+        } catch (e) {
+            console.error('❌ Erreur points:', e);
+        }
+        
+        // Afficher les valeurs actuelles
+        try {
+            this.drawCurrentValues(this.ctx, padding, chartWidth, chartHeight);
+            console.log('📊 Valeurs actuelles affichées');
+        } catch (e) {
+            console.error('❌ Erreur valeurs:', e);
+        }
+        
+        console.log('✅ Graphique terminé');
+    },
+    
+    drawAxes(ctx, padding, chartWidth, chartHeight, minScore, maxScore) {
+        // Axe Y (scores)
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, padding + chartHeight);
+        ctx.stroke();
+        
+        // Axe X (dates)
+        ctx.beginPath();
+        ctx.moveTo(padding, padding + chartHeight);
+        ctx.lineTo(padding + chartWidth, padding + chartHeight);
+        ctx.stroke();
+        
+        // Graduations Y (tous les 100 points)
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '10px Roboto';
+        for (let score = minScore; score <= maxScore; score += 100) {
+            const y = padding + chartHeight - (score / 1000) * chartHeight;
+            ctx.beginPath();
+            ctx.moveTo(padding - 5, y);
+            ctx.lineTo(padding, y);
+            ctx.strokeStyle = '#666666';
+            ctx.stroke();
+            ctx.fillText(score.toString(), padding - 30, y + 3);
+        }
+        
+        // Labels des dates
+        this.data.forEach((point, index) => {
+            const x = padding + (index / (this.data.length - 1)) * chartWidth;
+            ctx.fillText(point.date, x - 15, padding + chartHeight + 20);
+        });
+        
+        // Titre des axes
+        ctx.fillStyle = '#00ffff';
+        ctx.font = '12px Roboto';
+        ctx.fillText('Score de Stabilité', 10, 20);
+        ctx.fillText('Octobre 2025', padding + chartWidth / 2 - 30, padding + chartHeight + 40);
+    },
+    
+    drawCurrentValues(ctx, padding, chartWidth, chartHeight) {
+        // Afficher les valeurs actuelles en temps réel
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px Roboto';
+        
+        const currentDate = new Date().toLocaleDateString('fr-FR', { 
+            day: '2-digit', 
+            month: '2-digit' 
+        });
+        
+        const currentData = this.data.find(d => d.date === currentDate);
+        if (currentData) {
+            ctx.fillStyle = this.getScoreColor(currentData.score);
+            ctx.fillText(`ACTUEL: ${currentData.score}`, padding + chartWidth - 100, 25);
+        }
+        
+        // Dernière mise à jour
+        ctx.fillStyle = '#888888';
+        ctx.font = '10px Roboto';
+        const now = new Date();
+        ctx.fillText(`Mis à jour: ${now.toLocaleTimeString()}`, padding, padding + chartHeight + 60);
+    },
+    
+    getScoreColor(score) {
+        if (score >= 600) return '#00ff00'; // Vert - Stable
+        if (score >= 400) return '#ffff00'; // Jaune - Modéré
+        if (score >= 200) return '#ff8800'; // Orange - Instable
+        return '#ff0000'; // Rouge - Critique
+    },
+    
+    // Méthode pour mettre à jour un score spécifique
+    updateScore(date, newScore) {
+        const dataPoint = this.data.find(d => d.date === date);
+        if (dataPoint) {
+            dataPoint.score = newScore;
+            dataPoint.timestamp = new Date().getTime();
+            this.drawChart();
+            console.log(`Score mis à jour pour ${date}: ${newScore}`);
+        }
+    },
+    
+    drawCurve(ctx, padding, chartWidth, chartHeight, minScore, scoreRange) {
+        if (this.data.length < 2) return;
+        
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ffff';
+        ctx.lineWidth = 3;
+        
+        this.data.forEach((point, index) => {
+            const x = padding + (index / (this.data.length - 1)) * chartWidth;
+            const y = padding + chartHeight - ((point.score - minScore) / scoreRange) * chartHeight;
+            
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        
+        ctx.stroke();
+    },
+    
+    drawPoints(ctx, padding, chartWidth, chartHeight, minScore, scoreRange) {
+        this.data.forEach((point, index) => {
+            const x = padding + (index / (this.data.length - 1)) * chartWidth;
+            const y = padding + chartHeight - ((point.score - minScore) / scoreRange) * chartHeight;
+            
+            // Point
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#00ffff';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Score au-dessus du point
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '11px Roboto';
+            ctx.fillText(point.score.toString(), x - 10, y - 10);
+        });
+    }
+};
+
+function drawStabilityChart() {
+    StabilityChartManager.drawChart();
 }
 
 console.log('Script Dashboard France24 - Pret pour initialisation');

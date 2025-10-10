@@ -24,6 +24,38 @@
                         En octobre 2025, le monde est marqué par une multipolarité croissante et des tensions géopolitiques. Au Moyen-Orient, un fragile cessez-le-feu Israël-Hamas coexiste avec des risques d'escalade post-frappes israéliennes sur l'Iran, tandis que la Syrie post-Assad organise ses premières élections. En Ukraine, la guerre s'enlise face à une Russie agressive, avec une Europe en réarmement (Pologne à 4,7 % du PIB) et des menaces hybrides (drones, cyber). Les États-Unis de Trump poussent l'isolationnisme et des deals avec la Chine, qui, avec l'Inde et les BRICS, défie l'ordre dollar-centré. Économiquement, la croissance mondiale (3,2 %) reste fragile, avec or et Bitcoin comme refuges, tandis que climat et cyber-risques dominent les préoccupations globales.
                     </div>
                 </div>
+                
+                <!-- Section Graphique Evolution Stabilité -->
+                <div class="chart-section">
+                    <div class="chart-accordion">
+                        <button class="chart-accordion-button active" id="chart-accordion-btn" onclick="toggleChartAccordion()">
+                            <span>Évolution du Score de Stabilité Mondiale - Octobre 2025</span>
+                            <span class="chart-accordion-icon">▼</span>
+                        </button>
+                        <div class="chart-accordion-content active" id="chart-accordion-content">
+                            <div class="stability-chart-container">
+                                <div class="chart-header">
+                                    <h3>Score de Stabilité Mondiale</h3>
+                                    <div class="chart-legend">
+                                        <span class="legend-item critical">0-199 Critique</span>
+                                        <span class="legend-item unstable">200-399 Instable</span>
+                                        <span class="legend-item moderate">400-599 Modéré</span>
+                                        <span class="legend-item stable">600+ Stable</span>
+                                    </div>
+                                </div>
+                                <div class="chart-svg-container" id="stability-chart-svg">
+                                    <!-- Le graphique SVG sera généré ici -->
+                                </div>
+                                <div class="chart-footer">
+                                    <div class="chart-stats" id="chart-stats">
+                                        <span>Dernière mise à jour: <span id="last-update">--:--</span></span>
+                                        <span>Tendance: <span id="trend-indicator">--</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
