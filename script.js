@@ -1513,6 +1513,10 @@ const StabilityChartManager = {
     },
     
     createPoints(svg, padding, chartWidth, chartHeight) {
+        // Nettoyer les tooltips existantes pour éviter l'accumulation
+        const existingTooltips = document.querySelectorAll('.chart-tooltip-advanced');
+        existingTooltips.forEach(t => t.remove());
+        
         // Utiliser la même échelle que pour la courbe
         const scores = this.data.map(d => d.score);
         const minScore = Math.min(...scores);
@@ -1537,6 +1541,8 @@ const StabilityChartManager = {
             
             // Tooltip avancé au survol
             circle.addEventListener('mouseenter', (e) => {
+                console.log('Tooltip mouseenter triggered for point:', point.date, point.score);
+                
                 // Récupérer les données de contenu détaillé
                 const dateStr = `2025-${point.date.split('/')[1]}-${point.date.split('/')[0]}`;
                 const content = ContentManager.getStaticContent('daily', dateStr);
@@ -1607,6 +1613,7 @@ const StabilityChartManager = {
                 `;
                 
                 document.body.appendChild(tooltip);
+                console.log('Tooltip created and appended');
                 
                 // Position initiale
                 const updateTooltipPosition = (event) => {
@@ -1623,6 +1630,7 @@ const StabilityChartManager = {
                     hideTimeout = setTimeout(() => {
                         if (tooltip && tooltip.parentNode) {
                             tooltip.remove();
+                            console.log('Tooltip removed');
                         }
                     }, 300); // 300ms de délai
                 };
@@ -1632,6 +1640,7 @@ const StabilityChartManager = {
                     if (hideTimeout) {
                         clearTimeout(hideTimeout);
                         hideTimeout = null;
+                        console.log('Tooltip hide cancelled');
                     }
                 };
                 
