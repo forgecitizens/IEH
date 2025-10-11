@@ -283,10 +283,12 @@ const PerformanceManager = {
 // Gestionnaire d'actualités France24
 const NewsManager = {
     currentNews: [],
+    previousNewsHash: null,
     isLoading: false,
     hasError: false,
     refreshTimer: null,
     shuffleTimer: null,
+    isFirstLoad: true,
     
     fallbackNews: [
         'Développements technologiques majeurs dans le secteur de l\'intelligence artificielle',
@@ -355,11 +357,15 @@ const NewsManager = {
                 throw new Error('Données RSS invalides ou vides');
             }
             
-            this.currentNews = data.items
+            const newNews = data.items
                 .slice(0, CONFIG.rss.maxNews)
                 .map(item => this.cleanHtmlTags(item.title))
                 .filter(title => title.length > 5);
             
+            // Vérifier s'il y a de nouvelles actualités
+            this.checkForNewsChanges(newNews);
+            
+            this.currentNews = newNews;
             this.hasError = false;
             this.updateStatus('live', 'LIVE FRANCE24');
             this.displayNews();
@@ -386,6 +392,29 @@ const NewsManager = {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = text;
         return (tempDiv.textContent || tempDiv.innerText || '').trim();
+    },
+
+    // Générer un hash simple du contenu des actualités pour détecter les changements
+    generateNewsHash(newsArray) {
+        return newsArray.join('|').split('').reduce((hash, char) => {
+            const chr = char.charCodeAt(0);
+            hash = ((hash << 5) - hash) + chr;
+            return hash & hash; // Convertir en 32bit integer
+        }, 0);
+    },
+
+    // Vérifier si les actualités ont changé et jouer le jingle si nécessaire
+    checkForNewsChanges(newNews) {
+        const newHash = this.generateNewsHash(newNews);
+        
+        // Ne pas jouer le jingle au premier chargement
+        if (!this.isFirstLoad && this.previousNewsHash !== null && this.previousNewsHash !== newHash) {
+            console.log('🔔 Nouvelles actualités détectées, jingle déclenché');
+            AudioManager.playNewsJingle();
+        }
+        
+        this.previousNewsHash = newHash;
+        this.isFirstLoad = false;
     },
     
     updateStatus(type, text) {
@@ -736,6 +765,7 @@ const AudioManager = {
         open: null,
         close: null
     },
+    newsJingle: null,
     modalSoundsEnabled: true,
     
     init() {
@@ -762,7 +792,12 @@ const AudioManager = {
             this.modalSounds.close.volume = 0.4;
             this.modalSounds.close.preload = 'auto';
             
-            console.log('Sons modales precharges');
+            // Jingle d'actualités
+            this.newsJingle = new Audio('sounds/news_jingle.wav');
+            this.newsJingle.volume = 0.5;
+            this.newsJingle.preload = 'auto';
+            
+            console.log('Sons modales et jingle actualites precharges');
         } catch (error) {
             console.warn('Erreur prechargement sons modales:', error);
             this.modalSoundsEnabled = false;
@@ -775,6 +810,9 @@ const AudioManager = {
         } else {
             this.play();
         }
+        // Toggle modal sounds and news jingle with main audio
+        this.modalSoundsEnabled = this.isPlaying;
+        console.log(`Sons effets ${this.modalSoundsEnabled ? 'activés' : 'désactivés'} avec audio principal`);
     },
     
     play() {
@@ -843,6 +881,23 @@ const AudioManager = {
         }
     },
     
+    // Méthode pour jouer le jingle d'actualités
+    playNewsJingle() {
+        // Vérifier si les sons sont activés (respecter le bouton audio-control)
+        if (this.modalSoundsEnabled && this.newsJingle) {
+            try {
+                // Réinitialiser le son au début s'il était déjà joué
+                this.newsJingle.currentTime = 0;
+                this.newsJingle.play().catch(error => {
+                    console.warn('Erreur lecture jingle actualites:', error);
+                });
+                console.log('🔔 Jingle actualites joue');
+            } catch (error) {
+                console.warn('Erreur jingle actualites:', error);
+            }
+        }
+    },
+
     // Méthode pour activer/désactiver les sons de modales
     toggleModalSounds() {
         this.modalSoundsEnabled = !this.modalSoundsEnabled;
