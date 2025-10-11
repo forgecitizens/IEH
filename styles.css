@@ -218,20 +218,31 @@
 
         .chart-legend {
             display: flex;
-            gap: 15px;
-            font-size: 11px;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 10px;
+            line-height: 1.2;
         }
 
         .legend-item {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 3px;
             font-weight: bold;
+            font-size: 9px;
+            white-space: nowrap;
         }
 
-        .legend-item.critical { background: #ff4444; color: white; }
-        .legend-item.unstable { background: #ff8800; color: white; }
-        .legend-item.moderate { background: #ffaa00; color: black; }
-        .legend-item.stable { background: #00ff00; color: black; }
+        /* Dégradé de couleurs du rouge au vert */
+        .legend-item.catastrophe { background: #8B0000; color: white; } /* Rouge foncé */
+        .legend-item.acute-crisis { background: #DC143C; color: white; } /* Rouge crimson */
+        .legend-item.very-unstable { background: #FF4444; color: white; } /* Rouge */
+        .legend-item.marked-instability { background: #FF6347; color: white; } /* Rouge tomate */
+        .legend-item.moderate-tensions { background: #FF8800; color: white; } /* Orange */
+        .legend-item.fragile-stability { background: #FFA500; color: black; } /* Orange clair */
+        .legend-item.relative-stability { background: #FFD700; color: black; } /* Jaune or */
+        .legend-item.relative-calm { background: #ADFF2F; color: black; } /* Vert jaune */
+        .legend-item.stable-peace { background: #32CD32; color: black; } /* Vert citron */
+        .legend-item.global-harmony { background: #00FF00; color: black; } /* Vert pur */
 
         .chart-svg-container {
             width: 100%;
@@ -240,7 +251,21 @@
             border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 8px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+        }
+
+        .chart-tooltip-active {
+            pointer-events: auto;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .chart-tooltip-active button {
+            pointer-events: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .stability-chart-svg {
@@ -314,6 +339,32 @@
         #trend-indicator.positive { color: #00ff00; }
         #trend-indicator.negative { color: #ff4444; }
         #trend-indicator.stable { color: #ffaa00; }
+
+        /* Tooltip de stabilité */
+        .stability-tooltip {
+            animation: fadeInTooltip 0.2s ease-out;
+        }
+
+        @keyframes fadeInTooltip {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Amélioration du curseur sur les points */
+        .chart-point {
+            transition: filter 0.2s ease;
+            cursor: pointer;
+        }
+
+        .chart-point:hover {
+            filter: drop-shadow(0 0 8px rgba(255, 68, 68, 1)) brightness(1.2);
+        }
 
         .global-section {
             grid-area: global;

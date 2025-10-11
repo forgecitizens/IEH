@@ -85,12 +85,12 @@ const ContentManager = {
             stability_justification: "Aujourd'hui, le score de stabilité mondiale s'établit à 442 / 1000. Justification : Malgré des signes positifs comme le fragile cessez-le-feu à Gaza et l'attribution du Nobel de la Paix à María Corina Machado au Venezuela, les menaces de Trump sur des tarifs douaniers massifs contre la Chine, la poursuite du shutdown gouvernemental américain avec ses impacts économiques croissants, et le défilé nord-coréen dévoilant un nouveau missile ICBM ont accentué les tensions commerciales et militaires, entraînant une légère détérioration par rapport à hier.",
             summary: "Le 11 octobre 2025, le monde géopolitique a bougé sur plusieurs fronts : aux États-Unis, le président Trump a menacé d'imposer 100 % de tarifs douaniers sur les importations chinoises dès le 1er novembre, en riposte aux restrictions de Pékin sur les métaux rares, ce qui a fait chuter les marchés boursiers mondiaux et ravivé les craintes d'une guerre commerciale ; en parallèle, le shutdown du gouvernement fédéral américain entre dans sa deuxième semaine, entraînant des milliers de licenciements de fonctionnaires et des pertes économiques estimées à 110 milliards de dollars. Au Moyen-Orient, un fragile cessez-le-feu entre Israël et le Hamas est entré en vigueur à Gaza, avec le début du retrait des troupes israéliennes, l'arrivée d'aide humanitaire et l'échange imminent d'otages contre prisonniers palestiniens, tandis que des frappes aériennes israéliennes ont visé des sites du Hezbollah au Liban, tuant un civil. En Corée du Nord, un défilé militaire a dévoilé un nouveau missile balistique intercontinental capable de frapper les États-Unis, sous les yeux d'officiels chinois et russes, signalant une escalade des tensions en Asie. Enfin, le Prix Nobel de la Paix a été décerné à l'opposante vénézuélienne María Corina Machado pour sa lutte pour la démocratie, et une explosion tragique dans une usine d'explosifs au Tennessee a fait plusieurs morts et 18 disparus. Ces événements soulignent un monde plus fragmenté, entre espoirs de paix et risques de conflits.",
             full_summary: "AFRIQUE\n\nLe 11 octobre 2025, l'Afrique fait face à une persistance des conflits armés et des défis sécuritaires, malgré une croissance économique prévue comme la deuxième plus rapide au monde. Au Nigeria, les groupes ISWAP et Boko Haram ont intensifié leurs embuscades contre les bases militaires dans l'État de Borno, avec plus de 20 attaques depuis le début de l'année, entraînant pillages d'équipements et déplacements massifs vers le Cameroun. Au Soudan, les affrontements entre les Forces armées soudanaises (SAF) et les Forces de soutien rapide (RSF) ont culminé en septembre avec la prise de Bara par les SAF, un nœud stratégique reliant Darfour à Khartoum, aggravant la crise humanitaire dans le Kordofan du Nord. Au Mali, un embargo sur le carburant imposé par les juntes militaires a provoqué des pénuries aiguës dans des régions comme Kayes et Bamako, avec des hausses de prix fulgurantes et des patrouilles renforcées contre les militants. Sur le plan diplomatique, l'Union européenne a promis 11,5 milliards d'euros d'investissements en Afrique du Sud pour l'énergie propre et les infrastructures, tandis que la Guinée a inculpé 60 personnes pour émeutes mortelles dans une mine d'or. Ces tensions soulignent une frustration sociale croissante due à la pauvreté, au changement climatique et à une gouvernance faible, malgré des élections récentes comme celle au Mozambique qui a plongé le pays dans le chaos.\n\nASIE\n\nEn Asie, les tensions géopolitiques s'intensifient autour de la compétition sino-américaine et des instabilités internes. En Corée du Nord, un défilé militaire le 11 octobre a révélé un nouveau missile balistique intercontinental (ICBM) capable d'atteindre les États-Unis, en présence d'officiels chinois et russes, signalant une escalade des alliances anti-occidentales et ravivant les craintes d'une course aux armements. Au Japon, la nouvelle Première ministre conservatrice Sanae Takaichi, issue d'un gouvernement d'opposition fragile après la chute de la coalition LDP-Komeito, doit naviguer entre les visites à Yasukuni, les relations avec la Corée du Sud et un accord tarifaire coercitif de 550 milliards de dollars avec les États-Unis, risquant de polariser la région. En Chine, le quatrième plénum du Parti communiste (prévu pour fin octobre) prépare un renouvellement massif du Comité central et le plan quinquennal 2026-2030, tandis que Pékin accélère la construction de réserves pétrolières (169 millions de barils supplémentaires d'ici 2026) face aux vulnérabilités d'approvisionnement liées à la Russie et à l'Iran. Au Pakistan, l'armée a éliminé 30 militants impliqués dans une attaque tuant 11 soldats, et en Indonésie, le ministre des Finances anticipe une croissance de 6 % grâce à une injection de liquidités de 12 milliards de dollars. La mer de Chine méridionale reste un point chaud avec des confrontations non militaires accrues, tandis que l'Australie inverse sa politique pour maintenir l'usage du charbon, impactant la transition énergétique régionale.\n\nEUROPE\n\nL'Europe est marquée par des incertitudes fiscales et électorales qui redessinent son paysage politique au 11 octobre 2025. En Allemagne, après l'effondrement de la coalition d'Olaf Scholz en novembre 2024, les élections de février ont porté les conservateurs CDU/CSU au pouvoir, mais sans majorité absolue, forçant une nouvelle coalition qui peine à stabiliser l'économie de la plus grande puissance européenne face à la fragmentation commerciale mondiale. En France, une crise politique s'aggrave avec la démission d'un autre Premier ministre, tandis que le sommet sur l'IA les 10-11 février vise à contrer les inégalités technologiques, mais des tensions budgétaires persistent. Au Royaume-Uni, des préoccupations sur la sécurité européenne émergent avec des incidents soulignant la dérive Est-Ouest, et l'UE renégocie ses accords commerciaux avec le Mexique et le Chili pour diversifier ses partenaires face aux tarifs trumpiens. En Norvège, les partis de centre-gauche conservent le pouvoir après les élections de septembre, mais l'expiration du mandat du Forum de gouvernance d'Internet fin 2025 pousse à un renouvellement sous l'égide de l'ONU. Globalement, l'Europe fait face à une vulnérabilité accrue aux cyberattaques sur son infrastructure énergétique et à des risques de polarisation, avec une croissance du PIB de la zone euro révisée à la hausse pour le deuxième trimestre, mais freinée par la perte d'accès au gaz russe bon marché.\n\nAMÉRIQUES\n\nAux Amériques, les États-Unis dominent l'actualité géopolitique le 11 octobre 2025 avec un shutdown gouvernemental entrant dans sa deuxième semaine, causant des milliers de licenciements temporaires et des pertes économiques estimées à 110 milliards de dollars, exacerbant les divisions internes sous l'administration Trump. Le président menace d'imposer 100 % de tarifs douaniers sur les importations chinoises dès le 1er novembre en réponse aux restrictions de Pékin sur les métaux rares, provoquant une chute des bourses mondiales et une redirection des flux commerciaux (Chine vers l'Europe +6 %, Mexique/Canada +25 %). Au Venezuela, l'opposante María Corina Machado reçoit le Prix Nobel de la Paix pour sa lutte pour la démocratie, au milieu d'une strife politique persistante et d'un risque d'invasion du Guyana jugé faible mais latent. Au Canada, la démission de Justin Trudeau en janvier a conduit à l'élection de Mark Carney comme leader libéral, avec des élections fédérales prévues d'ici le 20 octobre, centrées sur l'inflation, l'immigration et les craintes d'une guerre commerciale avec les États-Unis (tarifs potentiels de 25 % sur les exportations canadiennes). En Équateur, une foule de 500 manifestants a attaqué le cortège du président Daniel Noboa avec des pierres et possiblement des tirs, soulignant les tensions sur les infrastructures. Au Brésil, des manifestations Gen-Z éclatent au Pérou voisin, et au Chili, des élections générales sont prévues pour le 16 novembre. Ces événements illustrent une fragmentation accrue, avec des impacts sur la sécurité alimentaire et les chaînes d'approvisionnement.\n\nMOYEN-ORIENT\n\nLe Moyen-Orient connaît un tournant fragile le 11 octobre 2025, avec l'entrée en vigueur d'un cessez-le-feu entre Israël et le Hamas à Gaza, marquant la première phase d'un accord de paix deux ans après l'attaque du 7 octobre 2023 : retrait partiel des troupes israéliennes, arrivée d'aide humanitaire, et échange imminent d'otages contre prisonniers palestiniens (Israël libérera 11 membres du Hamas au lieu de Fatah). Donald Trump annonce une visite imminente (11 ou 12 octobre) pour sceller l'accord, qualifié de \"très proche\", potentiellement ouvrant une nouvelle ère de paix régionale. Cependant, des frappes israéliennes au Liban ont tué un civil en visant des sites du Hezbollah, et en septembre, une attaque sur le Yémen a éliminé le Premier ministre houthi et sept autres officiels, déclenchant une escalade avec des tirs de missiles sur Israël. En Syrie, des affrontements renouvelés opposent les forces gouvernementales aux Forces démocratiques syriennes (SDF) kurdes dans le nord, tandis que des négociations israélo-syriennes à Paris portent sur la désescalade. Au Liban, les opérations israéliennes s'étendent, et en Irak, des confrontations intra-kurdes les plus graves depuis 2003 précèdent des élections. Israël refuse les visas à des gymnastes israéliens en Indonésie en signe de protestation contre Gaza, et des manifestations en Israël n'ont pas altéré la politique de guerre. Ces développements, mêlant espoirs de trêve et risques d'escalade, redessinent potentiellement la carte du Levant, avec des implications pour la sécurité énergétique mondiale.\n\nOCÉANIE\n\nEn Océanie, les dynamiques géopolitiques sont marquées par une compétition croissante entre la Chine et les alliés occidentaux, bien que l'actualité du 11 octobre 2025 soit relativement calme. L'Australie, sous pression des tarifs américains, inverse sa politique énergétique pour prolonger l'usage du charbon au Queensland, impactant la transition verte et les relations avec les îles du Pacifique vulnérables au climat. La Chine continue ses avancées via le commerce et les infrastructures, érodant l'influence des États-Unis, de l'Australie et de la Nouvelle-Zélande : Huawei fait face à des interdictions sécuritaires, tandis que des pays comme Vanuatu et Samoa soutiennent ouvertement Pékin, risquant une polarisation régionale. Lors du Forum des îles du Pacifique en septembre, les îles ont exclu les États-Unis et la Chine pour se concentrer sur des enjeux locaux comme Taïwan et la géopolitique. L'Australie renforce ses liens avec l'Inde et le Japon via des visites présidentielles, et le parlement australien reprend ses sessions avec des débats sur l'IA et les alliances. Ces tensions soulignent le rôle stratégique de l'Océanie dans la chaîne d'approvisionnement mondiale et la sécurité maritime, avec des risques de division si la rivalité sino-américaine s'intensifie.",
-            content: "Analyse géopolitique du 11 octobre 2025 : tensions commerciales sino-américaines, shutdown gouvernemental, cessez-le-feu fragile à Gaza et escalade militaire nord-coréenne.",
+            content: "Analyse géopolitique du 11 octobre 2025 : tensions commerciales sino-américaines, shutdown gouvernemental persistant et escalade nord-coréenne.",
             sections: [
                 {
                     type: "geopolitical",
-                    title: "Tensions Commerciales et Militaires",
-                    content: "Les menaces tarifaires de Trump contre la Chine (100%), le shutdown américain et le nouveau missile ICBM nord-coréen créent un environnement de tensions accrues, contrebalancées par le fragile cessez-le-feu à Gaza et le Nobel de la Paix à María Corina Machado."
+                    title: "Escalade des Tensions Commerciales",
+                    content: "Les menaces de Trump sur des tarifs douaniers de 100% contre la Chine et la poursuite du shutdown gouvernemental américain créent une instabilité économique mondiale majeure."
                 }
             ],
             events: [],
@@ -551,7 +551,7 @@ const Dashboard = {
                 // Récupérer le score de base depuis les données statiques
                 const dateStr = `2025-10-${dataPoint.date.split('/')[0]}`;
                 const content = ContentManager.getStaticContent('daily', dateStr);
-                const baseScore = content ? content.stabilityScore : dataPoint.score;
+                const baseScore = content ? content.stability_score : dataPoint.score;
                 
                 // Simuler une fluctuation réaliste
                 const fluctuation = (Math.random() - 0.5) * 40; // ±20 points
@@ -1535,91 +1535,237 @@ const StabilityChartManager = {
             circle.setAttribute('data-score', point.score);
             circle.setAttribute('data-date', point.date);
             
-            // Tooltip avancé au survol
+            // Tooltip avec approche différente - dans le container
             circle.addEventListener('mouseenter', (e) => {
-                // Récupérer les données de contenu détaillé
-                const dateStr = `2025-${point.date.split('/')[1]}-${point.date.split('/')[0]}`;
-                const content = ContentManager.getStaticContent('daily', dateStr);
-                const scoreColor = this.getScoreColor(point.score);
+                console.log('🎯 Création tooltip pour:', point.date);
                 
-                const fullSummary = content && content.summary ? content.summary : 'Données non disponibles';
-                const truncatedSummary = fullSummary.length > 200 ? fullSummary.substring(0, 200) + '...' : fullSummary;
-                const needsExpansion = fullSummary.length > 200;
+                // Trouver le container du graphique
+                const chartContainer = document.querySelector('.chart-svg-container');
+                if (!chartContainer) {
+                    console.error('❌ Container du graphique non trouvé');
+                    return;
+                }
+                
+                // Récupérer les coordonnées du point dans le SVG
+                const svgRect = svg.getBoundingClientRect();
+                const containerRect = chartContainer.getBoundingClientRect();
+                
+                // Récupérer les données complètes du jour
+                const dateStr = `2025-10-${point.date.split('/')[0].padStart(2, '0')}`;
+                const content = ContentManager.getStaticContent('daily', dateStr);
                 
                 const tooltip = document.createElement('div');
-                tooltip.className = 'chart-tooltip-advanced';
+                tooltip.className = 'chart-tooltip-active';
                 tooltip.style.cssText = `
                     position: fixed;
-                    background: rgba(0, 0, 0, 0.95);
+                    background: rgba(0, 0, 0, 0.9);
                     color: white;
-                    padding: 15px;
-                    border-radius: 8px;
-                    font-size: 12px;
-                    line-height: 1.4;
+                    padding: 12px;
+                    border-radius: 6px;
+                    font-size: 11px;
+                    line-height: 1.3;
                     border: 1px solid #00ffff;
-                    max-width: 350px;
+                    max-width: 300px;
                     z-index: 9999;
-                    box-shadow: 0 4px 20px rgba(0,255,255,0.3);
-                    pointer-events: auto;
+                    left: ${x + 20}px;
+                    top: ${y - 80}px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
                 `;
                 
+                // Contenu du tooltip avec bouton "Afficher plus"
+                const scoreColor = this.getScoreColor(point.score);
+                const fullSummary = content && content.summary ? content.summary : 'Données non disponibles';
+                const truncatedSummary = fullSummary.length > 300 ? fullSummary.substring(0, 300) + '...' : fullSummary;
+                const needsExpansion = fullSummary.length > 300;
+                
                 tooltip.innerHTML = `
-                    <div style="border-bottom: 1px solid #00ffff; margin-bottom: 10px; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-                        <strong style="color: #00ffff; font-size: 14px;">${point.date}/2025</strong>
-                        <span style="background: ${scoreColor}; color: ${point.score >= 500 ? 'black' : 'white'}; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
-                            ${point.score}/1000
+                    <div style="border-bottom: 1px solid #00ffff; margin-bottom: 8px; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <strong style="color: #00ffff;">${point.date}/2025</strong>
+                        </div>
+                        <span style="background: ${scoreColor}; color: ${point.score >= 500 ? 'black' : 'white'}; padding: 2px 6px; border-radius: 3px; font-size: 10px;">
+                            ${point.score}
                         </span>
                     </div>
-                    <div style="color: #ddd; font-size: 11px;">
+                    <div id="tooltip-content" style="color: #ddd; font-size: 10px; transition: all 0.2s ease;">
                         <div id="summary-text">${truncatedSummary}</div>
                         ${needsExpansion ? `
-                            <div style="margin-top: 10px; text-align: center;">
+                            <div style="margin-top: 8px; text-align: center;">
                                 <button id="expand-btn" style="
                                     background: linear-gradient(45deg, #00ffff, #0088cc);
                                     color: black;
                                     border: none;
-                                    padding: 6px 15px;
-                                    border-radius: 5px;
+                                    padding: 4px 12px;
+                                    border-radius: 4px;
                                     font-size: 10px;
+                                    font-weight: bold;
                                     cursor: pointer;
                                     transition: all 0.2s ease;
-                                    font-weight: bold;
-                                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" 
-                                   onclick="
-                                       const summaryText = this.parentNode.previousElementSibling;
-                                       if (this.textContent.includes('Afficher plus')) {
-                                           summaryText.innerHTML = \`${fullSummary.replace(/`/g, '\\`').replace(/'/g, "\\'")}\`;
-                                           this.innerHTML = '📄 Afficher moins';
-                                           this.parentNode.parentNode.parentNode.style.maxWidth = '500px';
-                                           this.parentNode.parentNode.parentNode.style.maxHeight = '400px';
-                                           this.parentNode.parentNode.parentNode.style.overflow = 'auto';
-                                       } else {
-                                           summaryText.innerHTML = \`${truncatedSummary.replace(/`/g, '\\`').replace(/'/g, "\\'")}\`;
-                                           this.innerHTML = '📖 Afficher plus';
-                                           this.parentNode.parentNode.parentNode.style.maxWidth = '350px';
-                                           this.parentNode.parentNode.parentNode.style.maxHeight = 'auto';
-                                           this.parentNode.parentNode.parentNode.style.overflow = 'visible';
-                                       }
-                                   ">📖 Afficher plus</button>
+                                    box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+                                " onmouseover="this.style.background='linear-gradient(45deg, #ffffff, #00ffff)'; this.style.boxShadow='0 0 12px rgba(0, 255, 255, 0.8)';" 
+                                   onmouseout="this.style.background='linear-gradient(45deg, #00ffff, #0088cc)'; this.style.boxShadow='0 0 8px rgba(0, 255, 255, 0.4)';">
+                                    📖 Afficher plus
+                                </button>
                             </div>
                         ` : ''}
                     </div>
                 `;
                 
-                document.body.appendChild(tooltip);
+                // Ajouter les événements après un délai
+                setTimeout(() => {
+                    // Bouton "Afficher plus"
+                    if (needsExpansion) {
+                        const expandBtn = tooltip.querySelector('#expand-btn');
+                        const summaryText = tooltip.querySelector('#summary-text');
+                        
+                        if (expandBtn && summaryText) {
+                            expandBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                if (expandBtn.textContent.includes('Afficher plus')) {
+                                    // Étendre le résumé
+                                    summaryText.innerHTML = fullSummary;
+                                    expandBtn.innerHTML = '📄 Afficher moins';
+                                    tooltip.style.maxWidth = '500px';
+                                    tooltip.style.maxHeight = '400px';
+                                    tooltip.style.overflow = 'auto';
+                                    tooltip.style.transition = 'all 0.3s ease';
+                                } else {
+                                    // Réduire le résumé
+                                    summaryText.innerHTML = truncatedSummary;
+                                    expandBtn.innerHTML = '📖 Afficher plus';
+                                    tooltip.style.maxWidth = '300px';
+                                    tooltip.style.maxHeight = 'auto';
+                                    tooltip.style.overflow = 'visible';
+                                }
+                            });
+                        }
+                    }
+                    
+                    // Fermeture par clic en dehors
+                    setTimeout(() => {
+                        document.addEventListener('click', function closeTooltip(event) {
+                            if (!tooltip.contains(event.target)) {
+                                tooltip.remove();
+                                document.removeEventListener('click', closeTooltip);
+                            }
+                        });
+                    }, 100);
+                }, 50);
                 
-                const updateTooltipPosition = (event) => {
-                    tooltip.style.left = (event.clientX + 10) + 'px';
-                    tooltip.style.top = (event.clientY - 30) + 'px';
-                };
+                // Ajout du tooltip au container
+                this.container.appendChild(tooltip);
                 
-                updateTooltipPosition(e);
-                circle.addEventListener('mousemove', updateTooltipPosition);
+                // Gestion des événements de survol
+                const tooltipTimeout = setTimeout(() => {
+                    if (!tooltip.matches(':hover')) {
+                        tooltip.remove();
+                    }
+                }, 3000);
                 
-                circle.addEventListener('mouseleave', () => {
-                    document.body.removeChild(tooltip);
-                });
+                if (tooltip) {
+                    tooltip.addEventListener('mouseenter', () => {
+                        if (tooltipTimeout) {
+                            clearTimeout(tooltipTimeout);
+                        }
+                    });
+                    
+                    tooltip.addEventListener('mouseleave', () => {
+                        setTimeout(() => {
+                            if (!tooltip.matches(':hover')) {
+                                tooltip.remove();
+                            }
+                        }, 200);
+                    });
+                }
+            }, 50);
+            
+            svg.appendChild(circle);
+                    if (needsExpansion) {
+                        const expandBtn = tooltip.querySelector('#expand-btn');
+                        const summaryText = tooltip.querySelector('#summary-text');
+                        
+                        if (expandBtn && summaryText) {
+                            expandBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                if (expandBtn.textContent.includes('Afficher plus')) {
+                                    // Étendre le résumé
+                                    summaryText.innerHTML = fullSummary;
+                                    expandBtn.innerHTML = '📄 Afficher moins';
+                                    tooltip.style.maxWidth = '500px';
+                                    tooltip.style.maxHeight = '400px';
+                                    tooltip.style.overflow = 'auto';
+                                    tooltip.style.transition = 'all 0.3s ease';
+                                } else {
+                                    // Réduire le résumé
+                                    summaryText.innerHTML = truncatedSummary;
+                                    expandBtn.innerHTML = '📖 Afficher plus';
+                                    tooltip.style.maxWidth = '300px';
+                                    tooltip.style.maxHeight = 'auto';
+                                    tooltip.style.overflow = 'visible';
+                                }
+                            });
+                        }
+                    }
+                    
+                    // Fermeture par clic en dehors
+                    const handleClickOutside = (e) => {
+                        if (!tooltip.contains(e.target)) {
+                            tooltip.remove();
+                            document.removeEventListener('click', handleClickOutside);
+                        }
+                    };
+                    
+                    // Ajouter l'événement après un délai pour éviter la fermeture immédiate
+                    setTimeout(() => {
+                        document.addEventListener('click', handleClickOutside);
+                    }, 100);
+                    
+                }, 10);
+                
+                // Supprimer les anciens tooltips
+                const oldTooltips = chartContainer.querySelectorAll('.chart-tooltip-active');
+                oldTooltips.forEach(t => t.remove());
+                
+                chartContainer.appendChild(tooltip);
+                console.log('✅ Tooltip ajouté au container:', tooltip);
             });
+            
+            // Gestion de la fermeture par survol (plus douce)
+            let tooltipTimeout;
+            
+            circle.addEventListener('mouseleave', () => {
+                console.log('👋 Souris quitte le point');
+                tooltipTimeout = setTimeout(() => {
+                    const existingTooltip = chartContainer.querySelector('.chart-tooltip-active');
+                    if (existingTooltip && !existingTooltip.matches(':hover')) {
+                        existingTooltip.remove();
+                    }
+                }, 300);
+            });
+            
+            // Maintenir le tooltip ouvert quand on le survole
+            setTimeout(() => {
+                const tooltip = chartContainer.querySelector('.chart-tooltip-active');
+                if (tooltip) {
+                    tooltip.addEventListener('mouseenter', () => {
+                        if (tooltipTimeout) {
+                            clearTimeout(tooltipTimeout);
+                        }
+                    });
+                    
+                    tooltip.addEventListener('mouseleave', () => {
+                        // Remettre le curseur normal immédiatement
+                        document.body.style.cursor = 'auto';
+                        setTimeout(() => {
+                            if (!tooltip.matches(':hover')) {
+                                tooltip.remove();
+                                // S'assurer que le curseur est bien remis à normal
+                                document.body.style.cursor = 'auto';
+                            }
+                        }, 200);
+                    });
+                }
+            }, 50);
             
             svg.appendChild(circle);
         });
@@ -1865,10 +2011,16 @@ const StabilityChartManager = {
     },
     
     getScoreColor(score) {
-        if (score >= 600) return '#00ff00'; // Vert - Stable
-        if (score >= 400) return '#ffff00'; // Jaune - Modéré
-        if (score >= 200) return '#ff8800'; // Orange - Instable
-        return '#ff0000'; // Rouge - Critique
+        if (score >= 900) return '#00FF00'; // Vert pur - Harmonie globale
+        if (score >= 800) return '#32CD32'; // Vert citron - Paix stable
+        if (score >= 700) return '#ADFF2F'; // Vert jaune - Calme relatif
+        if (score >= 600) return '#FFD700'; // Jaune or - Stabilité relative
+        if (score >= 500) return '#FFA500'; // Orange clair - Stabilité fragile
+        if (score >= 400) return '#FF8800'; // Orange - Tensions modérées
+        if (score >= 300) return '#FF6347'; // Rouge tomate - Instabilité marquée
+        if (score >= 200) return '#FF4444'; // Rouge - Très instable
+        if (score >= 100) return '#DC143C'; // Rouge crimson - Crise aiguë
+        return '#8B0000'; // Rouge foncé - Catastrophe mondiale
     },
     
     // Méthode pour mettre à jour un score spécifique
