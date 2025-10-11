@@ -1541,14 +1541,24 @@ const StabilityChartManager = {
             
             // Tooltip avancé au survol
             circle.addEventListener('mouseenter', (e) => {
+                console.log('🖱️ Mouseenter sur point:', point.date, point.score);
+                
+                // Nettoyer les tooltips existantes d'abord
+                document.querySelectorAll('.chart-tooltip-advanced').forEach(t => t.remove());
+                
                 // Récupérer les données de contenu détaillé
                 const dateStr = `2025-${point.date.split('/')[1]}-${point.date.split('/')[0]}`;
                 const content = ContentManager.getStaticContent('daily', dateStr);
                 const scoreColor = StabilityChartManager.getStabilityColor(point.score);
                 
+                console.log('📊 Content:', content);
+                console.log('🎨 Score color:', scoreColor);
+                
                 const fullSummary = content && content.summary ? content.summary : 'Données non disponibles';
                 const truncatedSummary = fullSummary.length > 200 ? fullSummary.substring(0, 200) + '...' : fullSummary;
                 const needsExpansion = fullSummary.length > 200;
+                
+                console.log('📝 Summary length:', fullSummary.length, 'Needs expansion:', needsExpansion);
                 
                 const tooltip = document.createElement('div');
                 tooltip.className = 'chart-tooltip-advanced';
@@ -1611,6 +1621,7 @@ const StabilityChartManager = {
                 `;
                 
                 document.body.appendChild(tooltip);
+                console.log('✅ Tooltip ajoutée au DOM');
                 
                 // Position initiale
                 const updateTooltipPosition = (event) => {
