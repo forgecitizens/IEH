@@ -484,6 +484,7 @@ const Dashboard = {
             // Initialiser le graphique avec un délai pour s'assurer que le DOM est prêt
             setTimeout(() => {
                 console.log('🚀 Initialisation différée du graphique...');
+                console.log('📍 StabilityChartManager exists:', !!window.StabilityChartManager);
                 StabilityChartManager.init();
             }, 500);
             
@@ -1412,6 +1413,9 @@ const StabilityChartManager = {
     
     renderSVGChart() {
         console.log('🎨 Rendu du graphique SVG...');
+        console.log('📦 Container exists:', !!this.container);
+        console.log('📊 Data length:', this.data ? this.data.length : 'undefined');
+        console.log('📋 Data content:', this.data);
         
         if (!this.container || this.data.length === 0) {
             console.error('❌ Container ou données manquants');
@@ -1513,6 +1517,8 @@ const StabilityChartManager = {
     },
     
     createPoints(svg, padding, chartWidth, chartHeight) {
+        console.log('🔵 createPoints called with data:', this.data);
+        
         // Nettoyer les tooltips existantes pour éviter l'accumulation
         const existingTooltips = document.querySelectorAll('.chart-tooltip-advanced');
         existingTooltips.forEach(t => t.remove());
@@ -1526,6 +1532,8 @@ const StabilityChartManager = {
         const scaleMax = Math.min(1000, maxScore + margin);
         const scaleRange = scaleMax - scaleMin;
         
+        console.log('📊 Scale info:', { minScore, maxScore, scaleMin, scaleMax, scaleRange });
+        
         this.data.forEach((point, index) => {
             const x = padding.left + (index / (this.data.length - 1)) * chartWidth;
             const normalizedScore = (point.score - scaleMin) / scaleRange;
@@ -1538,6 +1546,8 @@ const StabilityChartManager = {
             circle.setAttribute('r', 4);
             circle.setAttribute('data-score', point.score);
             circle.setAttribute('data-date', point.date);
+            
+            console.log(`⚪ Circle created for ${point.date} at (${x}, ${y}) with score ${point.score}`);
             
             // Tooltip avancé au survol
             circle.addEventListener('mouseenter', (e) => {
@@ -1654,7 +1664,10 @@ const StabilityChartManager = {
             });
             
             svg.appendChild(circle);
+            console.log(`✅ Circle added to SVG for ${point.date}`);
         });
+        
+        console.log('🎯 Total circles created:', this.data.length);
     },
     
     createLabels(svg, padding, chartWidth, chartHeight) {
