@@ -246,7 +246,9 @@
 
         .chart-svg-container {
             width: 100%;
-            height: 280px;
+            min-height: 280px;
+            height: 40vh;
+            max-height: 400px;
             background: rgba(0, 20, 40, 0.3);
             border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 8px;
@@ -254,13 +256,15 @@
             overflow: visible;
         }
 
-        .chart-tooltip-active {
-            pointer-events: auto;
+        .chart-tooltip-active, .chart-tooltip-advanced {
+            pointer-events: auto !important;
             animation: fadeIn 0.2s ease-out;
+            user-select: text;
         }
 
-        .chart-tooltip-active button {
-            pointer-events: auto;
+        .chart-tooltip-active button, .chart-tooltip-advanced button {
+            pointer-events: auto !important;
+            cursor: pointer !important;
         }
 
         @keyframes fadeIn {
@@ -271,6 +275,7 @@
         .stability-chart-svg {
             width: 100%;
             height: 100%;
+            min-height: 250px;
         }
 
         .chart-grid-line {
@@ -339,6 +344,34 @@
         #trend-indicator.positive { color: #00ff00; }
         #trend-indicator.negative { color: #ff4444; }
         #trend-indicator.stable { color: #ffaa00; }
+
+        /* Styles mobile pour les graphiques */
+        @media (max-width: 768px) {
+            .chart-svg-container {
+                height: 45vh;
+                min-height: 300px;
+                margin: 0 -10px;
+                width: calc(100% + 20px);
+            }
+            
+            .stability-chart-svg {
+                min-height: 280px;
+            }
+            
+            .chart-label {
+                font-size: 10px;
+            }
+            
+            .chart-point {
+                r: 6;
+                stroke-width: 3;
+            }
+            
+            .chart-point:hover {
+                r: 8;
+                stroke-width: 4;
+            }
+        }
 
         /* Tooltip de stabilité */
         .stability-tooltip {

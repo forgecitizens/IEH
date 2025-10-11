@@ -1540,7 +1540,7 @@ const StabilityChartManager = {
                 // Récupérer les données de contenu détaillé
                 const dateStr = `2025-${point.date.split('/')[1]}-${point.date.split('/')[0]}`;
                 const content = ContentManager.getStaticContent('daily', dateStr);
-                const scoreColor = this.getScoreColor(point.score);
+                const scoreColor = this.getStabilityColor(point.score);
                 
                 const fullSummary = content && content.summary ? content.summary : 'Données non disponibles';
                 const truncatedSummary = fullSummary.length > 200 ? fullSummary.substring(0, 200) + '...' : fullSummary;
@@ -1608,17 +1608,40 @@ const StabilityChartManager = {
                 
                 document.body.appendChild(tooltip);
                 
+                // Position initiale
                 const updateTooltipPosition = (event) => {
                     tooltip.style.left = (event.clientX + 10) + 'px';
                     tooltip.style.top = (event.clientY - 30) + 'px';
                 };
                 
                 updateTooltipPosition(e);
-                circle.addEventListener('mousemove', updateTooltipPosition);
                 
-                circle.addEventListener('mouseleave', () => {
-                    document.body.removeChild(tooltip);
-                });
+                let hideTimeout;
+                
+                // Fonction pour supprimer la tooltip avec délai
+                const scheduleHide = () => {
+                    hideTimeout = setTimeout(() => {
+                        if (tooltip && tooltip.parentNode) {
+                            tooltip.remove();
+                        }
+                    }, 300); // 300ms de délai
+                };
+                
+                // Fonction pour annuler la suppression
+                const cancelHide = () => {
+                    if (hideTimeout) {
+                        clearTimeout(hideTimeout);
+                        hideTimeout = null;
+                    }
+                };
+                
+                // Gestion des événements sur le cercle
+                circle.addEventListener('mousemove', updateTooltipPosition);
+                circle.addEventListener('mouseleave', scheduleHide);
+                
+                // Gestion des événements sur la tooltip elle-même
+                tooltip.addEventListener('mouseenter', cancelHide);
+                tooltip.addEventListener('mouseleave', scheduleHide);
             });
             
             svg.appendChild(circle);
