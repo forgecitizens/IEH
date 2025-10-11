@@ -1549,7 +1549,7 @@ const StabilityChartManager = {
                 // Récupérer les données de contenu détaillé
                 const dateStr = `2025-${point.date.split('/')[1]}-${point.date.split('/')[0]}`;
                 const content = ContentManager.getStaticContent('daily', dateStr);
-                const scoreColor = StabilityChartManager.getStabilityColor(point.score);
+                const scoreColor = CalendarManager.getStabilityColor(point.score);
                 
                 console.log('📊 Content:', content);
                 console.log('🎨 Score color:', scoreColor);
