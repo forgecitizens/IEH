@@ -687,7 +687,7 @@
 /* Ajustement du contenu principal pour le bandeau déjà appliqué dans body principal */
 
 /* ================================================================ */
-/* POPULATION CLIQUABLE - Animation et Modal */
+/* ÉLÉMENTS CLIQUABLES - Animation et Interactions */
 /* ================================================================ */
 
 .population-clickable {
@@ -731,6 +731,36 @@
 /* Animation de pulsation legere au survol */
 .population-clickable:hover .stat-value {
     animation: glow-counter 2s infinite;
+}
+
+/* ================================================================ */
+/* RESSOURCE PÉTROLE CLIQUABLE */
+/* ================================================================ */
+
+.oil-resource-clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 8px;
+    padding: 5px;
+    margin: -5px;
+}
+
+.oil-resource-clickable:hover {
+    background: rgba(255, 140, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
+    border: 1px solid rgba(255, 140, 0, 0.4);
+}
+
+.oil-resource-clickable:hover .resource-label span:first-child {
+    color: #ff8c00;
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+}
+
+.oil-resource-clickable:hover .oil-fill {
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
+    filter: brightness(1.3);
 }
 
 @keyframes glow-counter {
@@ -1051,6 +1081,65 @@
     width: 700px;
     max-width: 90vw;
     max-height: 90vh;
+}
+
+/* ================================================================ */
+/* MODALE DONNÉES PÉTROLIÈRES */
+/* ================================================================ */
+
+.oil-modal-content {
+    width: 90vw;
+    max-width: 1200px;
+    height: 80vh;
+    max-height: 800px;
+    border: 2px solid #ff8c00;
+    box-shadow: 0 20px 40px rgba(255, 140, 0, 0.4);
+}
+
+.oil-modal-content .modal-header {
+    border-bottom: 1px solid rgba(255, 140, 0, 0.3);
+    background: rgba(255, 140, 0, 0.1);
+}
+
+.oil-modal-content .modal-header h3 {
+    color: #ff8c00;
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+}
+
+.oil-modal-content .modal-body {
+    padding: 0;
+    height: calc(100% - 120px);
+    overflow: hidden;
+}
+
+.oil-modal-content .modal-footer {
+    padding: 15px 25px;
+    border-top: 1px solid rgba(255, 140, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    color: #cccccc;
+    font-size: 0.9rem;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: #ff8c00;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 140, 0, 0.2);
+    transform: rotate(90deg);
 }
 
 .daily-modal-body {

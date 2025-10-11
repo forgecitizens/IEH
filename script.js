@@ -937,6 +937,36 @@ function closeCreditsModal() {
     }
 }
 
+// ================================================================
+// MODALE DONNÉES PÉTROLIÈRES
+// ================================================================
+
+function openOilDataModal() {
+    const modal = document.getElementById('oil-data-modal');
+    if (modal) {
+        AudioManager.playModalOpen();
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        console.log('🛢️ Modale données pétrolières ouverte');
+    } else {
+        console.error('Modale données pétrolières non trouvée');
+    }
+}
+
+function closeOilDataModal() {
+    const modal = document.getElementById('oil-data-modal');
+    if (modal) {
+        AudioManager.playModalClose();
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        console.log('🛢️ Modale données pétrolières fermée');
+    } else {
+        console.error('Modale données pétrolières non trouvée');
+    }
+}
+
 // Ajouter les event listeners pour toutes les modales
 document.addEventListener('DOMContentLoaded', () => {
     const creditsModal = document.getElementById('credits-modal');
@@ -963,6 +993,16 @@ document.addEventListener('DOMContentLoaded', () => {
         dailyContentModal.addEventListener('click', (event) => {
             if (event.target === dailyContentModal) {
                 closeDailyContent();
+            }
+        });
+    }
+
+    // Event listener pour la modale données pétrolières
+    const oilDataModal = document.getElementById('oil-data-modal');
+    if (oilDataModal) {
+        oilDataModal.addEventListener('click', (event) => {
+            if (event.target === oilDataModal) {
+                closeOilDataModal();
             }
         });
     }
@@ -1220,6 +1260,7 @@ document.addEventListener('keydown', (event) => {
         const creditsModal = document.getElementById('credits-modal');
         const calendarModal = document.getElementById('calendar-modal');
         const dailyContentModal = document.getElementById('daily-content-modal');
+        const oilDataModal = document.getElementById('oil-data-modal');
         
         // Fermer d'abord la tooltip si elle est visible
         if (stabilityTooltip && stabilityTooltip.classList.contains('visible')) {
@@ -1232,6 +1273,8 @@ document.addEventListener('keydown', (event) => {
             closeCalendar();
         } else if (dailyContentModal && dailyContentModal.classList.contains('active')) {
             closeDailyContent();
+        } else if (oilDataModal && oilDataModal.classList.contains('active')) {
+            closeOilDataModal();
         }
     }
 });

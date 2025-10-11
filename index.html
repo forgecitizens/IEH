@@ -89,7 +89,7 @@
 
         <div class="section resources-section">
             <h2 class="section-title">Ressources Energetiques</h2>
-            <div class="resource-bar">
+            <div class="resource-bar oil-resource-clickable" onclick="openOilDataModal()">
                 <div class="resource-label">
                     <span>Petrole</span>
                     <span>45%</span>
@@ -267,6 +267,27 @@
 
     <!-- Overlay pour tooltip de stabilité -->
     <div class="tooltip-overlay" id="tooltip-overlay" onclick="hideStabilityTooltip()"></div>
+
+    <!-- Modale données pétrolières -->
+    <div class="modal-overlay" id="oil-data-modal" onclick="closeOilDataModal()">
+        <div class="modal-content oil-modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>🛢️ Production Pétrolière Mondiale</h3>
+                <button class="modal-close-btn" onclick="closeOilDataModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <iframe 
+                    src="https://ourworldindata.org/grapher/oil-production-by-country?tab=map&time=latest" 
+                    loading="lazy" 
+                    style="width: 100%; height: 600px; border: 0px none;" 
+                    allow="web-share; clipboard-write">
+                </iframe>
+            </div>
+            <div class="modal-footer">
+                <p>Données fournies par <strong>Our World in Data</strong></p>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
