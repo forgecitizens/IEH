@@ -484,7 +484,6 @@ const Dashboard = {
             // Initialiser le graphique avec un délai pour s'assurer que le DOM est prêt
             setTimeout(() => {
                 console.log('🚀 Initialisation différée du graphique...');
-                console.log('📍 StabilityChartManager exists:', !!window.StabilityChartManager);
                 StabilityChartManager.init();
             }, 500);
             
@@ -1413,9 +1412,6 @@ const StabilityChartManager = {
     
     renderSVGChart() {
         console.log('🎨 Rendu du graphique SVG...');
-        console.log('📦 Container exists:', !!this.container);
-        console.log('📊 Data length:', this.data ? this.data.length : 'undefined');
-        console.log('📋 Data content:', this.data);
         
         if (!this.container || this.data.length === 0) {
             console.error('❌ Container ou données manquants');
@@ -1517,8 +1513,6 @@ const StabilityChartManager = {
     },
     
     createPoints(svg, padding, chartWidth, chartHeight) {
-        console.log('🔵 createPoints called with data:', this.data);
-        
         // Nettoyer les tooltips existantes pour éviter l'accumulation
         const existingTooltips = document.querySelectorAll('.chart-tooltip-advanced');
         existingTooltips.forEach(t => t.remove());
@@ -1531,8 +1525,6 @@ const StabilityChartManager = {
         const scaleMin = Math.max(0, minScore - margin);
         const scaleMax = Math.min(1000, maxScore + margin);
         const scaleRange = scaleMax - scaleMin;
-        
-        console.log('📊 Scale info:', { minScore, maxScore, scaleMin, scaleMax, scaleRange });
         
         this.data.forEach((point, index) => {
             const x = padding.left + (index / (this.data.length - 1)) * chartWidth;
@@ -1547,16 +1539,12 @@ const StabilityChartManager = {
             circle.setAttribute('data-score', point.score);
             circle.setAttribute('data-date', point.date);
             
-            console.log(`⚪ Circle created for ${point.date} at (${x}, ${y}) with score ${point.score}`);
-            
             // Tooltip avancé au survol
             circle.addEventListener('mouseenter', (e) => {
-                console.log('Tooltip mouseenter triggered for point:', point.date, point.score);
-                
                 // Récupérer les données de contenu détaillé
                 const dateStr = `2025-${point.date.split('/')[1]}-${point.date.split('/')[0]}`;
                 const content = ContentManager.getStaticContent('daily', dateStr);
-                const scoreColor = this.getStabilityColor(point.score);
+                const scoreColor = StabilityChartManager.getStabilityColor(point.score);
                 
                 const fullSummary = content && content.summary ? content.summary : 'Données non disponibles';
                 const truncatedSummary = fullSummary.length > 200 ? fullSummary.substring(0, 200) + '...' : fullSummary;
@@ -1623,7 +1611,6 @@ const StabilityChartManager = {
                 `;
                 
                 document.body.appendChild(tooltip);
-                console.log('Tooltip created and appended');
                 
                 // Position initiale
                 const updateTooltipPosition = (event) => {
@@ -1640,7 +1627,6 @@ const StabilityChartManager = {
                     hideTimeout = setTimeout(() => {
                         if (tooltip && tooltip.parentNode) {
                             tooltip.remove();
-                            console.log('Tooltip removed');
                         }
                     }, 300); // 300ms de délai
                 };
@@ -1650,7 +1636,6 @@ const StabilityChartManager = {
                     if (hideTimeout) {
                         clearTimeout(hideTimeout);
                         hideTimeout = null;
-                        console.log('Tooltip hide cancelled');
                     }
                 };
                 
@@ -1664,10 +1649,7 @@ const StabilityChartManager = {
             });
             
             svg.appendChild(circle);
-            console.log(`✅ Circle added to SVG for ${point.date}`);
         });
-        
-        console.log('🎯 Total circles created:', this.data.length);
     },
     
     createLabels(svg, padding, chartWidth, chartHeight) {
