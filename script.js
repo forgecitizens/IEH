@@ -33,10 +33,13 @@ class GeoDataManager {
             let response;
             try {
                 response = await fetch('./ne_50m_admin_0_countries.geojson');
+                console.log('📊 Init - Response status:', response.status);
+                console.log('📊 Init - Response ok:', response.ok);
                 if (!response.ok) throw new Error('Natural Earth file not found');
                 console.log('✅ Fichier Natural Earth trouvé');
             } catch (neError) {
-                console.log('⚠️ Fichier Natural Earth non trouvé, tentative countries.json...');
+                console.log('⚠️ Fichier Natural Earth non trouvé:', neError.message);
+                console.log('🔄 Tentative countries.json...');
                 response = await fetch('./countries.json');
                 if (!response.ok) throw new Error('Aucun fichier géographique trouvé');
             }
@@ -44,10 +47,15 @@ class GeoDataManager {
             this.countriesData = await response.json();
             console.log('📁 Fichier GeoJSON chargé, features:', this.countriesData.features?.length);
             
+            // Vérifier que les données sont valides
+            if (!this.countriesData || !this.countriesData.features || this.countriesData.features.length === 0) {
+                throw new Error('Données GeoJSON invalides ou vides');
+            }
+            
             // Extraire les noms de pays pour la détection
             this.extractCountryNames();
             this.initialized = true;
-            console.log(`✅ Données géographiques chargées : ${this.countryNames.length} pays`);
+            console.log(`✅ Données géographiques Natural Earth chargées : ${this.countryNames.length} pays`);
             console.log('📝 Premiers pays:', this.countryNames.slice(0, 5).map(c => c.name));
             
             // Activer la détection des pays dans les textes existants
@@ -57,6 +65,7 @@ class GeoDataManager {
             console.error('❌ Erreur lors du chargement des données géographiques:', error);
             console.error('🔍 Type d\'erreur:', error.name);
             console.error('📄 Message:', error.message);
+            console.error('🌐 URL tentée:', error.url || 'URL non disponible');
             
             // Fallback : utiliser une liste de pays basique pour tester
             this.initializeFallbackCountries();
@@ -397,6 +406,31 @@ class GeoDataManager {
         return div.innerHTML;
     }
 
+    // Fonction de test pour diagnostiquer le chargement
+    async testNaturalEarthLoading() {
+        console.log('🧪 Test de chargement Natural Earth...');
+        try {
+            const response = await fetch('./ne_50m_admin_0_countries.geojson');
+            console.log('📊 Response status:', response.status);
+            console.log('📊 Response ok:', response.ok);
+            console.log('📊 Response headers:', [...response.headers.entries()]);
+            
+            if (response.ok) {
+                const text = await response.text();
+                console.log('📏 Taille du fichier:', text.length, 'caractères');
+                console.log('🔤 Début du fichier:', text.substring(0, 100));
+                
+                const data = JSON.parse(text);
+                console.log('🗺️ Nombre de features:', data.features?.length);
+                console.log('🏷️ Premier pays:', data.features?.[0]?.properties?.NAME);
+                return data;
+            }
+        } catch (error) {
+            console.error('❌ Erreur test Natural Earth:', error);
+        }
+        return null;
+    }
+
     // Appliquer la surbrillance aux textes existants
     highlightCountriesInExistingText() {
         console.log('🔍 Recherche des éléments de résumé...');
@@ -474,6 +508,9 @@ class GeoDataManager {
         const worldBounds = this.calculateWorldBounds();
         const { minX, minY, maxX, maxY } = worldBounds;
         
+        console.log('🗺️ World bounds:', { minX, minY, maxX, maxY });
+        console.log('🎯 Looking for country:', highlightedCountry.name);
+        
         const mapWidth = 580;
         const mapHeight = 280;
         const scaleX = mapWidth / (maxX - minX);
@@ -493,6 +530,10 @@ class GeoDataManager {
                 const isHighlighted = feature.properties.NAME === highlightedCountry.name || 
                                     feature.properties.NAME_EN === highlightedCountry.name ||
                                     feature.properties.ADMIN === highlightedCountry.name;
+                
+                if (isHighlighted) {
+                    console.log('🎯 Found matching country:', feature.properties);
+                }
                 
                 if (isHighlighted) {
                     // Pays en surbrillance
@@ -597,7 +638,7 @@ class GeoDataManager {
         
         return coordinates.map((coord, index) => {
             const x = (coord[0] - worldMinX) * scale + offsetX;
-            const y = (worldMinY - coord[1]) * scale + offsetY + 300; // Inverser Y et ajuster
+            const y = 300 - ((coord[1] - worldMinY) * scale + offsetY); // Inverser Y pour SVG (0 en haut)
             return index === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
         }).join(' ') + ' Z';
     }
@@ -764,12 +805,14 @@ class GeoDataManager {
     }
 }
 
-// Instance globale avec initialisation immédiate
+// Instance globale avec initialisation complète
 window.geoDataManager = new GeoDataManager();
 
-// Initialisation immédiate du mode fallback (ne dépend pas de fetch)
-console.log('🌍 Initialisation immédiate du mode fallback...');
-window.geoDataManager.initializeFallbackCountries();
+// Initialisation avec tentative de chargement Natural Earth
+console.log('🌍 Initialisation du gestionnaire géographique...');
+window.geoDataManager.init().catch(error => {
+    console.log('⚠️ Chargement Natural Earth échoué, mode fallback activé');
+});
 
 // Fonction de retry pour s'assurer que la détection s'applique
 let retryCount = 0;
