@@ -1643,6 +1643,39 @@
     animation: pulseCountry 2s ease-in-out infinite;
 }
 
+/* Styles pour la vraie carte du monde */
+.world-country {
+    fill: #333;
+    stroke: #555;
+    stroke-width: 0.5;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.world-country:hover {
+    fill: #444;
+    opacity: 0.9;
+}
+
+.highlighted-country {
+    fill: #00ffff;
+    stroke: #ffffff;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+    animation: pulseHighlightedCountry 2s ease-in-out infinite;
+}
+
+@keyframes pulseHighlightedCountry {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+        opacity: 0.9;
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(0, 255, 255, 1));
+        opacity: 1;
+    }
+}
+
 @keyframes pulseCountry {
     0%, 100% {
         filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));

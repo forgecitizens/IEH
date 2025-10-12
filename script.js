@@ -27,15 +27,22 @@ class GeoDataManager {
 
     async init() {
         try {
-            console.log('🌍 Chargement des données géographiques...');
-            const response = await fetch('./countries.json');
+            console.log('🌍 Chargement des données géographiques Natural Earth...');
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Essayer d'abord le fichier Natural Earth détaillé
+            let response;
+            try {
+                response = await fetch('./ne_50m_admin_0_countries.geojson');
+                if (!response.ok) throw new Error('Natural Earth file not found');
+                console.log('✅ Fichier Natural Earth trouvé');
+            } catch (neError) {
+                console.log('⚠️ Fichier Natural Earth non trouvé, tentative countries.json...');
+                response = await fetch('./countries.json');
+                if (!response.ok) throw new Error('Aucun fichier géographique trouvé');
             }
             
             this.countriesData = await response.json();
-            console.log('📁 Fichier countries.json chargé, features:', this.countriesData.features?.length);
+            console.log('📁 Fichier GeoJSON chargé, features:', this.countriesData.features?.length);
             
             // Extraire les noms de pays pour la détection
             this.extractCountryNames();
@@ -102,13 +109,24 @@ class GeoDataManager {
     extractCountryNames() {
         if (!this.countriesData || !this.countriesData.features) return;
         
-        this.countryNames = this.countriesData.features.map(feature => ({
-            name: feature.properties.NAME,
-            nameEn: feature.properties.NAME_EN || feature.properties.NAME,
-            nameFr: feature.properties.NAME_FR || feature.properties.NAME,
-            geometry: feature.geometry,
-            properties: feature.properties
-        }));
+        this.countryNames = this.countriesData.features.map(feature => {
+            // Natural Earth a des propriétés différentes
+            const props = feature.properties;
+            return {
+                name: props.NAME || props.NAME_EN,
+                nameEn: props.NAME_EN || props.NAME,
+                nameFr: props.NAME_FR || props.NAME_LONG || props.NAME,
+                nameShort: props.NAME_SHORT,
+                geometry: feature.geometry,
+                properties: feature.properties,
+                // Propriétés Natural Earth spécifiques
+                admin: props.ADMIN,
+                iso2: props.ISO_A2,
+                iso3: props.ISO_A3
+            };
+        });
+        
+        console.log('🏷️ Exemple pays Natural Earth:', this.countryNames[0]);
     }
 
     // Détection des pays dans un texte
@@ -429,49 +447,159 @@ class GeoDataManager {
         return country;
     }
 
-    // Générer le SVG pour un pays
+    // Générer le SVG pour un pays avec vraie carte du monde
     generateCountrySVG(countryData) {
         if (!countryData) return '';
         
         // Mode fallback : affichage simplifié avec drapeau et informations
-        if (!countryData.geometry) {
+        if (!countryData.geometry || !this.countriesData?.features) {
             return this.generateFallbackCountrySVG(countryData);
         }
         
         try {
-            // Calculer les bounds du pays
-            const bounds = this.calculateBounds(countryData.geometry);
-            const { minX, minY, maxX, maxY } = bounds;
-            
-            const width = maxX - minX;
-            const height = maxY - minY;
-            const scale = Math.min(600 / width, 300 / height) * 0.8;
-            
-            const centerX = (minX + maxX) / 2;
-            const centerY = (minY + maxY) / 2;
-            
-            let pathData = '';
-            
-            if (countryData.geometry.type === 'Polygon') {
-                pathData = this.polygonToPath(countryData.geometry.coordinates[0], scale, centerX, centerY);
-            } else if (countryData.geometry.type === 'MultiPolygon') {
-                pathData = countryData.geometry.coordinates
-                    .map(polygon => this.polygonToPath(polygon[0], scale, centerX, centerY))
-                    .join(' ');
-            }
-            
-            return `
-                <path d="${pathData}" 
-                      class="country-shape" 
-                      fill="#00ffff" 
-                      stroke="#ffffff" 
-                      stroke-width="1"/>
-                <rect width="600" height="300" fill="none" stroke="#333" stroke-width="1"/>
-            `;
+            console.log('🗺️ Génération carte du monde avec pays en surbrillance...');
+            return this.generateWorldMapWithCountryHighlight(countryData);
         } catch (error) {
-            console.error('Erreur génération SVG:', error);
+            console.error('❌ Erreur génération carte du monde:', error);
             return this.generateFallbackCountrySVG(countryData);
         }
+    }
+
+    // Générer une vraie carte du monde avec le pays en surbrillance
+    generateWorldMapWithCountryHighlight(highlightedCountry) {
+        let worldPaths = '';
+        let highlightedPath = '';
+        
+        // Calculer les bounds globaux pour la projection
+        const worldBounds = this.calculateWorldBounds();
+        const { minX, minY, maxX, maxY } = worldBounds;
+        
+        const mapWidth = 580;
+        const mapHeight = 280;
+        const scaleX = mapWidth / (maxX - minX);
+        const scaleY = mapHeight / (maxY - minY);
+        const scale = Math.min(scaleX, scaleY) * 0.95;
+        
+        const offsetX = (600 - (maxX - minX) * scale) / 2;
+        const offsetY = (300 - (maxY - minY) * scale) / 2;
+        
+        // Générer tous les pays
+        this.countriesData.features.forEach((feature, index) => {
+            if (!feature.geometry) return;
+            
+            try {
+                const pathData = this.geometryToPath(feature.geometry, scale, minX, minY, offsetX, offsetY);
+                
+                const isHighlighted = feature.properties.NAME === highlightedCountry.name || 
+                                    feature.properties.NAME_EN === highlightedCountry.name ||
+                                    feature.properties.ADMIN === highlightedCountry.name;
+                
+                if (isHighlighted) {
+                    // Pays en surbrillance
+                    highlightedPath += `
+                        <path d="${pathData}" 
+                              class="highlighted-country" 
+                              fill="#00ffff" 
+                              stroke="#ffffff" 
+                              stroke-width="2"
+                              filter="url(#countryGlow)"/>
+                    `;
+                } else {
+                    // Autres pays
+                    worldPaths += `
+                        <path d="${pathData}" 
+                              class="world-country" 
+                              fill="#333" 
+                              stroke="#555" 
+                              stroke-width="0.5"
+                              opacity="0.7"/>
+                    `;
+                }
+            } catch (err) {
+                // Ignorer les erreurs sur des pays individuels
+                if (index < 5) console.log(`⚠️ Erreur pays ${feature.properties?.NAME}:`, err.message);
+            }
+        });
+        
+        return `
+            <!-- Définitions des effets -->
+            <defs>
+                <filter id="countryGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <pattern id="worldGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#222" stroke-width="0.5" opacity="0.3"/>
+                </pattern>
+            </defs>
+            
+            <!-- Fond -->
+            <rect width="600" height="300" fill="#0a0a0a"/>
+            <rect width="600" height="300" fill="url(#worldGrid)"/>
+            
+            <!-- Océans (optionnel) -->
+            <rect width="600" height="300" fill="#001122" opacity="0.3"/>
+            
+            <!-- Tous les pays du monde -->
+            ${worldPaths}
+            
+            <!-- Pays en surbrillance -->
+            ${highlightedPath}
+            
+            <!-- Bordure -->
+            <rect width="600" height="300" fill="none" stroke="#00ffff" stroke-width="1"/>
+            
+            <!-- Nom du pays -->
+            <text x="300" y="25" text-anchor="middle" fill="#00ffff" font-size="14" font-family="Orbitron, monospace">
+                ${highlightedCountry.name}
+            </text>
+        `;
+    }
+
+    // Calculer les bounds du monde entier
+    calculateWorldBounds() {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        
+        this.countriesData.features.forEach(feature => {
+            if (feature.geometry) {
+                const bounds = this.calculateBounds(feature.geometry);
+                minX = Math.min(minX, bounds.minX);
+                minY = Math.min(minY, bounds.minY);
+                maxX = Math.max(maxX, bounds.maxX);
+                maxY = Math.max(maxY, bounds.maxY);
+            }
+        });
+        
+        return { minX, minY, maxX, maxY };
+    }
+
+    // Convertir une géométrie en path SVG avec projection
+    geometryToPath(geometry, scale, worldMinX, worldMinY, offsetX, offsetY) {
+        if (!geometry) return '';
+        
+        if (geometry.type === 'Polygon') {
+            return this.polygonToWorldPath(geometry.coordinates[0], scale, worldMinX, worldMinY, offsetX, offsetY);
+        } else if (geometry.type === 'MultiPolygon') {
+            return geometry.coordinates
+                .map(polygon => this.polygonToWorldPath(polygon[0], scale, worldMinX, worldMinY, offsetX, offsetY))
+                .join(' ');
+        }
+        
+        return '';
+    }
+
+    // Convertir un polygone en path avec projection mondiale
+    polygonToWorldPath(coordinates, scale, worldMinX, worldMinY, offsetX, offsetY) {
+        if (!coordinates || coordinates.length === 0) return '';
+        
+        return coordinates.map((coord, index) => {
+            const x = (coord[0] - worldMinX) * scale + offsetX;
+            const y = (worldMinY - coord[1]) * scale + offsetY + 300; // Inverser Y et ajuster
+            return index === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+        }).join(' ') + ' Z';
     }
 
     // Génération SVG de fallback avec carte du monde simplifiée
