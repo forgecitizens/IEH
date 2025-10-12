@@ -225,6 +225,7 @@
         }
 
         .legend-item {
+            display: none; /* Temporairement masqué - prend trop de place */
             padding: 3px 6px;
             border-radius: 3px;
             font-weight: bold;
