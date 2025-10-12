@@ -83,7 +83,11 @@ class GeoDataManager {
             { name: 'Brazil', nameEn: 'Brazil', nameFr: 'Brésil', fallbackIcon: '🇧🇷' },
             { name: 'Canada', nameEn: 'Canada', nameFr: 'Canada', fallbackIcon: '🇨🇦' },
             { name: 'Australia', nameEn: 'Australia', nameFr: 'Australie', fallbackIcon: '🇦🇺' },
-            { name: 'South Africa', nameEn: 'South Africa', nameFr: 'Afrique du Sud', fallbackIcon: '🇿🇦' }
+            { name: 'South Africa', nameEn: 'South Africa', nameFr: 'Afrique du Sud', fallbackIcon: '🇿🇦' },
+            // Pays africains supplémentaires pour les résumés d'octobre
+            { name: 'Africa', nameEn: 'Africa', nameFr: 'Afrique', fallbackIcon: '🌍' },
+            { name: 'Middle East', nameEn: 'Middle East', nameFr: 'Moyen-Orient', fallbackIcon: '🕌' },
+            { name: 'Gaza Strip', nameEn: 'Gaza Strip', nameFr: 'Bande de Gaza', fallbackIcon: '🇵🇸' }
         ];
         
         this.initialized = true;
@@ -140,7 +144,7 @@ class GeoDataManager {
             'United Kingdom': ['Royaume-Uni', 'Grande-Bretagne', 'Angleterre'],
             'Russian Federation': ['Russie'],
             'China': ['Chine'],
-            'Palestine': ['Gaza', 'Cisjordanie'],
+            'Palestine': ['Gaza', 'Cisjordanie', 'bande de Gaza'],
             'Israel': ['Israël'],
             'Ukraine': ['Ukraine'],
             'France': ['France'],
@@ -3010,6 +3014,18 @@ window.forceCountryDetection = function() {
     console.log('✅ Force application terminée');
 };
 
+// Test spécifique de détection sur le texte donné
+window.testDetectionOnText = function(text) {
+    console.log('🧪 Test de détection sur:', text);
+    if (window.geoDataManager?.initialized) {
+        const detected = window.geoDataManager.detectCountriesInText(text);
+        console.log('🌍 Pays détectés:', detected.map(c => c.name));
+        return detected;
+    }
+    return [];
+};
+
 console.log('Script Dashboard France24 - Pret pour initialisation');
 console.log('💡 Tapez "forceCountryDetection()" si les pays ne sont pas en surbrillance');
+console.log('💡 Tapez "testDetectionOnText(\'texte à tester\')" pour tester la détection');
 console.log('💡 Tapez "testCountryPopup()" pour tester la popup cartographique');
