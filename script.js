@@ -16,6 +16,626 @@ const CONFIG = {
 };
 
 // ================================================================
+// GESTIONNAIRE DE DONNÉES GÉOGRAPHIQUES
+// ================================================================
+class GeoDataManager {
+    constructor() {
+        this.countriesData = null;
+        this.countryNames = [];
+        this.initialized = false;
+    }
+
+    async init() {
+        try {
+            console.log('🌍 Chargement des données géographiques...');
+            const response = await fetch('./countries.json');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            this.countriesData = await response.json();
+            console.log('📁 Fichier countries.json chargé, features:', this.countriesData.features?.length);
+            
+            // Extraire les noms de pays pour la détection
+            this.extractCountryNames();
+            this.initialized = true;
+            console.log(`✅ Données géographiques chargées : ${this.countryNames.length} pays`);
+            console.log('📝 Premiers pays:', this.countryNames.slice(0, 5).map(c => c.name));
+            
+            // Activer la détection des pays dans les textes existants
+            this.highlightCountriesInExistingText();
+            
+        } catch (error) {
+            console.error('❌ Erreur lors du chargement des données géographiques:', error);
+            console.error('🔍 Type d\'erreur:', error.name);
+            console.error('📄 Message:', error.message);
+            
+            // Fallback : utiliser une liste de pays basique pour tester
+            this.initializeFallbackCountries();
+        }
+    }
+
+    initializeFallbackCountries() {
+        console.log('🔄 Activation du mode fallback avec pays de base...');
+        this.countryNames = [
+            { name: 'France', nameEn: 'France', nameFr: 'France', fallbackIcon: '🇫🇷' },
+            { name: 'United States', nameEn: 'United States', nameFr: 'États-Unis', fallbackIcon: '🇺🇸' },
+            { name: 'United Kingdom', nameEn: 'United Kingdom', nameFr: 'Royaume-Uni', fallbackIcon: '🇬🇧' },
+            { name: 'Germany', nameEn: 'Germany', nameFr: 'Allemagne', fallbackIcon: '🇩🇪' },
+            { name: 'China', nameEn: 'China', nameFr: 'Chine', fallbackIcon: '🇨🇳' },
+            { name: 'Russia', nameEn: 'Russia', nameFr: 'Russie', fallbackIcon: '🇷🇺' },
+            { name: 'Ukraine', nameEn: 'Ukraine', nameFr: 'Ukraine', fallbackIcon: '🇺🇦' },
+            { name: 'Israel', nameEn: 'Israel', nameFr: 'Israël', fallbackIcon: '🇮🇱' },
+            { name: 'Palestine', nameEn: 'Palestine', nameFr: 'Palestine', fallbackIcon: '🇵🇸' },
+            { name: 'Iran', nameEn: 'Iran', nameFr: 'Iran', fallbackIcon: '🇮🇷' },
+            { name: 'Syria', nameEn: 'Syria', nameFr: 'Syrie', fallbackIcon: '🇸🇾' },
+            { name: 'Turkey', nameEn: 'Turkey', nameFr: 'Turquie', fallbackIcon: '🇹🇷' },
+            { name: 'Egypt', nameEn: 'Egypt', nameFr: 'Égypte', fallbackIcon: '🇪🇬' },
+            { name: 'Cameroon', nameEn: 'Cameroon', nameFr: 'Cameroun', fallbackIcon: '🇨🇲' },
+            { name: 'Gabon', nameEn: 'Gabon', nameFr: 'Gabon', fallbackIcon: '🇬🇦' },
+            { name: 'Czech Republic', nameEn: 'Czech Republic', nameFr: 'République tchèque', fallbackIcon: '🇨🇿' },
+            { name: 'Nepal', nameEn: 'Nepal', nameFr: 'Népal', fallbackIcon: '🇳🇵' },
+            { name: 'Italy', nameEn: 'Italy', nameFr: 'Italie', fallbackIcon: '🇮🇹' },
+            { name: 'Spain', nameEn: 'Spain', nameFr: 'Espagne', fallbackIcon: '🇪🇸' },
+            { name: 'Japan', nameEn: 'Japan', nameFr: 'Japon', fallbackIcon: '🇯🇵' },
+            { name: 'India', nameEn: 'India', nameFr: 'Inde', fallbackIcon: '🇮🇳' },
+            { name: 'Brazil', nameEn: 'Brazil', nameFr: 'Brésil', fallbackIcon: '🇧🇷' },
+            { name: 'Canada', nameEn: 'Canada', nameFr: 'Canada', fallbackIcon: '🇨🇦' },
+            { name: 'Australia', nameEn: 'Australia', nameFr: 'Australie', fallbackIcon: '🇦🇺' },
+            { name: 'South Africa', nameEn: 'South Africa', nameFr: 'Afrique du Sud', fallbackIcon: '🇿🇦' }
+        ];
+        
+        this.initialized = true;
+        console.log(`✅ Mode fallback activé avec ${this.countryNames.length} pays`);
+        
+        // Activer la détection des pays dans les textes existants
+        setTimeout(() => {
+            this.highlightCountriesInExistingText();
+        }, 100);
+    }
+
+    extractCountryNames() {
+        if (!this.countriesData || !this.countriesData.features) return;
+        
+        this.countryNames = this.countriesData.features.map(feature => ({
+            name: feature.properties.NAME,
+            nameEn: feature.properties.NAME_EN || feature.properties.NAME,
+            nameFr: feature.properties.NAME_FR || feature.properties.NAME,
+            geometry: feature.geometry,
+            properties: feature.properties
+        }));
+    }
+
+    // Détection des pays dans un texte
+    detectCountriesInText(text) {
+        if (!this.initialized || !text) return [];
+        
+        const detectedCountries = new Set();
+        
+        this.countryNames.forEach(country => {
+            // Recherche du nom français, anglais et variations communes
+            const names = [
+                country.name,
+                country.nameEn,
+                country.nameFr,
+                // Variations communes
+                this.getCountryVariations(country.name)
+            ].flat().filter(Boolean);
+            
+            names.forEach(name => {
+                const pattern = new RegExp(`\\b${this.escapeRegex(name)}s?\\b`, 'gi');
+                if (pattern.test(text)) {
+                    detectedCountries.add(country);
+                }
+            });
+        });
+        
+        return Array.from(detectedCountries);
+    }
+
+    getCountryVariations(countryName) {
+        const variations = {
+            'United States of America': ['États-Unis', 'USA', 'Amérique', 'États Unis'],
+            'United Kingdom': ['Royaume-Uni', 'Grande-Bretagne', 'Angleterre'],
+            'Russian Federation': ['Russie'],
+            'China': ['Chine'],
+            'Palestine': ['Gaza', 'Cisjordanie'],
+            'Israel': ['Israël'],
+            'Ukraine': ['Ukraine'],
+            'France': ['France'],
+            'Germany': ['Allemagne'],
+            'Italy': ['Italie'],
+            'Spain': ['Espagne'],
+            'Netherlands': ['Pays-Bas'],
+            'Belgium': ['Belgique'],
+            'Switzerland': ['Suisse'],
+            'Turkey': ['Turquie'],
+            'Egypt': ['Égypte'],
+            'Saudi Arabia': ['Arabie Saoudite'],
+            'Iran': ['Iran'],
+            'Iraq': ['Irak'],
+            'Syria': ['Syrie'],
+            'Lebanon': ['Liban'],
+            'Jordan': ['Jordanie'],
+            'India': ['Inde'],
+            'Japan': ['Japon'],
+            'South Korea': ['Corée du Sud'],
+            'North Korea': ['Corée du Nord'],
+            'Brazil': ['Brésil'],
+            'Mexico': ['Mexique'],
+            'Canada': ['Canada'],
+            'Australia': ['Australie'],
+            'South Africa': ['Afrique du Sud'],
+            'Nigeria': ['Nigeria'],
+            'Kenya': ['Kenya'],
+            'Morocco': ['Maroc'],
+            'Algeria': ['Algérie'],
+            'Tunisia': ['Tunisie'],
+            'Libya': ['Libye'],
+            'Sudan': ['Soudan'],
+            'Ethiopia': ['Éthiopie'],
+            'Ghana': ['Ghana'],
+            'Senegal': ['Sénégal'],
+            'Mali': ['Mali'],
+            'Burkina Faso': ['Burkina Faso'],
+            'Niger': ['Niger'],
+            'Chad': ['Tchad'],
+            'Cameroon': ['Cameroun'],
+            'Gabon': ['Gabon'],
+            'Democratic Republic of the Congo': ['République démocratique du Congo', 'RDC'],
+            'Central African Republic': ['République centrafricaine', 'RCA'],
+            'Madagascar': ['Madagascar'],
+            'Zimbabwe': ['Zimbabwe'],
+            'Botswana': ['Botswana'],
+            'Namibia': ['Namibie'],
+            'Angola': ['Angola'],
+            'Mozambique': ['Mozambique'],
+            'Tanzania': ['Tanzanie'],
+            'Uganda': ['Ouganda'],
+            'Rwanda': ['Rwanda'],
+            'Burundi': ['Burundi'],
+            'Somalia': ['Somalie'],
+            'Djibouti': ['Djibouti'],
+            'Eritrea': ['Érythrée'],
+            'Czech Republic': ['République tchèque', 'Tchéquie'],
+            'Slovakia': ['Slovaquie'],
+            'Poland': ['Pologne'],
+            'Hungary': ['Hongrie'],
+            'Romania': ['Roumanie'],
+            'Bulgaria': ['Bulgarie'],
+            'Croatia': ['Croatie'],
+            'Serbia': ['Serbie'],
+            'Bosnia and Herzegovina': ['Bosnie-Herzégovine'],
+            'Montenegro': ['Monténégro'],
+            'North Macedonia': ['Macédoine du Nord'],
+            'Albania': ['Albanie'],
+            'Greece': ['Grèce'],
+            'Portugal': ['Portugal'],
+            'Norway': ['Norvège'],
+            'Sweden': ['Suède'],
+            'Denmark': ['Danemark'],
+            'Finland': ['Finlande'],
+            'Iceland': ['Islande'],
+            'Ireland': ['Irlande'],
+            'Austria': ['Autriche'],
+            'Luxembourg': ['Luxembourg'],
+            'Slovenia': ['Slovénie'],
+            'Estonia': ['Estonie'],
+            'Latvia': ['Lettonie'],
+            'Lithuania': ['Lituanie'],
+            'Belarus': ['Biélorussie'],
+            'Moldova': ['Moldavie'],
+            'Georgia': ['Géorgie'],
+            'Armenia': ['Arménie'],
+            'Azerbaijan': ['Azerbaïdjan'],
+            'Kazakhstan': ['Kazakhstan'],
+            'Uzbekistan': ['Ouzbékistan'],
+            'Turkmenistan': ['Turkménistan'],
+            'Kyrgyzstan': ['Kirghizistan'],
+            'Tajikistan': ['Tadjikistan'],
+            'Afghanistan': ['Afghanistan'],
+            'Pakistan': ['Pakistan'],
+            'Bangladesh': ['Bangladesh'],
+            'Sri Lanka': ['Sri Lanka'],
+            'Nepal': ['Népal'],
+            'Bhutan': ['Bhoutan'],
+            'Myanmar': ['Myanmar', 'Birmanie'],
+            'Thailand': ['Thaïlande'],
+            'Vietnam': ['Vietnam'],
+            'Cambodia': ['Cambodge'],
+            'Laos': ['Laos'],
+            'Malaysia': ['Malaisie'],
+            'Singapore': ['Singapour'],
+            'Indonesia': ['Indonésie'],
+            'Philippines': ['Philippines'],
+            'Mongolia': ['Mongolie'],
+            'Argentina': ['Argentine'],
+            'Chile': ['Chili'],
+            'Peru': ['Pérou'],
+            'Colombia': ['Colombie'],
+            'Venezuela': ['Venezuela'],
+            'Ecuador': ['Équateur'],
+            'Bolivia': ['Bolivie'],
+            'Paraguay': ['Paraguay'],
+            'Uruguay': ['Uruguay'],
+            'Guyana': ['Guyana'],
+            'Suriname': ['Suriname'],
+            'French Guiana': ['Guyane française'],
+            'Cuba': ['Cuba'],
+            'Jamaica': ['Jamaïque'],
+            'Haiti': ['Haïti'],
+            'Dominican Republic': ['République dominicaine'],
+            'Puerto Rico': ['Porto Rico'],
+            'Trinidad and Tobago': ['Trinité-et-Tobago'],
+            'Barbados': ['Barbade'],
+            'Bahamas': ['Bahamas'],
+            'Belize': ['Belize'],
+            'Guatemala': ['Guatemala'],
+            'Honduras': ['Honduras'],
+            'El Salvador': ['Salvador'],
+            'Nicaragua': ['Nicaragua'],
+            'Costa Rica': ['Costa Rica'],
+            'Panama': ['Panama'],
+            'New Zealand': ['Nouvelle-Zélande'],
+            'Papua New Guinea': ['Papouasie-Nouvelle-Guinée'],
+            'Fiji': ['Fidji'],
+            'Solomon Islands': ['Îles Salomon'],
+            'Vanuatu': ['Vanuatu'],
+            'New Caledonia': ['Nouvelle-Calédonie'],
+            'French Polynesia': ['Polynésie française'],
+            'Samoa': ['Samoa'],
+            'Tonga': ['Tonga'],
+            'Palau': ['Palaos'],
+            'Marshall Islands': ['Îles Marshall'],
+            'Micronesia': ['Micronésie'],
+            'Kiribati': ['Kiribati'],
+            'Tuvalu': ['Tuvalu'],
+            'Nauru': ['Nauru']
+        };
+        
+        return variations[countryName] || [];
+    }
+
+    escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Mettre en surbrillance les pays dans un élément DOM
+    highlightCountriesInElement(element) {
+        if (!this.initialized || !element) {
+            console.log('⚠️ GeoDataManager non initialisé ou élément manquant');
+            return;
+        }
+        
+        // Éviter la double application sur le même élément
+        if (element.hasAttribute('data-countries-highlighted')) {
+            console.log('⚠️ Élément déjà traité, éviter la récursion');
+            return;
+        }
+        
+        // Marquer l'élément comme traité
+        element.setAttribute('data-countries-highlighted', 'true');
+        
+        // Utiliser le textContent pour éviter les problèmes avec HTML existant
+        const originalText = element.textContent;
+        console.log(`🔍 Analyse du texte: "${originalText?.substring(0, 100)}..."`);
+        
+        const detectedCountries = this.detectCountriesInText(originalText);
+        console.log(`🌍 Pays détectés:`, detectedCountries.map(c => c.name));
+        
+        if (detectedCountries.length === 0) {
+            console.log('❌ Aucun pays détecté dans ce texte');
+            return;
+        }
+        
+        // Reconstruire le HTML proprement
+        let newHTML = originalText;
+        
+        // Trier les pays par longueur de nom (plus long en premier) pour éviter les conflits
+        detectedCountries.sort((a, b) => b.name.length - a.name.length);
+        
+        detectedCountries.forEach(country => {
+            const names = [
+                country.name,
+                country.nameEn,
+                country.nameFr,
+                ...this.getCountryVariations(country.name)
+            ].filter(Boolean);
+            
+            // Supprimer les doublons
+            const uniqueNames = [...new Set(names)];
+            console.log(`🔤 Noms uniques à rechercher pour ${country.name}:`, uniqueNames);
+            
+            uniqueNames.forEach(name => {
+                const pattern = new RegExp(`\\b(${this.escapeRegex(name)}s?)\\b`, 'gi');
+                const matches = newHTML.match(pattern);
+                if (matches) {
+                    console.log(`✅ Correspondances trouvées pour "${name}":`, matches);
+                    newHTML = newHTML.replace(pattern, (match) => {
+                        console.log(`🎯 Remplacement: "${match}" → surbrillance`);
+                        return `<span class="country-highlight" data-country="${this.escapeHtml(country.name)}" onmouseover="showCountryMap('${this.escapeHtml(country.name)}')" onmouseout="hideCountryMap()">${match}</span>`;
+                    });
+                }
+            });
+        });
+        
+        element.innerHTML = newHTML;
+        console.log(`✅ HTML mis à jour pour l'élément`);
+        
+        // Vérifier que les éléments .country-highlight sont bien créés
+        const highlightedElements = element.querySelectorAll('.country-highlight');
+        console.log(`🎯 Éléments .country-highlight créés:`, highlightedElements.length);
+    }
+
+    // Échapper les caractères HTML pour éviter les problèmes d'injection
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Appliquer la surbrillance aux textes existants
+    highlightCountriesInExistingText() {
+        console.log('🔍 Recherche des éléments de résumé...');
+        // Surbrillance dans les résumés quotidiens et le résumé principal
+        const summaryElements = document.querySelectorAll('.summary-text:not([data-countries-highlighted]), .daily-summary-section .summary-text:not([data-countries-highlighted]), #daily-summary-text:not([data-countries-highlighted]), #full-summary-text:not([data-countries-highlighted]), .summary-section .summary-text:not([data-countries-highlighted])');
+        console.log(`📝 Éléments non traités trouvés:`, summaryElements.length);
+        
+        summaryElements.forEach((element, index) => {
+            console.log(`📄 Élément ${index}:`, element.tagName, element.className, element.id);
+            console.log(`📄 Contenu (50 premiers caractères):`, element.textContent?.substring(0, 50));
+            this.highlightCountriesInElement(element);
+        });
+        
+        console.log(`🌍 Détection appliquée à ${summaryElements.length} nouveaux éléments de résumé`);
+    }
+
+    // Appliquer la détection spécifiquement au résumé principal
+    highlightMainSummary() {
+        const mainSummary = document.querySelector('.summary-section .summary-text');
+        if (mainSummary && this.initialized) {
+            this.highlightCountriesInElement(mainSummary);
+            console.log('🌍 Détection appliquée au résumé principal');
+        }
+    }
+
+    // Obtenir les données d'un pays spécifique
+    getCountryData(countryName) {
+        const country = this.countryNames.find(country => 
+            country.name === countryName || 
+            country.nameEn === countryName || 
+            country.nameFr === countryName
+        );
+        
+        // Ajouter l'icône de fallback si elle n'existe pas
+        if (country && !country.fallbackIcon) {
+            const flagEmojis = {
+                'France': '🇫🇷', 'United States': '🇺🇸', 'United Kingdom': '🇬🇧',
+                'Germany': '🇩🇪', 'China': '🇨🇳', 'Russia': '🇷🇺', 'Ukraine': '🇺🇦',
+                'Israel': '🇮🇱', 'Palestine': '🇵🇸', 'Iran': '🇮🇷', 'Syria': '🇸🇾',
+                'Turkey': '🇹🇷', 'Egypt': '🇪🇬', 'Cameroon': '🇨🇲', 'Gabon': '🇬🇦',
+                'Czech Republic': '🇨🇿', 'Nepal': '🇳🇵', 'Italy': '🇮🇹', 'Spain': '🇪🇸',
+                'Japan': '🇯🇵', 'India': '🇮🇳', 'Brazil': '🇧🇷', 'Canada': '🇨🇦',
+                'Australia': '🇦🇺', 'South Africa': '🇿🇦'
+            };
+            country.fallbackIcon = flagEmojis[country.name] || '🗺️';
+        }
+        
+        return country;
+    }
+
+    // Générer le SVG pour un pays
+    generateCountrySVG(countryData) {
+        if (!countryData) return '';
+        
+        // Mode fallback : affichage simplifié avec drapeau et informations
+        if (!countryData.geometry) {
+            return this.generateFallbackCountrySVG(countryData);
+        }
+        
+        try {
+            // Calculer les bounds du pays
+            const bounds = this.calculateBounds(countryData.geometry);
+            const { minX, minY, maxX, maxY } = bounds;
+            
+            const width = maxX - minX;
+            const height = maxY - minY;
+            const scale = Math.min(600 / width, 300 / height) * 0.8;
+            
+            const centerX = (minX + maxX) / 2;
+            const centerY = (minY + maxY) / 2;
+            
+            let pathData = '';
+            
+            if (countryData.geometry.type === 'Polygon') {
+                pathData = this.polygonToPath(countryData.geometry.coordinates[0], scale, centerX, centerY);
+            } else if (countryData.geometry.type === 'MultiPolygon') {
+                pathData = countryData.geometry.coordinates
+                    .map(polygon => this.polygonToPath(polygon[0], scale, centerX, centerY))
+                    .join(' ');
+            }
+            
+            return `
+                <path d="${pathData}" 
+                      class="country-shape" 
+                      fill="#00ffff" 
+                      stroke="#ffffff" 
+                      stroke-width="1"/>
+                <rect width="600" height="300" fill="none" stroke="#333" stroke-width="1"/>
+            `;
+        } catch (error) {
+            console.error('Erreur génération SVG:', error);
+            return this.generateFallbackCountrySVG(countryData);
+        }
+    }
+
+    // Génération SVG de fallback avec carte du monde simplifiée
+    generateFallbackCountrySVG(countryData) {
+        const flag = countryData.fallbackIcon || '🗺️';
+        const countryName = countryData.name || 'Pays inconnu';
+        
+        // Obtenir la position approximative du pays sur une carte du monde
+        const countryPosition = this.getCountryPosition(countryName);
+        
+        return `
+            <!-- Fond avec grille -->
+            <defs>
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#333" stroke-width="0.5"/>
+                </pattern>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge> 
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <rect width="600" height="300" fill="#0a0a0a"/>
+            <rect width="600" height="300" fill="url(#grid)" opacity="0.2"/>
+            
+            <!-- Contour principal -->
+            <rect width="600" height="300" fill="none" stroke="#00ffff" stroke-width="1"/>
+            
+            <!-- Carte du monde simplifiée -->
+            ${this.generateSimplifiedWorldMap()}
+            
+            <!-- Position du pays avec animation -->
+            <circle cx="${countryPosition.x}" cy="${countryPosition.y}" r="8" fill="none" stroke="#00ffff" stroke-width="2" filter="url(#glow)">
+                <animate attributeName="r" values="8;12;8" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="${countryPosition.x}" cy="${countryPosition.y}" r="4" fill="#00ffff" opacity="0.8">
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            
+            <!-- Drapeau du pays -->
+            <text x="${countryPosition.x}" y="${countryPosition.y - 20}" text-anchor="middle" font-size="20" fill="#00ffff">${flag}</text>
+            
+            <!-- Nom du pays -->
+            <text x="300" y="280" text-anchor="middle" font-size="14" fill="#00ffff" font-family="Orbitron, monospace">${countryName}</text>
+            
+            <!-- Lignes de connexion -->
+            <line x1="${countryPosition.x}" y1="${countryPosition.y}" x2="300" y2="265" stroke="#00ffff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2">
+                <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2s" repeatCount="indefinite"/>
+            </line>
+        `;
+    }
+
+    // Générer une carte du monde simplifiée
+    generateSimplifiedWorldMap() {
+        return `
+            <!-- Continents simplifiés -->
+            <!-- Amérique du Nord -->
+            <path d="M 50 80 Q 80 70 120 90 L 140 120 Q 130 140 100 130 Q 70 120 50 100 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+            
+            <!-- Amérique du Sud -->
+            <path d="M 100 140 Q 120 160 110 200 Q 100 220 90 210 Q 80 180 85 160 Q 90 145 100 140 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+            
+            <!-- Europe -->
+            <path d="M 280 70 Q 320 65 340 80 Q 330 100 310 95 Q 290 90 280 80 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+            
+            <!-- Afrique -->
+            <path d="M 290 100 Q 330 95 340 130 Q 350 170 330 190 Q 310 185 290 175 Q 285 140 290 110 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+            
+            <!-- Asie -->
+            <path d="M 350 60 Q 420 55 480 70 Q 500 90 490 110 Q 460 105 430 100 Q 380 95 350 80 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+            
+            <!-- Océanie -->
+            <path d="M 480 160 Q 520 155 530 170 Q 525 180 510 175 Q 490 170 480 165 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+            
+            <!-- Groenland -->
+            <path d="M 180 30 Q 200 25 210 40 Q 205 50 190 45 Q 175 40 180 35 Z" fill="#333" stroke="#555" stroke-width="0.5"/>
+        `;
+    }
+
+    // Obtenir la position approximative d'un pays sur la carte
+    getCountryPosition(countryName) {
+        const positions = {
+            // Europe
+            'France': { x: 300, y: 85 },
+            'Germany': { x: 320, y: 80 },
+            'United Kingdom': { x: 290, y: 75 },
+            'Italy': { x: 315, y: 90 },
+            'Spain': { x: 285, y: 95 },
+            'Czech Republic': { x: 325, y: 82 },
+            
+            // Amérique du Nord
+            'United States': { x: 100, y: 100 },
+            'Canada': { x: 90, y: 70 },
+            
+            // Amérique du Sud
+            'Brazil': { x: 110, y: 170 },
+            
+            // Asie
+            'China': { x: 450, y: 85 },
+            'Russia': { x: 420, y: 65 },
+            'Japan': { x: 480, y: 90 },
+            'India': { x: 400, y: 110 },
+            'Nepal': { x: 410, y: 105 },
+            'Iran': { x: 380, y: 95 },
+            'Syria': { x: 365, y: 90 },
+            'Turkey': { x: 355, y: 85 },
+            'Israel': { x: 360, y: 95 },
+            'Palestine': { x: 360, y: 96 },
+            
+            // Afrique
+            'Egypt': { x: 345, y: 105 },
+            'South Africa': { x: 320, y: 185 },
+            'Cameroon': { x: 310, y: 135 },
+            'Gabon': { x: 305, y: 140 },
+            
+            // Europe de l'Est
+            'Ukraine': { x: 345, y: 78 },
+            
+            // Océanie
+            'Australia': { x: 510, y: 170 }
+        };
+        
+        return positions[countryName] || { x: 300, y: 150 }; // Position par défaut au centre
+    }
+
+    calculateBounds(geometry) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        
+        const processCoordinates = (coords) => {
+            if (Array.isArray(coords[0])) {
+                coords.forEach(processCoordinates);
+            } else {
+                const [x, y] = coords;
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+        };
+        
+        if (geometry.type === 'Polygon') {
+            geometry.coordinates.forEach(processCoordinates);
+        } else if (geometry.type === 'MultiPolygon') {
+            geometry.coordinates.forEach(polygon => {
+                polygon.forEach(processCoordinates);
+            });
+        }
+        
+        return { minX, minY, maxX, maxY };
+    }
+
+    polygonToPath(coordinates, scale, centerX, centerY) {
+        if (!coordinates || coordinates.length === 0) return '';
+        
+        return coordinates.map((coord, index) => {
+            const x = (coord[0] - centerX) * scale + 300;
+            const y = (centerY - coord[1]) * scale + 150; // Inverser Y pour SVG
+            return index === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+        }).join(' ') + ' Z';
+    }
+}
+
+// Instance globale
+window.geoDataManager = new GeoDataManager();
+
+// ================================================================
 // GESTIONNAIRE DE CONTENU AVEC LAZY LOADING
 // ================================================================
 const ContentManager = {
@@ -91,6 +711,23 @@ const ContentManager = {
                     type: "geopolitical",
                     title: "Tensions Commerciales et Militaires",
                     content: "Les menaces tarifaires de Trump contre la Chine (100%), le shutdown américain et le nouveau missile ICBM nord-coréen créent un environnement de tensions accrues, contrebalancées par le fragile cessez-le-feu à Gaza et le Nobel de la Paix à María Corina Machado."
+                }
+            ],
+            events: [],
+            isLoading: false
+        },
+        'daily-2025-10-12': {
+            date: "2025-10-12",
+            title: "Actualités du 12 octobre 2025",
+            stability_score: 440,
+            stability_justification: "Les élections au Cameroun (où Paul Biya, 92 ans, brigue un huitième mandat dans un climat de tensions sécuritaires persistantes) et au Gabon (consolidation post-coup d'État) ajoutent une légère incertitude en Afrique, tandis que le shutdown budgétaire partiel aux États-Unis pèse sur l'économie globale sans escalade majeure. Au Moyen-Orient, la trêve fragile à Gaza tient bon malgré des incidents internes, et les tensions US-Chine s'apaisent avec des signaux diplomatiques positifs de Trump. Globalement, les conflits chroniques (Ukraine, Soudan) stagnent sans flambée, et le commerce international reste robuste malgré les politiques protectionnistes – pas de dérapage notable, mais une vigilance accrue sur les risques climatiques et cyber. Si de nouveaux événements émergent, cela pourrait évoluer rapidement !",
+            summary: "En Afrique, l'élection présidentielle au Cameroun voit Paul Biya, au pouvoir depuis 42 ans, favori pour un septième mandat dans un contexte tendu par les crises anglophone et sécuritaire, tandis qu'au Gabon, Brice Oligui Nguema consolide son autorité post-coup d'État de 2023. Au Moyen-Orient, un fragile accord de trêve à Gaza prévoit l'échange de 48 otages contre 250 prisonniers palestiniens, mais des violences internes éclatent avec des attaques du Hamas contre des clans rivaux, soulignant l'instabilité persistante, et Israël intercepte une flottille humanitaire en octobre, arrêtant des militants dont Greta Thunberg. En Europe et Asie, les élections législatives en République tchèque donnent la pluralité à Andrej Babiš sans majorité claire, fragilisant la coalition pro-UE, et au Népal, la Première ministre Sushila Karki affronte des manifestations Gen Z contre la corruption. Globalement, un shutdown budgétaire partiel aux États-Unis accentue la crise budgétaire, la Russie fait face à des pénuries de carburant dues aux sanctions, et Zelensky espère que le plan Trump pour Gaza inspire une pression accrue sur Poutine pour l'Ukraine.",
+            content: "Analyse géopolitique du 12 octobre 2025 : élections africaines tendues, trêve fragile à Gaza avec incidents internes, instabilité politique en Europe et Asie, shutdown américain persistant.",
+            sections: [
+                {
+                    type: "geopolitical",
+                    title: "Instabilité Politique Globale",
+                    content: "Le 12 octobre 2025 révèle une instabilité politique généralisée avec des élections tendues en Afrique, une trêve fragile au Moyen-Orient, des coalitions fragilisées en Europe, et un shutdown persistant aux États-Unis, créant un environnement géopolitique incertain mais sans escalade majeure."
                 }
             ],
             events: [],
@@ -506,6 +1143,14 @@ const Dashboard = {
             AudioManager.init();
             AudioManager.preloadModalSounds();
             CalendarManager.init();
+            
+            // Initialiser le gestionnaire de données géographiques
+            window.geoDataManager.init().then(() => {
+                // Appliquer la détection au résumé principal une fois les données chargées
+                setTimeout(() => {
+                    window.geoDataManager.highlightMainSummary();
+                }, 200);
+            }).catch(err => console.error('Erreur initialisation GeoDataManager:', err));
             
             // Forcer l'ouverture de l'accordéon du graphique
             this.ensureChartAccordionOpen();
@@ -1311,6 +1956,35 @@ function openDailyContentModal(content, dateStr) {
         fullSummary.innerHTML = fullText.replace(/\n/g, '<br>');
     }
     
+    // Appliquer la détection des pays après avoir rempli les textes
+    setTimeout(() => {
+        if (window.geoDataManager && window.geoDataManager.initialized) {
+            if (summaryText) {
+                // Supprimer l'attribut de traitement pour forcer la re-détection
+                summaryText.removeAttribute('data-countries-highlighted');
+                window.geoDataManager.highlightCountriesInElement(summaryText);
+            }
+            if (fullSummary) {
+                // Supprimer l'attribut de traitement pour forcer la re-détection
+                fullSummary.removeAttribute('data-countries-highlighted');
+                window.geoDataManager.highlightCountriesInElement(fullSummary);
+            }
+            console.log('🌍 Détection des pays appliquée au contenu quotidien');
+        } else {
+            console.log('⚠️ GeoDataManager pas encore initialisé, nouvelle tentative...');
+            // Réessayer après un délai plus long
+            setTimeout(() => {
+                if (window.geoDataManager && window.geoDataManager.initialized) {
+                    if (summaryText) summaryText.removeAttribute('data-countries-highlighted');
+                    if (fullSummary) fullSummary.removeAttribute('data-countries-highlighted');
+                    if (summaryText) window.geoDataManager.highlightCountriesInElement(summaryText);
+                    if (fullSummary) window.geoDataManager.highlightCountriesInElement(fullSummary);
+                    console.log('🌍 Détection des pays appliquée au contenu quotidien (2e tentative)');
+                }
+            }, 500);
+        }
+    }, 100);
+    
     // Réinitialiser l'accordéon
     resetAccordion();
     
@@ -1482,7 +2156,7 @@ const StabilityChartManager = {
         console.log('📊 Chargement des données de stabilité...');
         
         // Récupérer les vraies données de stabilité avec fallback robuste
-        const dates = ['2025-10-08', '2025-10-09', '2025-10-10', '2025-10-11'];
+        const dates = ['2025-10-08', '2025-10-09', '2025-10-10', '2025-10-11', '2025-10-12'];
         this.data = dates.map((dateStr, index) => {
             const content = ContentManager.getStaticContent('daily', dateStr);
             let score = 450 + index * 25; // Fallback par défaut
@@ -2057,4 +2731,181 @@ function drawStabilityChart() {
     StabilityChartManager.drawChart();
 }
 
+// ================================================================
+// FONCTIONS POPUP CARTOGRAPHIQUE
+// ================================================================
+let countryMapPopup = null;
+
+window.showCountryMap = function(countryName) {
+    console.log('🗺️ showCountryMap appelée pour:', countryName);
+    
+    if (!window.geoDataManager || !window.geoDataManager.initialized) {
+        console.log('❌ GeoDataManager non initialisé');
+        return;
+    }
+    
+    window.hideCountryMap(); // Fermer popup existante
+    
+    const countryData = window.geoDataManager.getCountryData(countryName);
+    console.log('🔍 Données pays trouvées:', countryData ? countryData.name : 'Aucune');
+    
+    if (!countryData) {
+        console.log('❌ Pas de données pour ce pays');
+        return;
+    }
+    
+    // Créer la popup
+    console.log('🎨 Création de la popup...');
+    countryMapPopup = document.createElement('div');
+    countryMapPopup.className = 'country-map-popup';
+    
+    // Générer le SVG (ou version simplifiée si ça échoue)
+    let svgContent = '';
+    try {
+        svgContent = window.geoDataManager.generateCountrySVG(countryData);
+        console.log('✅ SVG généré avec données:', countryData.geometry ? 'géométrie complète' : 'mode fallback');
+    } catch (error) {
+        console.log('❌ Erreur génération SVG:', error);
+        svgContent = window.geoDataManager.generateFallbackCountrySVG(countryData);
+        console.log('🔄 Utilisation du SVG de fallback de secours');
+    }
+    
+    countryMapPopup.innerHTML = `
+        <h4>${countryData.name}</h4>
+        <div class="country-map-container">
+            <svg class="country-map-svg" viewBox="0 0 600 300">
+                <rect width="600" height="300" fill="#0a0a0a"/>
+                ${svgContent}
+            </svg>
+        </div>
+        <div class="country-info">
+            Nom EN: ${countryData.nameEn || countryData.name} | 
+            Géométrie: ${countryData.geometry ? countryData.geometry.type : 'Non disponible'}
+        </div>
+    `;
+    
+    console.log('📍 Ajout au DOM...');
+    // Positionnement dynamique
+    document.addEventListener('mousemove', window.updateCountryMapPosition);
+    document.body.appendChild(countryMapPopup);
+    console.log('✅ Popup ajoutée au DOM');
+    
+    // Position initiale
+    const event = window.event || { clientX: 300, clientY: 200 };
+    window.updateCountryMapPosition(event);
+    console.log('📍 Position initiale définie');
+}
+
+window.updateCountryMapPosition = function(event) {
+    if (!countryMapPopup) return;
+    
+    const margin = 20;
+    const popupRect = countryMapPopup.getBoundingClientRect();
+    
+    let x = event.clientX + margin;
+    let y = event.clientY + margin;
+    
+    // Ajuster si la popup dépasse de l'écran
+    if (x + popupRect.width > window.innerWidth) {
+        x = event.clientX - popupRect.width - margin;
+    }
+    if (y + popupRect.height > window.innerHeight) {
+        y = event.clientY - popupRect.height - margin;
+    }
+    
+    countryMapPopup.style.left = Math.max(margin, x) + 'px';
+    countryMapPopup.style.top = Math.max(margin, y) + 'px';
+}
+
+window.hideCountryMap = function() {
+    if (countryMapPopup) {
+        document.removeEventListener('mousemove', updateCountryMapPosition);
+        countryMapPopup.remove();
+        countryMapPopup = null;
+    }
+}
+
+// Fonction pour nettoyer les éléments corrompus
+window.cleanCorruptedHighlights = function() {
+    console.log('🧹 Nettoyage des surbrillances corrompues...');
+    
+    // Supprimer tous les attributs de traitement
+    const allElements = document.querySelectorAll('[data-countries-highlighted]');
+    allElements.forEach(el => {
+        el.removeAttribute('data-countries-highlighted');
+    });
+    
+    // Supprimer toutes les surbrillances existantes et restaurer le texte original
+    const corruptedElements = document.querySelectorAll('.summary-text, #daily-summary-text, #full-summary-text');
+    corruptedElements.forEach(element => {
+        // Extraire juste le texte brut et le remettre
+        const cleanText = element.textContent;
+        element.innerHTML = cleanText;
+        console.log('🧹 Élément nettoyé:', cleanText.substring(0, 50));
+    });
+    
+    console.log('✅ Nettoyage terminé. Relancez la détection avec window.geoDataManager.highlightCountriesInExistingText()');
+};
+
+// Fonction de test pour forcer la surbrillance (à utiliser dans la console)
+window.testCountryHighlight = function() {
+    console.log('🧪 Test manuel de surbrillance des pays');
+    
+    // Forcer la surbrillance sur tous les éléments de résumé
+    const summaryElements = document.querySelectorAll('.summary-text, #daily-summary-text, #full-summary-text');
+    console.log(`📝 Éléments trouvés pour le test:`, summaryElements.length);
+    
+    summaryElements.forEach((element, index) => {
+        console.log(`🔍 Test élément ${index}:`, element.tagName, element.textContent?.substring(0, 50));
+        
+        // Injecter un test simple
+        if (element.textContent && element.textContent.includes('Ukraine')) {
+            const originalHTML = element.innerHTML;
+            const newHTML = originalHTML.replace(/Ukraine/g, '<span class="country-highlight" style="background: red !important; color: yellow !important; padding: 5px !important;">Ukraine</span>');
+            element.innerHTML = newHTML;
+            console.log('✅ Test forcé sur Ukraine');
+        }
+    });
+    
+    // Vérifier les éléments créés
+    const highlighted = document.querySelectorAll('.country-highlight');
+    console.log(`🎯 Nombre d'éléments .country-highlight après test:`, highlighted.length);
+};
+
+// Fonction de test simple pour la popup
+window.testCountryPopup = function() {
+    console.log('🧪 Test popup simple...');
+    
+    const testPopup = document.createElement('div');
+    testPopup.className = 'country-map-popup';
+    testPopup.style.position = 'fixed';
+    testPopup.style.top = '50px';
+    testPopup.style.left = '50px';
+    testPopup.style.zIndex = '10000';
+    
+    testPopup.innerHTML = `
+        <h4>Test Pays</h4>
+        <div class="country-map-container">
+            <svg class="country-map-svg" viewBox="0 0 600 300">
+                <rect width="600" height="300" fill="#0a0a0a"/>
+                <text x="300" y="150" text-anchor="middle" fill="#00ffff">Test Carte</text>
+            </svg>
+        </div>
+        <div class="country-info">
+            Test popup cartographique
+        </div>
+    `;
+    
+    document.body.appendChild(testPopup);
+    console.log('✅ Popup de test créée');
+    
+    // Auto-suppression après 3 secondes
+    setTimeout(() => {
+        testPopup.remove();
+        console.log('🗑️ Popup de test supprimée');
+    }, 3000);
+};
+
 console.log('Script Dashboard France24 - Pret pour initialisation');
+console.log('💡 Tapez "testCountryHighlight()" dans la console pour tester manuellement');
+console.log('💡 Tapez "testCountryPopup()" pour tester la popup cartographique');
