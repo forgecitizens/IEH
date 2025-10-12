@@ -632,8 +632,50 @@ class GeoDataManager {
     }
 }
 
-// Instance globale
+// Instance globale avec initialisation immédiate
 window.geoDataManager = new GeoDataManager();
+
+// Initialisation immédiate du mode fallback (ne dépend pas de fetch)
+console.log('🌍 Initialisation immédiate du mode fallback...');
+window.geoDataManager.initializeFallbackCountries();
+
+// Fonction de retry pour s'assurer que la détection s'applique
+let retryCount = 0;
+const maxRetries = 5;
+
+function ensureCountryDetection() {
+    retryCount++;
+    console.log(`🔄 Tentative ${retryCount}/${maxRetries} d'application de la détection...`);
+    
+    if (window.geoDataManager && window.geoDataManager.initialized) {
+        const summaryElements = document.querySelectorAll('.summary-text, .summary-section .summary-text');
+        console.log(`📝 Éléments trouvés: ${summaryElements.length}`);
+        
+        let applied = false;
+        summaryElements.forEach(element => {
+            if (element.textContent && !element.hasAttribute('data-countries-highlighted')) {
+                console.log(`🎯 Application sur: ${element.textContent.substring(0, 50)}...`);
+                window.geoDataManager.highlightCountriesInElement(element);
+                applied = true;
+            }
+        });
+        
+        if (applied) {
+            console.log('✅ Détection appliquée avec succès');
+            return true;
+        }
+    }
+    
+    if (retryCount < maxRetries) {
+        setTimeout(ensureCountryDetection, 1000);
+    } else {
+        console.log('❌ Échec après toutes les tentatives');
+    }
+    return false;
+}
+
+// Démarrer le processus de retry
+setTimeout(ensureCountryDetection, 500);
 
 // ================================================================
 // GESTIONNAIRE DE CONTENU AVEC LAZY LOADING
@@ -1144,32 +1186,13 @@ const Dashboard = {
             AudioManager.preloadModalSounds();
             CalendarManager.init();
             
-            // Initialiser le gestionnaire de données géographiques
-            console.log('🌍 Début initialisation GeoDataManager...');
-            window.geoDataManager.init().then(() => {
-                console.log('✅ GeoDataManager initialisé avec succès');
-                // Appliquer la détection au résumé principal une fois les données chargées
-                setTimeout(() => {
-                    console.log('🔍 Application détection au résumé principal...');
-                    window.geoDataManager.highlightMainSummary();
-                    
-                    // Forcer aussi la détection sur tous les éléments visibles
-                    setTimeout(() => {
-                        console.log('🔄 Force détection globale...');
-                        window.geoDataManager.highlightCountriesInExistingText();
-                    }, 500);
-                }, 200);
-            }).catch(err => {
-                console.error('❌ Erreur initialisation GeoDataManager:', err);
-                // Forcer l'initialisation en mode fallback
-                setTimeout(() => {
-                    console.log('🔄 Force initialisation fallback...');
-                    window.geoDataManager.initializeFallbackCountries();
-                    setTimeout(() => {
-                        window.geoDataManager.highlightCountriesInExistingText();
-                    }, 100);
-                }, 100);
-            });
+            // Le GeoDataManager est déjà initialisé plus haut avec mode fallback
+            console.log('🌍 GeoDataManager déjà initialisé, tentative de détection...');
+            setTimeout(() => {
+                if (window.geoDataManager?.initialized) {
+                    window.geoDataManager.highlightCountriesInExistingText();
+                }
+            }, 300);
             
             // Forcer l'ouverture de l'accordéon du graphique
             this.ensureChartAccordionOpen();
@@ -2972,7 +2995,21 @@ window.debugGeoDataManager = function() {
     }
 };
 
+// Force application immédiate (à utiliser en dernier recours)
+window.forceCountryDetection = function() {
+    console.log('� FORCE APPLICATION DÉTECTION PAYS');
+    if (!window.geoDataManager?.initialized) {
+        window.geoDataManager.initializeFallbackCountries();
+    }
+    
+    document.querySelectorAll('[data-countries-highlighted]').forEach(el => {
+        el.removeAttribute('data-countries-highlighted');
+    });
+    
+    window.geoDataManager.highlightCountriesInExistingText();
+    console.log('✅ Force application terminée');
+};
+
 console.log('Script Dashboard France24 - Pret pour initialisation');
-console.log('💡 Tapez "debugGeoDataManager()" pour diagnostiquer les problèmes de détection');
-console.log('💡 Tapez "testCountryHighlight()" dans la console pour tester manuellement');
+console.log('💡 Tapez "forceCountryDetection()" si les pays ne sont pas en surbrillance');
 console.log('💡 Tapez "testCountryPopup()" pour tester la popup cartographique');
