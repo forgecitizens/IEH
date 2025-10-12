@@ -2573,7 +2573,7 @@ const StabilityChartManager = {
                 tooltip.innerHTML = `
                     <div style="border-bottom: 1px solid #00ffff; margin-bottom: 10px; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
                         <strong style="color: #00ffff; font-size: 14px;">${point.date}/2025</strong>
-                        <span style="background: ${scoreColor}; color: ${point.score >= 500 ? 'black' : 'white'}; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+                        <span style="background: #000000; color: ${scoreColor}; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; font-family: 'Orbitron', monospace;">
                             ${point.score}/1000
                         </span>
                     </div>
