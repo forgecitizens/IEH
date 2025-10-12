@@ -1285,6 +1285,17 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             PopulationCounter.updateCounter();
         }, 200);
+        
+        // Force supplémentaire d'initialisation GeoDataManager si pas initialisé
+        setTimeout(() => {
+            if (!window.geoDataManager?.initialized) {
+                console.log('🔄 Force initialisation GeoDataManager...');
+                window.geoDataManager.initializeFallbackCountries();
+                setTimeout(() => {
+                    window.geoDataManager.highlightCountriesInExistingText();
+                }, 200);
+            }
+        }, 1000);
     }, 100);
 });
 
